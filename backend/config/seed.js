@@ -38,18 +38,45 @@ const seed = async () => {
   ]);
   console.log("✅ Users seeded");
 
-  // ── Crops ─────────────────────────────────────────────
-  const [tomato, potato, wheat, spinach, carrot, corn, rice, onion] = await Crop.insertMany([
+  // ── Crops (Marketplace Products) ─────────────────────────
+  const seededCrops = await Crop.insertMany([
+    // Vegetables
     { farmer: farmer1._id, name: "Organic Tomatoes",  subtitle: "Harvested 2 days ago", category: "vegetables", quantity: 250,  unit: "kg",   pricePerUnit: 25,  status: "available", badge: "organic",    emoji: "🍅", location: "Gujarat" },
     { farmer: farmer1._id, name: "Golden Potatoes",   subtitle: "Storage Grade A",       category: "vegetables", quantity: 1200, unit: "kg",   pricePerUnit: 18,  status: "available", badge: null,         emoji: "🥔", location: "Gujarat" },
-    { farmer: farmer1._id, name: "Organic Wheat",     subtitle: "Premium Grade",         category: "grains",     quantity: 5000, unit: "kg",   pricePerUnit: 22,  status: "available", badge: "organic",    emoji: "🌾", location: "Gujarat" },
     { farmer: farmer2._id, name: "Baby Spinach",      subtitle: "Earth washed",          category: "vegetables", quantity: 150,  unit: "kg",   pricePerUnit: 40,  status: "available", badge: "flash_sale", emoji: "🥬", location: "Maharashtra" },
     { farmer: farmer2._id, name: "Heirloom Carrots",  subtitle: "Fresh harvest",         category: "vegetables", quantity: 300,  unit: "kg",   pricePerUnit: 32,  status: "available", badge: "flash_sale", emoji: "🥕", location: "Maharashtra" },
-    { farmer: farmer2._id, name: "Golden Corn",       subtitle: "Sweet variety",         category: "vegetables", quantity: 800,  unit: "unit", pricePerUnit: 25,  status: "available", badge: null,         emoji: "🌽", location: "Maharashtra" },
-    { farmer: farmer1._id, name: "Basmati Rice",      subtitle: "Long grain variety",    category: "grains",     quantity: 2000, unit: "kg",   pricePerUnit: 55,  status: "available", badge: "best_deal",  emoji: "🍚", location: "Gujarat" },
     { farmer: farmer2._id, name: "Red Onions",        subtitle: "Grade A, dry",          category: "vegetables", quantity: 500,  unit: "kg",   pricePerUnit: 20,  status: "available", badge: null,         emoji: "🧅", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Fresh Garlic",       subtitle: "Organic bulbs",         category: "vegetables", quantity: 200,  unit: "kg",   pricePerUnit: 110, status: "available", badge: "organic",    emoji: "🧄", location: "Gujarat" },
+    { farmer: farmer2._id, name: "Green Chilli",      subtitle: "Spicy variety",         category: "vegetables", quantity: 180,  unit: "kg",   pricePerUnit: 65,  status: "available", badge: "limited",    emoji: "🌶️", location: "Maharashtra" },
+    
+    // Fruits
+    { farmer: farmer1._id, name: "Shimla Apples",     subtitle: "Crisp & Juicy",         category: "fruits",     quantity: 450,  unit: "kg",   pricePerUnit: 120, status: "available", badge: "limited",    emoji: "🍎", location: "Himachal Pradesh" },
+    { farmer: farmer1._id, name: "Alphonso Mangoes",  subtitle: "Ratnagiri Special",     category: "fruits",     quantity: 600,  unit: "kg",   pricePerUnit: 150, status: "available", badge: "best_deal",  emoji: "🥭", location: "Maharashtra" },
+    { farmer: farmer2._id, name: "Robusta Bananas",   subtitle: "Sweet farm fresh",      category: "fruits",     quantity: 800,  unit: "unit", pricePerUnit: 40, status: "available", badge: "organic",    emoji: "🍌", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Nagpur Oranges",    subtitle: "Juicy citrus",          category: "fruits",     quantity: 550,  unit: "kg",   pricePerUnit: 70,  status: "available", badge: null,         emoji: "🍊", location: "Maharashtra" },
+    { farmer: farmer2._id, name: "Black Grapes",      subtitle: "Seedless sweet",        category: "fruits",     quantity: 350,  unit: "kg",   pricePerUnit: 90,  status: "available", badge: "flash_sale", emoji: "🍇", location: "Maharashtra" },
+
+    // Grains
+    { farmer: farmer1._id, name: "Organic Wheat",     subtitle: "Premium Grade",         category: "grains",     quantity: 5000, unit: "kg",   pricePerUnit: 22,  status: "available", badge: "organic",    emoji: "🌾", location: "Gujarat" },
+    { farmer: farmer1._id, name: "Basmati Rice",      subtitle: "Long grain variety",    category: "grains",     quantity: 2000, unit: "kg",   pricePerUnit: 55,  status: "available", badge: "best_deal",  emoji: "🍚", location: "Gujarat" },
+    { farmer: farmer2._id, name: "Golden Sweet Corn", subtitle: "Sweet variety",         category: "grains",     quantity: 800,  unit: "kg",   pricePerUnit: 25,  status: "available", badge: null,         emoji: "🌽", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Yellow Soybean",    subtitle: "Protein rich",          category: "grains",     quantity: 1500, unit: "kg",   pricePerUnit: 48,  status: "available", badge: null,         emoji: "🫘", location: "Gujarat" },
+
+    // Herbs & Spices
+    { farmer: farmer1._id, name: "Organic Turmeric",  subtitle: "High Curcumin",         category: "herbs",      quantity: 300,  unit: "kg",   pricePerUnit: 85,  status: "available", badge: "organic",    emoji: "🌿", location: "Gujarat" },
+    { farmer: farmer2._id, name: "Fresh Ginger",      subtitle: "Aromatic roots",        category: "herbs",      quantity: 250,  unit: "kg",   pricePerUnit: 75,  status: "available", badge: null,         emoji: "🫚", location: "Maharashtra" },
+    { farmer: farmer2._id, name: "Fresh Mint Leaves", subtitle: "Chemical free",         category: "herbs",      quantity: 100,  unit: "kg",   pricePerUnit: 50,  status: "available", badge: "organic",    emoji: "🌱", location: "Maharashtra" },
+
+    // Other
+    { farmer: farmer1._id, name: "Raw Cotton",        subtitle: "Long staple grade",     category: "other",      quantity: 3000, unit: "kg",   pricePerUnit: 68,  status: "available", badge: null,         emoji: "☁️", location: "Gujarat" },
+    { farmer: farmer2._id, name: "Organic Sugarcane", subtitle: "High Brix content",     category: "other",      quantity: 4000, unit: "kg",   pricePerUnit: 15,  status: "available", badge: null,         emoji: "🎋", location: "Maharashtra" },
   ]);
-  console.log("✅ Crops seeded");
+  const tomato = seededCrops[0];
+  const potato = seededCrops[1];
+  const spinach = seededCrops[2];
+  const wheat = seededCrops[7];
+  const corn = seededCrops[9];
+  console.log("✅ Crops seeded with Fruits, Vegetables, Grains, Herbs, & Other");
 
   // ── Purchase Requests ──────────────────────────────────
   const [req1, req2, req3, req4] = await PurchaseRequest.insertMany([
@@ -133,20 +160,39 @@ const seed = async () => {
 
   // ── Crop Prices (Mandi Prices) ─────────────────────────
   await CropPrice.insertMany([
-    { cropName: "Wheat",        emoji: "🌾", category: "grains",     minPrice: 2000, maxPrice: 2300, modalPrice: 2150, unit: "quintal", market: "Ahmedabad Mandi",  state: "Gujarat",     trend: "up",     changePercent: 2.5  },
-    { cropName: "Rice",         emoji: "🍚", category: "grains",     minPrice: 2800, maxPrice: 3200, modalPrice: 3000, unit: "quintal", market: "Pune Mandi",       state: "Maharashtra", trend: "stable", changePercent: 0.5  },
-    { cropName: "Tomato",       emoji: "🍅", category: "vegetables", minPrice: 800,  maxPrice: 1500, modalPrice: 1100, unit: "quintal", market: "Surat Mandi",      state: "Gujarat",     trend: "down",   changePercent: -5.2 },
-    { cropName: "Potato",       emoji: "🥔", category: "vegetables", minPrice: 600,  maxPrice: 1000, modalPrice: 800,  unit: "quintal", market: "Nashik Mandi",     state: "Maharashtra", trend: "up",     changePercent: 3.1  },
-    { cropName: "Onion",        emoji: "🧅", category: "vegetables", minPrice: 1200, maxPrice: 2000, modalPrice: 1600, unit: "quintal", market: "Lasalgaon Mandi",  state: "Maharashtra", trend: "up",     changePercent: 8.4  },
-    { cropName: "Carrot",       emoji: "🥕", category: "vegetables", minPrice: 1500, maxPrice: 2200, modalPrice: 1800, unit: "quintal", market: "Rajkot Mandi",     state: "Gujarat",     trend: "stable", changePercent: 1.0  },
-    { cropName: "Spinach",      emoji: "🥬", category: "vegetables", minPrice: 500,  maxPrice: 900,  modalPrice: 700,  unit: "quintal", market: "Mumbai Mandi",     state: "Maharashtra", trend: "down",   changePercent: -2.8 },
-    { cropName: "Corn/Maize",   emoji: "🌽", category: "grains",     minPrice: 1500, maxPrice: 1900, modalPrice: 1700, unit: "quintal", market: "Baroda Mandi",     state: "Gujarat",     trend: "stable", changePercent: 0.3  },
-    { cropName: "Cotton",       emoji: "🌿", category: "other",      minPrice: 6000, maxPrice: 7500, modalPrice: 6800, unit: "quintal", market: "Rajkot Mandi",     state: "Gujarat",     trend: "up",     changePercent: 4.2  },
-    { cropName: "Soybean",      emoji: "🫘", category: "grains",     minPrice: 4200, maxPrice: 4800, modalPrice: 4500, unit: "quintal", market: "Indore Mandi",     state: "MP",          trend: "up",     changePercent: 1.8  },
-    { cropName: "Garlic",       emoji: "🧄", category: "vegetables", minPrice: 8000, maxPrice: 12000, modalPrice: 10000, unit: "quintal", market: "Neemuch Mandi",   state: "MP",          trend: "up",     changePercent: 12.5 },
-    { cropName: "Chilli",       emoji: "🌶️", category: "vegetables", minPrice: 5000, maxPrice: 8000, modalPrice: 6500, unit: "quintal", market: "Guntur Mandi",    state: "AP",          trend: "stable", changePercent: 0.8  },
+    // Fruits
+    { cropName: "Apple",         emoji: "🍎", category: "fruits",     minPrice: 4600, maxPrice: 6200, modalPrice: 5350, unit: "quintal", market: "Shimla Mandi",     state: "Himachal Pradesh", trend: "up", changePercent: 2.9 },
+    { cropName: "Mango",         emoji: "🥭", category: "fruits",     minPrice: 3800, maxPrice: 5200, modalPrice: 4450, unit: "quintal", market: "Ratnagiri Mandi",   state: "Maharashtra",     trend: "up", changePercent: 3.4 },
+    { cropName: "Banana",        emoji: "🍌", category: "fruits",     minPrice: 1400, maxPrice: 1950, modalPrice: 1720, unit: "quintal", market: "Jalgaon Mandi",    state: "Maharashtra",     trend: "up", changePercent: 1.2 },
+    { cropName: "Orange",        emoji: "🍊", category: "fruits",     minPrice: 2200, maxPrice: 3100, modalPrice: 2650, unit: "quintal", market: "Nagpur Mandi",     state: "Maharashtra",     trend: "up", changePercent: 1.9 },
+    { cropName: "Grapes",        emoji: "🍇", category: "fruits",     minPrice: 3500, maxPrice: 4800, modalPrice: 4100, unit: "quintal", market: "Nashik Mandi",     state: "Maharashtra",     trend: "down", changePercent: -1.4 },
+
+    // Vegetables
+    { cropName: "Tomato",        emoji: "🍅", category: "vegetables", minPrice: 800,  maxPrice: 1500, modalPrice: 1100, unit: "quintal", market: "Surat Mandi",      state: "Gujarat",         trend: "down", changePercent: -5.2 },
+    { cropName: "Potato",        emoji: "🥔", category: "vegetables", minPrice: 600,  maxPrice: 1000, modalPrice: 800,  unit: "quintal", market: "Nashik Mandi",     state: "Maharashtra",     trend: "up", changePercent: 3.1 },
+    { cropName: "Onion",         emoji: "🧅", category: "vegetables", minPrice: 1200, maxPrice: 2000, modalPrice: 1600, unit: "quintal", market: "Lasalgaon Mandi",  state: "Maharashtra",     trend: "up", changePercent: 8.4 },
+    { cropName: "Carrot",        emoji: "🥕", category: "vegetables", minPrice: 1500, maxPrice: 2200, modalPrice: 1800, unit: "quintal", market: "Rajkot Mandi",     state: "Gujarat",         trend: "stable", changePercent: 1.0 },
+    { cropName: "Spinach",       emoji: "🥬", category: "vegetables", minPrice: 500,  maxPrice: 900,  modalPrice: 700,  unit: "quintal", market: "Mumbai Mandi",     state: "Maharashtra",     trend: "down", changePercent: -2.8 },
+    { cropName: "Garlic",        emoji: "🧄", category: "vegetables", minPrice: 8000, maxPrice: 12000, modalPrice: 10000, unit: "quintal", market: "Neemuch Mandi",   state: "Madhya Pradesh",  trend: "up", changePercent: 12.5 },
+    { cropName: "Green Chilli",  emoji: "🌶️", category: "vegetables", minPrice: 5000, maxPrice: 8000, modalPrice: 6500, unit: "quintal", market: "Guntur Mandi",    state: "Andhra Pradesh",  trend: "stable", changePercent: 0.8 },
+
+    // Grains
+    { cropName: "Wheat",         emoji: "🌾", category: "grains",     minPrice: 2000, maxPrice: 2300, modalPrice: 2150, unit: "quintal", market: "Ahmedabad Mandi",  state: "Gujarat",         trend: "up", changePercent: 2.5 },
+    { cropName: "Rice",          emoji: "🍚", category: "grains",     minPrice: 2800, maxPrice: 3200, modalPrice: 3000, unit: "quintal", market: "Pune Mandi",       state: "Maharashtra",     trend: "stable", changePercent: 0.5 },
+    { cropName: "Corn/Maize",    emoji: "🌽", category: "grains",     minPrice: 1500, maxPrice: 1900, modalPrice: 1700, unit: "quintal", market: "Baroda Mandi",     state: "Gujarat",         trend: "stable", changePercent: 0.3 },
+    { cropName: "Soybean",       emoji: "🫘", category: "grains",     minPrice: 4200, maxPrice: 4800, modalPrice: 4500, unit: "quintal", market: "Indore Mandi",     state: "Madhya Pradesh",  trend: "up", changePercent: 1.8 },
+
+    // Herbs
+    { cropName: "Turmeric",      emoji: "🌿", category: "herbs",      minPrice: 7200, maxPrice: 8600, modalPrice: 7950, unit: "quintal", market: "Nizamabad Mandi",  state: "Telangana",       trend: "up", changePercent: 1.7 },
+    { cropName: "Ginger",        emoji: "🫚", category: "herbs",      minPrice: 6500, maxPrice: 8200, modalPrice: 7400, unit: "quintal", market: "Wayanad Mandi",    state: "Kerala",          trend: "down", changePercent: -1.5 },
+    { cropName: "Dry Chillies",  emoji: "🌶️", category: "herbs",      minPrice: 14500, maxPrice: 17800, modalPrice: 16200, unit: "quintal", market: "Guntur Mandi",   state: "Andhra Pradesh",  trend: "up", changePercent: 4.1 },
+
+    // Other
+    { cropName: "Cotton",        emoji: "☁️", category: "other",      minPrice: 6000, maxPrice: 7500, modalPrice: 6800, unit: "quintal", market: "Rajkot Mandi",     state: "Gujarat",         trend: "up", changePercent: 4.2 },
+    { cropName: "Sugarcane",     emoji: "🎋", category: "other",      minPrice: 310,  maxPrice: 345,  modalPrice: 325,  unit: "quintal", market: "Muzaffarnagar Mandi", state: "UP",            trend: "up", changePercent: 1.5 },
+    { cropName: "Groundnut",     emoji: "🥜", category: "other",      minPrice: 5900, maxPrice: 6600, modalPrice: 6320, unit: "quintal", market: "Junagadh Mandi",   state: "Gujarat",         trend: "up", changePercent: 1.4 }
   ]);
-  console.log("✅ Crop prices seeded");
+  console.log("✅ Crop prices seeded with Fruits, Vegetables, Grains, Herbs, & Other");
 
   // ── Crop Advisories ────────────────────────────────────
   await CropAdvisory.insertMany([

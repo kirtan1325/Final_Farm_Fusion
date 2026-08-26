@@ -8,7 +8,7 @@ const getCropPrices = async (req, res) => {
     const { category, search, location, state } = req.query;
     const filter = {};
     if (category && category.toLowerCase() !== "all") {
-      filter.category = category.toLowerCase();
+      filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
     }
 
     const queryTerm = search || location || state;

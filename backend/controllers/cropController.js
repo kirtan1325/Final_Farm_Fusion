@@ -14,7 +14,9 @@ const getCrops = async (req, res) => {
     const { category, minPrice, maxPrice, status, search } = req.query;
     const filter = { quantity: { $gt: 0 } };
 
-    if (category)             filter.category = category;
+    if (category && category.toLowerCase() !== "all") {
+      filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
+    }
     if (status)               filter.status   = status;
     if (minPrice || maxPrice) filter.pricePerUnit = {};
     if (minPrice) filter.pricePerUnit.$gte = Number(minPrice);
