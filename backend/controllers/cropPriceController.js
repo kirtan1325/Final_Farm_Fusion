@@ -1,16 +1,32 @@
 // backend/controllers/cropPriceController.js
 const CropPrice = require("../models/CropPrice");
 
-// @desc  Get all crop prices (with optional filter)
-// @route GET /api/prices?category=grains&search=wheat
+// @desc  Get all crop prices (with optional filter for category, search, location, state)
+// @route GET /api/prices?category=grains&search=wheat&location=Punjab
 const getCropPrices = async (req, res) => {
   try {
-    const { category, search } = req.query;
+    const { category, search, location, state } = req.query;
     const filter = {};
-    if (category) filter.category = category;
-    if (search)   filter.cropName = { $regex: search, $options: "i" };
+    if (category && category.toLowerCase() !== "all") {
+      filter.category = category.toLowerCase();
+    }
 
-    const prices = await CropPrice.find(filter).sort({ cropName: 1 });
+    const queryTerm = search || location || state;
+    if (queryTerm && queryTerm.trim()) {
+      const term = queryTerm.trim();
+      filter.$or = [
+        { cropName: { $regex: term, $options: "i" } },
+        { state: { $regex: term, $options: "i" } },
+        { market: { $regex: term, $options: "i" } }
+      ];
+    }
+
+    let prices = await CropPrice.find(filter).sort({ cropName: 1 });
+    if (prices.length === 0 && (location || state) && !search) {
+      delete filter.$or;
+      prices = await CropPrice.find(filter).sort({ cropName: 1 });
+    }
+
     res.json({ success: true, count: prices.length, data: prices });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
