@@ -423,15 +423,17 @@ def live_prices():
     ]
 
     filtered = mandi_database
-    if search:
-        s = search.lower()
-        filtered = [p for p in filtered if s in p["cropName"].lower() or s in p["state"].lower() or s in p["market"].lower()]
-        if not filtered:
-            filtered = mandi_database
-            
-    if category and category.lower() != "all":
-        c = category.lower()
-        filtered = [p for p in filtered if p["category"].lower() == c]
+    if category and category.strip() and category.lower() != "all":
+        c = category.strip().lower()
+        cat_filtered = [p for p in filtered if p["category"].lower() == c]
+        if cat_filtered:
+            filtered = cat_filtered
+
+    if search and search.strip():
+        s = search.strip().lower()
+        search_matches = [p for p in filtered if s in p["cropName"].lower() or s in p["state"].lower() or s in p["market"].lower()]
+        if search_matches:
+            filtered = search_matches
 
     return jsonify({"success": True, "count": len(filtered), "data": filtered})
 

@@ -103,7 +103,7 @@ export default function CropPrices() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState(farmerLocation);
+  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [flashingRowId, setFlashingRowId] = useState(null);
@@ -516,7 +516,10 @@ export default function CropPrices() {
               {CATEGORIES.map(c => (
                 <button
                   key={c}
-                  onClick={() => setCategory(c)}
+                  onClick={() => {
+                    setCategory(c);
+                    if (search === farmerLocation) setSearch("");
+                  }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold border cursor-pointer transition-all capitalize
                     ${category === c
                       ? "text-white border-transparent shadow-xs"

@@ -297,8 +297,6 @@ export default function Marketplace() {
       const data = await getMarketplaceCrops(filters);
       let crops = data.data || [];
 
-      if (user?._id) crops = crops.filter(c => c.farmer?._id !== user._id);
-
       if (sortBy === "Price: Low to High") crops = [...crops].sort((a, b) => a.pricePerUnit - b.pricePerUnit);
       if (sortBy === "Price: High to Low") crops = [...crops].sort((a, b) => b.pricePerUnit - a.pricePerUnit);
 

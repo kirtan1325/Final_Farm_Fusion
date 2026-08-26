@@ -7,26 +7,33 @@ const getCropPrices = async (req, res) => {
   try {
     const { category, search, location, state } = req.query;
     const filter = {};
-    if (category && category.toLowerCase() !== "all") {
+
+    if (category && category.trim() && category.toLowerCase() !== "all") {
       filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
     }
 
     const queryTerm = search || location || state;
     if (queryTerm && queryTerm.trim()) {
       const term = queryTerm.trim();
-      filter.$or = [
-        { cropName: { $regex: term, $options: "i" } },
-        { state: { $regex: term, $options: "i" } },
-        { market: { $regex: term, $options: "i" } }
-      ];
+      // Try filtering with both category and search/location term first
+      const searchFilter = {
+        ...filter,
+        $or: [
+          { cropName: { $regex: term, $options: "i" } },
+          { state: { $regex: term, $options: "i" } },
+          { market: { $regex: term, $options: "i" } }
+        ]
+      };
+      let prices = await CropPrice.find(searchFilter).sort({ cropName: 1 });
+      
+      // If search+category combo returned no results, but category was specified, fall back to returning all items in category!
+      if (prices.length === 0 && filter.category) {
+        prices = await CropPrice.find(filter).sort({ cropName: 1 });
+      }
+      return res.json({ success: true, count: prices.length, data: prices });
     }
 
-    let prices = await CropPrice.find(filter).sort({ cropName: 1 });
-    if (prices.length === 0 && (location || state) && !search) {
-      delete filter.$or;
-      prices = await CropPrice.find(filter).sort({ cropName: 1 });
-    }
-
+    const prices = await CropPrice.find(filter).sort({ cropName: 1 });
     res.json({ success: true, count: prices.length, data: prices });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
