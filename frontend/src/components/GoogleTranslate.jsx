@@ -17,8 +17,13 @@ const ALL_LANGUAGES = [
   { code: 'ne', label: 'Nepali', native: 'नेपाली', flag: '🇳🇵', category: 'Indian / Main' },
   { code: 'or', label: 'Odia', native: 'ଓଡ଼ିଆ', flag: '🇮🇳', category: 'Indian / Main' },
   { code: 'as', label: 'Assamese', native: 'অসমীয়া', flag: '🇮🇳', category: 'Indian / Main' },
-  { code: 'sa', label: 'Sanskrit', native: 'संस्कृतम्', flag: '🇮🇳', category: 'Indian / Main' },
-  { code: 'sd', label: 'Sindhi', native: 'سنڌي', flag: '🇵🇰', category: 'Indian / Main' },
+  { code: 'sd', label: 'Sindhi', native: 'سنڌي', flag: '🇮🇳', category: 'Indian / Main' },
+  { code: 'mai', label: 'Maithili', native: 'मैथिली', flag: '🇮🇳', category: 'Indian / Main' },
+  { code: 'doi', label: 'Dogri', native: 'डोगरी', flag: '🇮🇳', category: 'Indian / Main' },
+  { code: 'gom', label: 'Konkani', native: 'कोंकणी', flag: '🇮🇳', category: 'Indian / Main' },
+  { code: 'mni-Mtei', label: 'Manipuri', native: 'মৈতৈলোন্', flag: '🇮🇳', category: 'Indian / Main' },
+  { code: 'sat', label: 'Santali', native: 'ᱥᱟᱱᱛᱟᱲᱤ', flag: '🇮🇳', category: 'Indian / Main' },
+  { code: 'bdo', label: 'Bodo', native: 'बर\'', flag: '🇮🇳', category: 'Indian / Main' },
 
   // 🌐 Global Major Languages
   { code: 'es', label: 'Spanish', native: 'Español', flag: '🇪🇸', category: 'Global' },
@@ -172,15 +177,38 @@ const GoogleTranslate = () => {
   }, [isOpen]);
 
   const applyLanguageChange = (langCode) => {
-    // Set googtrans cookie
-    document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}`;
-    document.cookie = `googtrans=/en/${langCode}; path=/;`;
+    // Set googtrans cookie across domains and paths
+    if (langCode === 'en') {
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+    } else {
+      document.cookie = `googtrans=/en/${langCode}; path=/;`;
+      document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}`;
+    }
 
-    // Trigger select element event
-    const select = document.querySelector('.goog-te-combo');
-    if (select) {
-      select.value = langCode;
-      select.dispatchEvent(new Event('change'));
+    // Polling trigger for Google Translate select element (.goog-te-combo)
+    let attempts = 0;
+    const triggerSelect = () => {
+      const select =
+        document.querySelector('.goog-te-combo') ||
+        document.querySelector('#google_translate_element select');
+
+      if (select) {
+        select.value = langCode;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        select.dispatchEvent(new Event('input', { bubbles: true }));
+        return true;
+      }
+      return false;
+    };
+
+    if (!triggerSelect()) {
+      const interval = setInterval(() => {
+        attempts++;
+        if (triggerSelect() || attempts > 20) {
+          clearInterval(interval);
+        }
+      }, 100);
     }
   };
 
@@ -197,15 +225,25 @@ const GoogleTranslate = () => {
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
-      {/* Hidden container for actual Google Translate widget */}
-      <div id="google_translate_element" className="hidden"></div>
+      {/* Invisible container for actual Google Translate widget so JS DOM events trigger properly */}
+      <div
+        id="google_translate_element"
+        style={{
+          position: 'absolute',
+          opacity: 0,
+          pointerEvents: 'none',
+          height: 0,
+          width: 0,
+          overflow: 'hidden',
+        }}
+      ></div>
 
       {/* Styles to remove annoying Google frames and tooltips */}
       <style>
         {`
           .goog-te-banner-frame { display: none !important; visibility: hidden !important; height: 0 !important; }
           .goog-logo-link { display: none !important; }
-          .goog-te-gadget { display: none !important; }
+          .goog-te-gadget { display: none !important; font-size: 0 !important; }
           body { top: 0 !important; position: static !important; }
           #goog-gt-tt { display: none !important; }
           .goog-tooltip { display: none !important; }
