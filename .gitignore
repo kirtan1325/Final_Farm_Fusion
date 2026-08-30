@@ -31,3 +31,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python / Dataset archives
+__pycache__/
+*.py[cod]
+archive/
+archive (3)/
