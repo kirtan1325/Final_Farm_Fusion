@@ -1,9 +1,16 @@
+import os
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["PYTHONUNBUFFERED"] = "1"
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import hashlib
 import math
 import random
-import os
 import io
 from dotenv import load_dotenv
 load_dotenv()
@@ -88,6 +95,7 @@ disease_accuracy_path    = os.path.join(models_dir, "disease_model_accuracy.txt"
 try:
     if os.path.exists(disease_model_pt_path) and os.path.exists(disease_classes_path):
         import torch
+        torch.set_num_threads(1)
         from torchvision import models as tv_models
         with open(disease_classes_path, "r") as f:
             DISEASE_CLASS_NAMES = json.load(f)
