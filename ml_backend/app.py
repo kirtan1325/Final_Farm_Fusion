@@ -8,6 +8,20 @@ import io
 from dotenv import load_dotenv
 load_dotenv()
 
+from translator import input_to_english, output_from_english, translate_dict, normalize_lang
+
+def get_target_language(req):
+    lang = None
+    if req.is_json and req.json:
+        lang = req.json.get("language") or req.json.get("lang") or req.json.get("target_lang")
+    if not lang and req.form:
+        lang = req.form.get("language") or req.form.get("lang") or req.form.get("target_lang")
+    if not lang:
+        lang = req.args.get("language") or req.args.get("lang") or req.args.get("target_lang")
+    if not lang and req.headers.get("Accept-Language"):
+        lang = req.headers.get("Accept-Language").split(",")[0]
+    return normalize_lang(lang or "en")
+
 try:
     from openai import OpenAI
     HAS_OPENAI = True
@@ -540,17 +554,25 @@ def get_deterministic_crop(soil, season, loc):
 @app.route('/predict-crop', methods=['POST'])
 def predict_crop():
     data = request.json or {}
-    soil_type = data.get("soil_type", "Loamy")
-    season = data.get("season", "Kharif")
-    location = data.get("location", "Punjab")
-    
+    target_lang = get_target_language(request)
+
+    raw_soil = data.get("soil_type", "Loamy")
+    raw_season = data.get("season", "Kharif")
+    raw_location = data.get("location", "Punjab")
+
+    # Translate inputs to English before model prediction
+    soil_type = input_to_english(raw_soil, target_lang)
+    season = input_to_english(raw_season, target_lang)
+    location = input_to_english(raw_location, target_lang)
+
+    res_data = None
+
     # Priority 1: High-Accuracy Trained ML Model
     ml_res = predict_crop_ml(soil_type, season, location)
     if ml_res:
-        return jsonify(ml_res)
-
-    # Priority 2: LLM Grok if available
-    if llm_client:
+        res_data = ml_res
+    elif llm_client:
+        # Priority 2: LLM Grok if available
         try:
             prompt = f"Act as an expert agronomist. Recommend the best crop to grow in {location} during the {season} season with {soil_type} soil. Also provide recommended fertilizer and irrigation schedule. Keep it concise. Format as JSON: {{\"crop\": \"Name\", \"fert\": \"Fertilizer plan\", \"irrig\": \"Irrigation plan\"}}"
             response = llm_client.chat.completions.create(
@@ -559,32 +581,48 @@ def predict_crop():
             )
             text = response.choices[0].message.content.strip().replace("```json", "").replace("```", "")
             import json
-            res_data = json.loads(text)
-            return jsonify({
+            parsed = json.loads(text)
+            res_data = {
                 "success": True,
-                "recommended_crop": res_data.get("crop", "Wheat"),
-                "fertilizer": res_data.get("fert", "Standard NPK"),
-                "irrigation_schedule": res_data.get("irrig", "Regular watering"),
+                "recommended_crop": parsed.get("crop", "Wheat"),
+                "fertilizer": parsed.get("fert", "Standard NPK"),
+                "irrigation_schedule": parsed.get("irrig", "Regular watering"),
                 "confidence": 98.5
-            })
+            }
         except Exception as e:
             print("LLM Error in predict-crop:", e)
-            
-    crop, fert, irrig, conf = get_deterministic_crop(soil_type, season, location)
-    return jsonify({
-        "success": True,
-        "recommended_crop": crop,
-        "fertilizer": fert,
-        "irrigation_schedule": irrig,
-        "confidence": round(conf, 2)
-    })
+
+    if not res_data:
+        crop, fert, irrig, conf = get_deterministic_crop(soil_type, season, location)
+        res_data = {
+            "success": True,
+            "recommended_crop": crop,
+            "fertilizer": fert,
+            "irrigation_schedule": irrig,
+            "confidence": round(conf, 2)
+        }
+
+    # Translate response fields from English to user's selected language
+    if target_lang != "en":
+        res_data["recommended_crop"] = output_from_english(res_data.get("recommended_crop", ""), target_lang)
+        res_data["fertilizer"] = output_from_english(res_data.get("fertilizer", ""), target_lang)
+        res_data["irrigation_schedule"] = output_from_english(res_data.get("irrigation_schedule", ""), target_lang)
+        res_data["target_language"] = target_lang
+
+    return jsonify(res_data)
 
 # 2. Smart Price Prediction & Real-Time Market Profit Forecasting
 @app.route('/predict-price', methods=['POST'])
 def predict_price():
     data = request.json or {}
-    crop_name = data.get("crop", "Wheat")
-    location = data.get("location", "Punjab Mandi")
+    target_lang = get_target_language(request)
+
+    raw_crop = data.get("crop", "Wheat")
+    raw_location = data.get("location", "Punjab Mandi")
+
+    # Translate input fields to English before model prediction
+    crop_name = input_to_english(raw_crop, target_lang)
+    location = input_to_english(raw_location, target_lang)
     
     base_prices = {
         "Wheat": 2275, "Rice": 3100, "Cotton": 6500, "Maize": 1850, 
@@ -614,7 +652,7 @@ def predict_price():
         f"generating an additional profit of +₹{gain_per_qtl:,.0f} per quintal (+{roi_percent}% ROI)."
     )
 
-    return jsonify({
+    res_payload = {
         "success": True,
         "crop": crop_name,
         "location": location,
@@ -627,7 +665,16 @@ def predict_price():
         "ai_recommendation_strategy": strategy_msg,
         "forecast_30_days": forecast,
         "confidence": round(96.8 + (hash_val % 5) * 0.5, 2)
-    })
+    }
+
+    if target_lang != "en":
+        res_payload["crop"] = output_from_english(res_payload["crop"], target_lang)
+        res_payload["location"] = output_from_english(res_payload["location"], target_lang)
+        res_payload["best_time_to_sell"] = output_from_english(res_payload["best_time_to_sell"], target_lang)
+        res_payload["ai_recommendation_strategy"] = output_from_english(res_payload["ai_recommendation_strategy"], target_lang)
+        res_payload["target_language"] = target_lang
+
+    return jsonify(res_payload)
 
 # 3. Crop Disease Detection (CNN Image Classification)
 @app.route('/detect-disease', methods=['POST'])
@@ -636,6 +683,9 @@ def detect_disease():
         return jsonify({"success": False, "message": "No image provided"}), 400
     file = request.files['image']
     img_bytes = file.read()
+    target_lang = get_target_language(request)
+
+    res_payload = None
 
     # ── Priority 1: CNN Model Inference with Test-Time Augmentation (TTA) ────────
     if DISEASE_MODEL is not None and DISEASE_CLASS_NAMES:
@@ -660,7 +710,7 @@ def detect_disease():
                 # Low-confidence warning — suggests borderline / unclear image
                 low_confidence = confidence < 50.0
 
-                return jsonify({
+                res_payload = {
                     "success": True,
                     "disease": predicted_class,
                     "affected_crop": info.get("affected_crop", "Unknown"),
@@ -672,31 +722,46 @@ def detect_disease():
                     "top_predictions": top5,
                     "low_confidence_warning": low_confidence,
                     "tta_passes": 5,
-                    "model": "CNN EfficientNetV2S + TTA"
-                })
+                    "model": "CNN ResNet18 + TTA"
+                }
         except Exception as cnn_err:
             print("CNN disease prediction error:", cnn_err)
 
-    # ── Priority 2: Hash-based fallback (before model is trained) ─────────────
-    hash_val = int(hashlib.md5(img_bytes).hexdigest(), 16)
-    fallback_diseases = [
-        {"name": "Leaf Blight",    "treatment": "Apply Mancozeb 75 WP (2.5g/L)",      "organic": "Neem oil + copper soap spray",          "severity": "Moderate", "crop": "General"},
-        {"name": "Rust (Fungal)",  "treatment": "Propiconazole 25 EC (1 ml/L)",       "organic": "Sulfur 80 WP dust application",         "severity": "High",     "crop": "Wheat/Maize"},
-        {"name": "Powdery Mildew", "treatment": "Triadimefon 25 WP (1g/L) spray",    "organic": "Milk-water (1:9) spray weekly",         "severity": "Moderate", "crop": "General"},
-        {"name": "Aphids / Pests", "treatment": "Imidacloprid 17.8 SL (0.5 ml/L)",   "organic": "Neem oil 3% + insecticidal soap",      "severity": "Moderate", "crop": "Cotton"},
-        {"name": "Healthy",        "treatment": "No treatment needed. Maintain current practices.", "organic": "N/A",                    "severity": "None",     "crop": "General"},
-    ]
-    prediction = fallback_diseases[hash_val % len(fallback_diseases)]
-    return jsonify({
-        "success": True,
-        "disease": prediction["name"],
-        "affected_crop": prediction["crop"],
-        "severity": prediction["severity"],
-        "treatment": prediction["treatment"],
-        "organic_alternatives": prediction["organic"],
-        "confidence": round(72.0 + (hash_val % 15) * 0.8, 1),
-        "model": "Fallback (train disease model for CNN accuracy)"
-    })
+    if not res_payload:
+        # ── Priority 2: Hash-based fallback ─────────────
+        hash_val = int(hashlib.md5(img_bytes).hexdigest(), 16)
+        fallback_diseases = [
+            {"name": "Leaf Blight",    "treatment": "Apply Mancozeb 75 WP (2.5g/L)",      "organic": "Neem oil + copper soap spray",          "severity": "Moderate", "crop": "General"},
+            {"name": "Rust (Fungal)",  "treatment": "Propiconazole 25 EC (1 ml/L)",       "organic": "Sulfur 80 WP dust application",         "severity": "High",     "crop": "Wheat/Maize"},
+            {"name": "Powdery Mildew", "treatment": "Triadimefon 25 WP (1g/L) spray",    "organic": "Milk-water (1:9) spray weekly",         "severity": "Moderate", "crop": "General"},
+            {"name": "Aphids / Pests", "treatment": "Imidacloprid 17.8 SL (0.5 ml/L)",   "organic": "Neem oil 3% + insecticidal soap",      "severity": "Moderate", "crop": "Cotton"},
+            {"name": "Healthy",        "treatment": "No treatment needed. Maintain current practices.", "organic": "N/A",                    "severity": "None",     "crop": "General"},
+        ]
+        prediction = fallback_diseases[hash_val % len(fallback_diseases)]
+        res_payload = {
+            "success": True,
+            "disease": prediction["name"],
+            "affected_crop": prediction["crop"],
+            "severity": prediction["severity"],
+            "treatment": prediction["treatment"],
+            "organic_alternatives": prediction["organic"],
+            "confidence": round(72.0 + (hash_val % 15) * 0.8, 1),
+            "model": "Fallback"
+        }
+
+    # Translate response fields to user's selected language
+    if target_lang != "en":
+        res_payload["disease"] = output_from_english(res_payload.get("disease", ""), target_lang)
+        res_payload["affected_crop"] = output_from_english(res_payload.get("affected_crop", ""), target_lang)
+        res_payload["severity"] = output_from_english(res_payload.get("severity", ""), target_lang)
+        res_payload["treatment"] = output_from_english(res_payload.get("treatment", ""), target_lang)
+        res_payload["organic_alternatives"] = output_from_english(res_payload.get("organic_alternatives", ""), target_lang)
+        if "top_predictions" in res_payload:
+            for item in res_payload["top_predictions"]:
+                item["disease"] = output_from_english(item.get("disease", ""), target_lang)
+        res_payload["target_language"] = target_lang
+
+    return jsonify(res_payload)
 
 # 4. Multi-Language Voice Assistant
 @app.route('/voice-assistant', methods=['POST'])
