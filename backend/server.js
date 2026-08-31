@@ -13,6 +13,7 @@ const app = express();
 
 const allowedOrigins = [
   process.env.CLIENT_URL,
+  "https://final-farm-fusion.vercel.app",
   "https://farm-fusion-eta.vercel.app",
   "http://localhost:3000",
   "http://localhost:5173",

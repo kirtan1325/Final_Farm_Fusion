@@ -22,6 +22,7 @@ function initSocket(httpServer) {
         if (!origin) return callback(null, true);
         const allowed = [
           process.env.CLIENT_URL,
+          "https://final-farm-fusion.vercel.app",
           "https://farm-fusion-eta.vercel.app",
           "http://localhost:3000",
           "http://localhost:5173",
