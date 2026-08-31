@@ -7,7 +7,6 @@ const connectDB = require("./config/db");
 
 // ── Load .env FIRST before anything reads process.env ──
 dotenv.config();
-connectDB();
 
 const app = express();
 
@@ -93,10 +92,13 @@ const { initSocket } = require("./config/socketManager");
 initSocket(server);
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`\n✅ Server running on http://localhost:${PORT}`);
+  console.log(`\n✅ Server running on port ${PORT}`);
   console.log(`   JWT_SECRET  : ${process.env.JWT_SECRET     ? "set ✅" : "MISSING ❌"}`);
   console.log(`   MONGO_URI   : ${process.env.MONGO_URI      ? "set ✅" : "MISSING ❌"}`);
   console.log(`   CLIENT_URL  : ${process.env.CLIENT_URL     ? "set ✅" : "MISSING ❌"}`);
   console.log(`   WEATHER_KEY : ${process.env.WEATHER_API_KEY && process.env.WEATHER_API_KEY !== "your_openweather_key_here" ? "set ✅" : "mock mode ⚠️"}`);
   console.log(`   Socket.IO   : enabled ✅\n`);
+
+  // Asynchronously connect database in background after port is listening
+  connectDB();
 });
