@@ -29,10 +29,12 @@ export default function CropRecommendation() {
     setError("");
     setResult(null);
     try {
+      const currentLang = localStorage.getItem('farm_fusion_lang') || 'en';
       const data = await predictCrop({
         soil_type: form.soil_type,
         season: form.season,
-        location: form.location || user?.location || "Unknown"
+        location: form.location || user?.location || "Unknown",
+        language: currentLang
       });
       if (data.success) {
         setResult(data);
