@@ -916,5 +916,10 @@ def live_prices():
 
     return jsonify({"success": True, "count": len(filtered), "data": filtered})
 
+@app.route('/', methods=['GET'])
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "online", "service": "Farm Fusion ML Engine", "model_framework": DISEASE_FRAMEWORK or "ready"}), 200
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=PORT, debug=True, use_reloader=False)

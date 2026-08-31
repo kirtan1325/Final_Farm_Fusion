@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+PORT=${PORT:-10000}
+echo "Starting Gunicorn on port $PORT..."
+if [ -d "ml_backend" ]; then
+  cd ml_backend
+fi
+exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120 app:app
