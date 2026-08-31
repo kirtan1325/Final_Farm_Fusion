@@ -49,41 +49,25 @@ if HAS_OPENAI and GROK_API_KEY:
 else:
     llm_client = None
 
-# Initialize ML Crop Recommendation Model
+# ── Asynchronous Background Model Initialization ────────────────────────────────
 import pickle
+import json
+import threading
 import numpy as np
 
-ML_MODEL = None
-ML_SCALER = None
-ML_ENCODERS = None
-ML_ACCURACY = 90.30
+ML_MODEL            = None
+ML_SCALER           = None
+ML_ENCODERS         = None
+ML_ACCURACY         = 90.30
+
+DISEASE_MODEL       = None
+DISEASE_FRAMEWORK   = None  # "tensorflow" or "pytorch"
+DISEASE_CLASS_NAMES = []
+DISEASE_MODEL_ACC   = 0.0
 
 models_dir = os.path.join(os.path.dirname(__file__), "models")
 model_path = os.path.join(models_dir, "crop_recommendation_model.pkl")
 encoders_path = os.path.join(models_dir, "crop_encoders.pkl")
-
-try:
-    if os.path.exists(model_path) and os.path.exists(encoders_path):
-        with open(model_path, "rb") as f:
-            art = pickle.load(f)
-            ML_MODEL = art["model"]
-            ML_SCALER = art["scaler"]
-            ML_ACCURACY = art.get("accuracy", 90.30)
-
-        with open(encoders_path, "rb") as f:
-            ML_ENCODERS = pickle.load(f)
-
-        print(f"Loaded trained Crop Recommendation ML model (Test Accuracy: {ML_ACCURACY}%)")
-except Exception as e:
-    print("Could not load ML crop model:", e)
-
-# ── Disease Detection CNN Model ────────────────────────────────────────────────
-import json
-
-DISEASE_MODEL        = None
-DISEASE_FRAMEWORK    = None  # "tensorflow" or "pytorch"
-DISEASE_CLASS_NAMES  = []
-DISEASE_MODEL_ACC    = 0.0
 
 disease_model_keras_path = os.path.join(models_dir, "disease_model.keras")
 disease_model_path       = os.path.join(models_dir, "disease_model.h5")
@@ -91,46 +75,68 @@ disease_model_pt_path    = os.path.join(models_dir, "disease_model_pt.pth")
 disease_classes_path     = os.path.join(models_dir, "disease_class_names.json")
 disease_accuracy_path    = os.path.join(models_dir, "disease_model_accuracy.txt")
 
-# Try loading PyTorch model first
-try:
-    if os.path.exists(disease_model_pt_path) and os.path.exists(disease_classes_path):
-        import torch
-        torch.set_num_threads(1)
-        from torchvision import models as tv_models
-        with open(disease_classes_path, "r") as f:
-            DISEASE_CLASS_NAMES = json.load(f)
-        
-        pt_model = tv_models.resnet18(weights=None)
-        pt_model.fc = torch.nn.Linear(pt_model.fc.in_features, len(DISEASE_CLASS_NAMES))
-        pt_model.load_state_dict(torch.load(disease_model_pt_path, map_location=torch.device('cpu')))
-        pt_model.eval()
-        DISEASE_MODEL = pt_model
-        DISEASE_FRAMEWORK = "pytorch"
-        if os.path.exists(disease_accuracy_path):
-            with open(disease_accuracy_path, "r") as f:
-                DISEASE_MODEL_ACC = float(f.read().strip())
-        print(f"Loaded Disease Detection PyTorch ResNet18 model ({len(DISEASE_CLASS_NAMES)} classes, "
-              f"Accuracy: {DISEASE_MODEL_ACC}%)")
-except Exception as _pt_err:
-    print(f"Notice: Found {os.path.basename(disease_model_pt_path)} but failed to load: {_pt_err}")
+def init_all_models():
+    global ML_MODEL, ML_SCALER, ML_ENCODERS, ML_ACCURACY
+    global DISEASE_MODEL, DISEASE_FRAMEWORK, DISEASE_CLASS_NAMES, DISEASE_MODEL_ACC
 
-# Fall back to TensorFlow only if TF model files exist and PyTorch model was not loaded
-if DISEASE_MODEL is None and (os.path.exists(disease_model_keras_path) or os.path.exists(disease_model_path)):
+    # 1. Load Crop ML Model
     try:
-        import tensorflow as tf
-        _model_to_load = disease_model_keras_path if os.path.exists(disease_model_keras_path) else disease_model_path
-        if os.path.exists(disease_classes_path):
-            DISEASE_MODEL = tf.keras.models.load_model(_model_to_load)
-            DISEASE_FRAMEWORK = "tensorflow"
+        if os.path.exists(model_path) and os.path.exists(encoders_path):
+            with open(model_path, "rb") as f:
+                art = pickle.load(f)
+                ML_MODEL = art["model"]
+                ML_SCALER = art["scaler"]
+                ML_ACCURACY = art.get("accuracy", 90.30)
+
+            with open(encoders_path, "rb") as f:
+                ML_ENCODERS = pickle.load(f)
+
+            print(f"Loaded trained Crop Recommendation ML model (Test Accuracy: {ML_ACCURACY}%)")
+    except Exception as e:
+        print("Could not load ML crop model:", e)
+
+    # 2. Load PyTorch / TensorFlow Disease Detection Model
+    try:
+        if os.path.exists(disease_model_pt_path) and os.path.exists(disease_classes_path):
+            import torch
+            torch.set_num_threads(1)
+            from torchvision import models as tv_models
             with open(disease_classes_path, "r") as f:
                 DISEASE_CLASS_NAMES = json.load(f)
+            
+            pt_model = tv_models.resnet18(weights=None)
+            pt_model.fc = torch.nn.Linear(pt_model.fc.in_features, len(DISEASE_CLASS_NAMES))
+            pt_model.load_state_dict(torch.load(disease_model_pt_path, map_location=torch.device('cpu')))
+            pt_model.eval()
+            DISEASE_MODEL = pt_model
+            DISEASE_FRAMEWORK = "pytorch"
             if os.path.exists(disease_accuracy_path):
                 with open(disease_accuracy_path, "r") as f:
                     DISEASE_MODEL_ACC = float(f.read().strip())
-            print(f"Loaded Disease Detection TensorFlow model ({len(DISEASE_CLASS_NAMES)} classes, "
+            print(f"Loaded Disease Detection PyTorch ResNet18 model ({len(DISEASE_CLASS_NAMES)} classes, "
                   f"Accuracy: {DISEASE_MODEL_ACC}%)")
-    except Exception as _de:
-        print("TensorFlow disease model load info:", _de)
+    except Exception as _pt_err:
+        print(f"Notice: Found {os.path.basename(disease_model_pt_path)} but failed to load: {_pt_err}")
+
+    if DISEASE_MODEL is None and (os.path.exists(disease_model_keras_path) or os.path.exists(disease_model_path)):
+        try:
+            import tensorflow as tf
+            _model_to_load = disease_model_keras_path if os.path.exists(disease_model_keras_path) else disease_model_path
+            if os.path.exists(disease_classes_path):
+                DISEASE_MODEL = tf.keras.models.load_model(_model_to_load)
+                DISEASE_FRAMEWORK = "tensorflow"
+                with open(disease_classes_path, "r") as f:
+                    DISEASE_CLASS_NAMES = json.load(f)
+                if os.path.exists(disease_accuracy_path):
+                    with open(disease_accuracy_path, "r") as f:
+                        DISEASE_MODEL_ACC = float(f.read().strip())
+                print(f"Loaded Disease Detection TensorFlow model ({len(DISEASE_CLASS_NAMES)} classes, "
+                      f"Accuracy: {DISEASE_MODEL_ACC}%)")
+        except Exception as _tf_err:
+            print(f"Notice: Failed to load TensorFlow model: {_tf_err}")
+
+# Launch model loading asynchronously in background thread so WSGI app imports in 0.001s
+threading.Thread(target=init_all_models, daemon=True).start()
 
 if DISEASE_MODEL is None:
     print("Notice: Serving rule-based crop disease diagnostic engine.")
