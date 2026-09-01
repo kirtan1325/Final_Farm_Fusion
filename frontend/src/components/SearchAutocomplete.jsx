@@ -73,7 +73,7 @@ export default function SearchAutocomplete({
   return (
     <div className={`relative w-full ${className}`} ref={wrapperRef}>
       <div className="relative flex items-center w-full">
-        <div className="absolute left-3 text-gray-400">
+        <div className="absolute left-3.5 text-[#00f4fe] pointer-events-none z-10">
           <Search size={16} />
         </div>
         <input
@@ -82,7 +82,7 @@ export default function SearchAutocomplete({
           onChange={handleInputChange}
           placeholder={placeholder}
           onFocus={() => { if (suggestions.length > 0) setShowDropdown(true); }}
-          className="w-full pl-9 pr-10 py-2 bg-white border border-gray-200 rounded-xl outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all text-sm text-gray-700"
+          className="w-full !pl-10 !pr-10 py-2 bg-[#062c1d] border border-[rgba(0,244,254,0.3)] rounded-xl outline-none focus:border-[#00f4fe] focus:ring-2 focus:ring-[#00f4fe]/20 transition-all text-sm text-white"
         />
         {loading && (
           <div className="absolute right-3 text-emerald-500">

@@ -246,9 +246,9 @@ export default function CropAdvisory() {
                           </div>
                         )}
                         {a.soilType && (
-                          <div className="bg-gray-50 rounded-xl px-3 py-2">
-                            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Soil</p>
-                            <p className="text-xs text-gray-700 font-semibold mt-0.5 truncate">🌍 {a.soilType}</p>
+                          <div className="bg-[#0b0f10]/80 border border-white/10 rounded-xl px-3 py-2 col-span-2 sm:col-span-1">
+                            <p className="text-[10px] text-[#a8cfb9] font-bold uppercase tracking-wide">Soil</p>
+                            <p className="text-xs text-white font-medium mt-0.5 break-words">🌍 {a.soilType}</p>
                           </div>
                         )}
                       </div>

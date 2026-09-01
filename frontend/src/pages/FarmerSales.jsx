@@ -243,16 +243,16 @@ export default function FarmerSales() {
           </div>
 
           {/* Controls: Filters & Search */}
-          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 ff-fade-in ff-stagger-2">
-            <div className="flex flex-wrap gap-2">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 ff-fade-in ff-stagger-2 pl-1 sm:pl-2">
+            <div className="flex flex-wrap gap-2.5 items-center">
               {FILTER_TABS.map(tab => (
                 <button
                   key={tab}
                   onClick={() => setFilter(tab)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider font-semibold transition-all border cursor-pointer ${
+                  className={`px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider font-bold transition-all border cursor-pointer ${
                     filter === tab
-                      ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]"
-                      : "bg-black/20 text-gray-400 border-gray-800 hover:text-white hover:border-gray-700"
+                      ? "bg-[#00f4fe] text-[#002021] border-[#00f4fe] shadow-[0_0_15px_rgba(0,244,254,0.4)]"
+                      : "bg-[#062c1d]/60 text-[#a8cfb9] border-white/10 hover:border-[#00f4fe]/40 hover:text-white"
                   }`}
                 >
                   {tab}

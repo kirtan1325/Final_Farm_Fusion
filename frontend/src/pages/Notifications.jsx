@@ -114,18 +114,18 @@ export default function Notifications() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       <SharedSidebar open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} activePath="/notifications" />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
 
         {/* ── Top Bar ── */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden cursor-pointer text-gray-500 hover:text-gray-800 transition-colors">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden cursor-pointer text-white hover:text-[#00f4fe] transition-colors">
             <MenuIcon />
           </button>
           <span className="text-xl">🔔</span>
-          <span className="font-bold text-gray-900 flex-1 text-base">Notifications</span>
+          <span className="font-bold text-white flex-1 text-base">Notifications & System Alerts</span>
 
           {unreadCount > 0 && (
             <button
@@ -140,13 +140,12 @@ export default function Notifications() {
         {/* ── Main ── */}
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-5 max-w-3xl w-full mx-auto">
 
-          {/* Page title */}
+          {/* Subtitle */}
           <div className="ff-fade-in ff-stagger-1">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Notifications</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-[#a8cfb9]">
               {unreadCount > 0
                 ? <><span className="ff-badge ff-badge-green">{unreadCount} unread</span>&nbsp;notification{unreadCount !== 1 ? "s" : ""}</>
-                : <span className="text-emerald-600 font-medium">✓ All caught up!</span>
+                : <span className="text-[#4ce346] font-medium">✓ All notifications caught up!</span>
               }
             </p>
           </div>

@@ -275,20 +275,25 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--ff-radius-sm);
   padding: 0 0.875rem;
   transition: all 0.2s ease;
+  position: relative;
 }
 .ff-input-group:focus-within {
   border-color: var(--ff-neon-cyan) !important;
   box-shadow: 0 0 12px rgba(0, 244, 254, 0.3) !important;
 }
+.ff-input-group svg {
+  flex-shrink: 0;
+}
 .ff-input-group input {
   flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #ffffff !important;
   font-size: 0.875rem;
   font-family: var(--ff-font);
   min-width: 0;
+  padding: 0 !important;
 }
 
 /* ─── Growth Signal Chips & Badges ────────────────────────── */

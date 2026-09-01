@@ -130,11 +130,11 @@ export default function Weather() {
                 onClick={() => { setCity(c); fetchWeather(c); }}
                 className="px-4 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer shadow-sm"
                 style={city === c
-                  ? { background: "linear-gradient(135deg,#3b82f6,#1d4ed8)", color: "#fff", border: "none", boxShadow: "0 2px 8px rgba(59,130,246,0.35)" }
-                  : { background: "#fff", color: "#6b7280", borderColor: "#d1d5db" }
+                  ? { background: "#00f4fe", color: "#002021", borderColor: "#00f4fe", boxShadow: "0 0 15px rgba(0, 244, 254, 0.4)", fontWeight: 700 }
+                  : { background: "#062c1d", color: "#a8cfb9", borderColor: "rgba(0, 244, 254, 0.25)" }
                 }
               >
-                {c}
+                📍 {c}
               </button>
             ))}
           </div>

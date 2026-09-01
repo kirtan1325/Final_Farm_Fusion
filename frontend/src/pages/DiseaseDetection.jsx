@@ -98,41 +98,38 @@ export default function DiseaseDetection() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#101415" }}>
       <SharedSidebar activePath="/disease-detection" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Bar */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-white">
             <MenuIcon />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl"
-              style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl shadow-[0_0_10px_rgba(0,244,254,0.3)]"
+              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
               🍃
             </div>
             <div>
-              <h1 className="font-bold text-gray-900 leading-tight">AI Disease Detection</h1>
-              <p className="text-xs text-gray-500 hidden sm:block">Deep learning powered crop health scanner</p>
+              <h1 className="font-bold text-white text-base leading-tight">AI Disease Detection</h1>
+              <p className="text-xs text-[#a8cfb9] hidden sm:block">Deep learning plant leaf scanner & treatment guide</p>
             </div>
           </div>
           {user && (
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-              style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 shadow-[0_0_10px_rgba(0,244,254,0.3)]"
+              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
               {getInitials(user.name)}
             </div>
           )}
         </header>
 
         <main className="flex-1 px-4 sm:px-6 py-8 max-w-5xl mx-auto w-full">
-          {/* Page heading */}
-          <div className="mb-8 ff-fade-in">
-            <h1 className="text-3xl font-extrabold text-gray-900">
-              Crop <span className="ff-gradient-text">Health Scanner</span>
-            </h1>
-            <p className="text-gray-500 mt-2 text-sm">
-              Upload a photo of a diseased or pest-infested plant leaf to instantly identify the issue and get organic/chemical remedies.
+          {/* Page description */}
+          <div className="mb-6 ff-fade-in">
+            <p className="text-[#a8cfb9] text-sm">
+              Upload a photo of a diseased or pest-infested plant leaf to instantly identify the issue and receive organic & chemical remedies.
             </p>
           </div>
 

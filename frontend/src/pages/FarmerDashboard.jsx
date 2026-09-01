@@ -4,6 +4,7 @@ import { getMyCrops, createCrop, updateCrop, deleteCrop } from "../api/cropServi
 import { getFarmerStats } from "../api/statsService";
 import { useAuth } from "../context/AuthContext";
 import { useNotifications } from "../context/NotificationContext";
+import SharedSidebar from "../components/SharedSidebar";
 import GoogleTranslate from "../components/GoogleTranslate";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 
@@ -740,7 +741,7 @@ export default function FarmerDashboard() {
   if (loading) return <ShimmerLoading />;
 
   return (
-    <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#101415] font-sans overflow-hidden">
       {showModal && (
         <CropFormModal
           initialData={editingCrop}
@@ -757,8 +758,7 @@ export default function FarmerDashboard() {
         />
       )}
 
-      <Sidebar active={active} setActive={setActive} open={sidebarOpen} setOpen={setSidebarOpen}
-        user={user} onLogout={handleLogout} onNavigate={navigate} />
+      <SharedSidebar activePath="/farmer/dashboard" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
 

@@ -82,56 +82,56 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       <SharedSidebar activePath={`/${user?.role}/settings`} open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Topbar */}
         <header className="ff-topbar flex-shrink-0">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-gray-500 cursor-pointer mr-1"><MenuIcon /></button>
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-white hover:text-[#00f4fe] transition-colors cursor-pointer mr-1"><MenuIcon /></button>
           <div className="flex items-center gap-2 flex-1">
             <span className="text-lg">⚙️</span>
-            <span className="font-bold text-gray-900 text-base">Settings</span>
+            <span className="font-bold text-white text-base">Account Settings</span>
           </div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-              style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-[0_0_10px_rgba(0,244,254,0.3)]"
+              style={{ background: "linear-gradient(135deg,#00f4fe,#4ce346)", color: "#002021" }}>
               {getInitials(user?.name)}
             </div>
-            <span className="hidden sm:block text-sm font-semibold text-gray-700">{user?.name}</span>
+            <span className="hidden sm:block text-xs font-bold text-white">{user?.name}</span>
           </div>
         </header>
 
         {/* Body */}
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6 max-w-4xl w-full mx-auto">
-          {/* Page header */}
+          {/* Subtitle description */}
           <div className="ff-fade-in">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Settings</h1>
-            <p className="text-sm text-gray-500 mt-1">Manage your account preferences and profile information.</p>
+            <p className="text-sm text-[#a8cfb9]">Manage your profile information, password security, and account preferences.</p>
           </div>
 
           {/* Alert banners */}
           {success && (
-            <div className="ff-toast ff-toast-success flex items-center gap-2 text-sm text-green-700 font-medium ff-slide-in-right">
+            <div className="ff-toast ff-toast-success flex items-center gap-2 text-sm text-emerald-400 font-medium ff-slide-in-right">
               <CheckIcon /> {success}
             </div>
           )}
           {error && (
-            <div className="ff-toast ff-toast-error flex items-center gap-2 text-sm text-red-700 font-medium ff-slide-in-right">
+            <div className="ff-toast ff-toast-error flex items-center gap-2 text-sm text-red-400 font-medium ff-slide-in-right">
               ⚠ {error}
             </div>
           )}
 
           {/* Section tabs */}
-          <div className="ff-card p-1 flex gap-1 w-fit ff-fade-in">
+          <div className="ff-card p-2 flex flex-wrap gap-2.5 w-full sm:w-fit ff-fade-in border border-[rgba(0,244,254,0.25)]">
             {SECTIONS.map(s => (
               <button key={s} onClick={() => setActiveSection(s)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer"
-                style={activeSection === s
-                  ? { background: "linear-gradient(135deg,#10b981,#059669)", color: "#fff", boxShadow: "0 2px 8px rgba(16,185,129,0.3)" }
-                  : { color: "#6b7280", background: "transparent" }}>
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+                  activeSection === s
+                    ? "bg-[#00f4fe] text-[#002021] border-[#00f4fe] shadow-[0_0_15px_rgba(0,244,254,0.4)]"
+                    : "bg-[#062c1d]/60 text-[#a8cfb9] border-white/10 hover:border-[#00f4fe]/40 hover:text-white"
+                }`}>
                 {SECTION_ICONS[s]}
-                <span className="hidden sm:inline">{s}</span>
+                <span>{s}</span>
               </button>
             ))}
           </div>

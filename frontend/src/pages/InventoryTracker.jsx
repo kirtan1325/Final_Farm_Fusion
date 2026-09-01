@@ -97,7 +97,7 @@ export default function InventoryTracker() {
   // ── Shimmer Loading ──────────────────────────────────
   if (loading) {
     return (
-      <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+      <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
         <SharedSidebar activePath="/farmer/inventory" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
         <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
           {/* Topbar skeleton */}
@@ -127,7 +127,7 @@ export default function InventoryTracker() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       <SharedSidebar activePath="/farmer/inventory" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
@@ -136,23 +136,23 @@ export default function InventoryTracker() {
         <header className="ff-topbar">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-500 hover:text-gray-700 transition-colors mr-2 cursor-pointer"
+            className="lg:hidden text-white hover:text-[#00f4fe] transition-colors mr-2 cursor-pointer"
           >
             <Menu size={22} />
           </button>
           <Link
             to="/farmer/dashboard"
-            className="flex items-center gap-1.5 text-gray-500 hover:text-emerald-600 transition-colors mr-3"
+            className="flex items-center gap-1.5 text-[#a8cfb9] hover:text-[#00f4fe] transition-colors mr-3 text-xs font-bold uppercase tracking-wider"
           >
-            <ArrowLeft size={18} />
-            <span className="hidden sm:inline text-sm font-medium">Back</span>
+            <ArrowLeft size={16} />
+            <span className="hidden sm:inline">Dashboard</span>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
-              <PackageOpen size={14} className="text-white" />
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(0,244,254,0.3)]"
+              style={{ background: "linear-gradient(135deg,#00f4fe,#4ce346)" }}>
+              <PackageOpen size={14} className="text-[#002021]" />
             </div>
-            <span className="font-bold text-gray-800 text-base">Inventory Tracker</span>
+            <span className="font-bold text-white text-base">Inventory & Expenses</span>
           </div>
         </header>
 
