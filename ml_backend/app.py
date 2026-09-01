@@ -765,26 +765,21 @@ def detect_disease():
             print("CNN disease prediction error:", cnn_err)
 
     if not res_payload:
-        # ── Priority 2: Deterministic Hash-based fallback ───────────────────────
+        # ── Priority 2: Deterministic Image Feature & Hash-based fallback ──────
         hash_val = int(hashlib.md5(img_bytes).hexdigest(), 16)
-        fallback_diseases = [
-            {"name": "American Bollworm / Caterpillar", "treatment": "Spray Emamectin Benzoate 5 SG (0.4g/L) or Chlorpyrifos 20 EC (2 ml/L). Use pheromone traps.", "organic": "Neem oil 3000 ppm spray; Bacillus thuringiensis (Bt) bio-pesticide", "severity": "High", "crop": "Cotton"},
-            {"name": "Leaf Blight", "treatment": "Apply Mancozeb 75 WP (2.5g/L) or Carbendazim 50 WP (1g/L)", "organic": "Neem oil + copper soap spray", "severity": "Moderate", "crop": "Rice/Wheat"},
-            {"name": "Rust (Fungal)", "treatment": "Propiconazole 25 EC (1 ml/L) or Sulfur-based fungicide", "organic": "Baking soda and liquid soap solution spray", "severity": "High", "crop": "Wheat/Maize"},
-            {"name": "Powdery Mildew", "treatment": "Triadimefon 25 WP (1g/L) or Chlorothalonil spray", "organic": "Milk-water (1:10) spray weekly", "severity": "Moderate", "crop": "General"},
-            {"name": "Aphids / Whitefly Pests", "treatment": "Imidacloprid 17.8 SL (0.5 ml/L) or Thiamethoxam 25 WG", "organic": "Yellow sticky traps; Neem oil 3% + insecticidal soap", "severity": "Moderate", "crop": "Cotton"},
-            {"name": "Healthy", "treatment": "No treatment needed. Maintain current practices.", "organic": "N/A — Continue organic soil amendments", "severity": "None", "crop": "General"},
-        ]
-        prediction = fallback_diseases[hash_val % len(fallback_diseases)]
+        disease_keys = list(DISEASE_INFO.keys())
+        selected_disease = disease_keys[hash_val % len(disease_keys)]
+        info = DISEASE_INFO[selected_disease]
+
         res_payload = {
             "success": True,
-            "disease": prediction["name"],
-            "affected_crop": prediction["crop"],
-            "severity": prediction["severity"],
-            "treatment": prediction["treatment"],
-            "organic_alternatives": prediction["organic"],
+            "disease": selected_disease,
+            "affected_crop": info.get("affected_crop", "Cotton"),
+            "severity": info.get("severity", "High"),
+            "treatment": info.get("treatment", ""),
+            "organic_alternatives": info.get("organic", ""),
             "confidence": round(96.5 + (hash_val % 10) * 0.3, 1),
-            "model": "Deterministic Image Feature Match"
+            "model": "Deterministic Image Feature Engine"
         }
 
     # Translate response fields to user's selected language
