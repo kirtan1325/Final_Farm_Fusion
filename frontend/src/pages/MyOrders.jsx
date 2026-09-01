@@ -336,7 +336,7 @@ export default function MyOrders() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
+    <div className="flex h-screen overflow-hidden text-white" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       {negotiateTarget && (
         <NegotiationModal request={negotiateTarget} onClose={() => setNegotiateTarget(null)} isFarmer={false} />
       )}

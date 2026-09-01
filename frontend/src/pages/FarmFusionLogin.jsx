@@ -60,7 +60,7 @@ const PinIcon      = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill
 
 const InputField = ({ label, type = "text", placeholder, value, onChange, icon, rightElement, required, autoComplete = "off" }) => (
   <div className="flex flex-col gap-1.5 text-left">
-    <label className="text-sm font-semibold text-gray-300">{label}</label>
+    <label className="text-xs font-bold uppercase tracking-wider text-[#00f4fe]">{label}</label>
     <div className="ff-input-group">
       {icon}
       <input
@@ -70,7 +70,7 @@ const InputField = ({ label, type = "text", placeholder, value, onChange, icon, 
         onChange={onChange}
         required={required}
         autoComplete={autoComplete}
-        className="placeholder-gray-600 w-full bg-transparent text-white outline-none"
+        className="placeholder-gray-500 w-full bg-transparent text-white outline-none text-sm"
       />
       {rightElement}
     </div>
@@ -313,16 +313,16 @@ export default function FarmFusionLogin() {
   const handleFacebook = () => { window.location.href = `${BACKEND}/api/auth/facebook`; };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative text-gray-900" style={{ background: "#F4F6F4" }}>
+    <div className="min-h-screen flex flex-col font-sans relative text-white" style={{ background: "#101415" }}>
       {/* ── Navbar ── */}
-      <nav className="w-full px-4 sm:px-8 h-14 flex items-center justify-between flex-shrink-0 border-b border-gray-200 backdrop-blur-md sticky top-0 z-40 bg-white">
+      <nav className="w-full px-4 sm:px-8 h-14 flex items-center justify-between flex-shrink-0 border-b border-gray-800 backdrop-blur-md sticky top-0 z-40 bg-[#0a0e10]/90">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-xs" style={{ background: "#0E4B33", color: "#FFFFFF" }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg" style={{ background: "linear-gradient(135deg, #10b981, #00f4fe)", color: "#002021" }}>
             🌱
           </div>
-          <span className="font-extrabold text-gray-900 text-base sm:text-lg tracking-tight font-sans">Farm Fusion</span>
+          <span className="font-extrabold text-white text-base sm:text-lg tracking-tight font-sans">Farm Fusion</span>
         </div>
-        <button className="hidden sm:flex items-center gap-1.5 text-xs font-bold rounded-lg px-3 py-1.5 transition-colors cursor-pointer border border-[#0E4B33] text-[#0E4B33] hover:bg-[#E6F9EF]">
+        <button className="hidden sm:flex items-center gap-1.5 text-xs font-bold rounded-lg px-3 py-1.5 transition-colors cursor-pointer border border-[#00f4fe] text-[#00f4fe] hover:bg-[#00f4fe]/10">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
@@ -332,12 +332,12 @@ export default function FarmFusionLogin() {
 
       {/* ── Main Panel ── */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10 max-w-6xl mx-auto w-full">
-        <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col lg:flex-row ff-fade-in border border-gray-200 shadow-xl"
-          style={{ background: "#FFFFFF" }}>
+        <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col lg:flex-row ff-fade-in border border-[rgba(0,244,254,0.25)] shadow-2xl"
+          style={{ background: "#0d1315" }}>
 
-          {/* ── Left Panel (Deep Forest Green visual card) ── */}
+          {/* ── Left Panel (Deep Emerald Visual Card) ── */}
           <div className="w-full lg:w-[42%] p-6 sm:p-8 flex flex-col justify-between gap-6 relative overflow-hidden"
-            style={{ background: "#0E4B33" }}>
+            style={{ background: "linear-gradient(135deg, #062c1d, #091c13)" }}>
             
             {/* Embedded Three.js Canvas */}
             <div ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-40" />
@@ -355,14 +355,14 @@ export default function FarmFusionLogin() {
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-3">
                 Smart Agriculture Network & Marketplace
               </h1>
-              <p className="text-white/80 text-xs sm:text-sm leading-relaxed">
+              <p className="text-[#a8cfb9] text-xs sm:text-sm leading-relaxed">
                 Connect directly with farmers, monitor crop health with AI, track mandi prices, and negotiate direct orders.
               </p>
             </div>
 
             {/* Middle Section: Role indicator */}
             <div className="relative z-10">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#95F2BE] mb-2">Select Your Role</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#00f4fe] mb-2">Select Your Role</p>
               <div className="grid grid-cols-2 gap-2 mb-3">
                 {ROLES.map((r) => {
                   const isSelected = role === r.id;
@@ -373,18 +373,18 @@ export default function FarmFusionLogin() {
                       onClick={() => setRole(r.id)}
                       className="p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all cursor-pointer text-center"
                       style={{
-                        background: isSelected ? "#95F2BE" : "rgba(255,255,255,0.08)",
-                        borderColor: isSelected ? "#95F2BE" : "rgba(255,255,255,0.2)",
+                        background: isSelected ? "linear-gradient(135deg, #10b981, #059669)" : "rgba(255,255,255,0.05)",
+                        borderColor: isSelected ? "#00f4fe" : "rgba(255,255,255,0.15)",
                       }}
                     >
-                      <span style={{ color: isSelected ? "#0E4B33" : "#FFFFFF" }}>{r.icon}</span>
-                      <span style={{ color: isSelected ? "#0E4B33" : "#FFFFFF" }} className="text-xs font-bold">{r.label}</span>
+                      <span className="text-white text-lg">{r.icon}</span>
+                      <span className="text-xs font-bold text-white">{r.label}</span>
                     </button>
                   );
                 })}
               </div>
 
-              <p className="text-xs text-center text-white/70">
+              <p className="text-xs text-center text-[#a8cfb9]">
                 {tab === "register"
                   ? selectedRole?.description
                   : "Verified role access for Farmers & Buyers"}
@@ -397,28 +397,28 @@ export default function FarmFusionLogin() {
                 {["👩‍🌾","👨‍🌾","🧑‍🌾"].map((emoji, i) => (
                   <span key={i}
                     className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${i > 0 ? "-ml-2" : ""}`}
-                    style={{ background: "rgba(255,255,255,0.15)", border: "2px solid #0E4B33" }}>
+                    style={{ background: "rgba(255,255,255,0.15)", border: "2px solid #00f4fe" }}>
                     {emoji}
                   </span>
                 ))}
               </div>
-              <span className="text-xs font-semibold text-white/90">Trusted by 5,000+ Farmers & Buyers</span>
+              <span className="text-xs font-semibold text-[#a8cfb9]">Trusted by 5,000+ Farmers & Buyers</span>
             </div>
           </div>
 
-          {/* ── Right Panel (White Form Container) ── */}
-          <div className="w-full lg:w-[58%] p-6 sm:p-8 flex flex-col justify-center bg-white">
+          {/* ── Right Panel (Dark Glass Form Container) ── */}
+          <div className="w-full lg:w-[58%] p-6 sm:p-8 flex flex-col justify-center bg-[#0a0e10]">
 
             {/* Heading */}
             <div className="mb-5 text-left">
-              <h2 className="text-2xl font-extrabold tracking-tight text-gray-900 mb-1">
+              <h2 className="text-2xl font-extrabold tracking-tight text-white mb-1">
                 {tab === "login" ? (
-                  <>Welcome Back to <span className="text-[#0E4B33]">Farm Fusion</span></>
+                  <>Welcome Back to <span className="ff-gradient-text">Farm Fusion</span></>
                 ) : (
-                  <>Create Your <span className="text-[#0E4B33]">Account</span></>
+                  <>Create Your <span className="ff-gradient-text">Account</span></>
                 )}
               </h2>
-              <p className="text-gray-500 text-xs">
+              <p className="text-[#a8cfb9] text-xs">
                 {tab === "login"
                   ? "Sign in to access your direct marketplace and AI farm tools"
                   : `Sign up to connect as a ${selectedRole?.label}`}
@@ -426,13 +426,13 @@ export default function FarmFusionLogin() {
             </div>
 
             {/* Tab switcher */}
-            <div className="flex gap-1 rounded-xl p-1 mb-5 bg-[#F4F6F4] border border-gray-200">
+            <div className="flex gap-1 rounded-xl p-1 mb-6 bg-[#05080a] border border-gray-800 flex-shrink-0">
               {["login","register"].map((t) => (
-                <button key={t} onClick={() => switchTab(t)}
+                <button key={t} type="button" onClick={() => switchTab(t)}
                   className="flex-1 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer"
                   style={{
-                    background: tab === t ? "#0E4B33" : "transparent",
-                    color: tab === t ? "#FFFFFF" : "#6B7280",
+                    background: tab === t ? "linear-gradient(135deg, #10b981, #059669)" : "transparent",
+                    color: tab === t ? "#FFFFFF" : "#94a3b8",
                   }}>
                   {t === "login" ? "Sign In" : "Register"}
                 </button>
@@ -440,34 +440,36 @@ export default function FarmFusionLogin() {
             </div>
 
             {/* Social buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-4">
-              <button onClick={handleGoogle}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-gray-200 border border-gray-800 hover:border-gray-600 hover:bg-white/5 transition-all cursor-pointer bg-transparent">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+              <button type="button" onClick={handleGoogle}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-white border border-gray-700 bg-[#131b1e] hover:border-[#00f4fe] hover:bg-white/10 transition-all cursor-pointer">
                 <GoogleIcon /> Continue with Google
               </button>
-              <button onClick={handleFacebook}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-gray-200 border border-gray-800 hover:border-gray-600 hover:bg-white/5 transition-all cursor-pointer bg-transparent">
+              <button type="button" onClick={handleFacebook}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-white border border-gray-700 bg-[#131b1e] hover:border-[#00f4fe] hover:bg-white/10 transition-all cursor-pointer">
                 <FacebookIcon /> Continue with Facebook
               </button>
             </div>
 
             {/* OR divider */}
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-6">
+
               <div className="flex-1 h-px bg-gray-800"/>
-              <span className="text-[11px] font-medium text-gray-400 whitespace-nowrap">Or sign in with email</span>
+              <span className="text-[11px] font-medium text-[#a8cfb9] whitespace-nowrap">Or sign in with email</span>
               <div className="flex-1 h-px bg-gray-800"/>
             </div>
 
             {/* Error banner */}
             {error && (
               <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-xs font-semibold mb-4 text-left border border-red-950/40"
-                style={{ background: "rgba(239, 68, 68, 0.06)", color: "#f87171" }}>
+                style={{ background: "rgba(239, 68, 68, 0.1)", color: "#f87171" }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="flex-shrink-0">
                   <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
                 <span>{error}</span>
               </div>
             )}
+
 
             {/* ══ LOGIN FORM ══ */}
             {tab === "login" && (
@@ -485,8 +487,8 @@ export default function FarmFusionLogin() {
 
                 <div className="flex flex-col gap-1.5 text-left">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-semibold text-gray-300">Password</label>
-                    <button type="button" className="text-xs font-semibold text-emerald-400 hover:underline cursor-pointer">
+                    <label className="text-xs font-bold uppercase tracking-wider text-[#00f4fe]">Password</label>
+                    <button type="button" className="text-xs font-semibold text-[#00f4fe] hover:underline cursor-pointer">
                       Forgot password?
                     </button>
                   </div>
@@ -510,16 +512,23 @@ export default function FarmFusionLogin() {
 
                 <label className="flex items-center gap-2.5 cursor-pointer select-none py-1 text-left">
                   <input type="checkbox" checked={remember} onChange={() => setRemember(!remember)}
-                    className="w-4 h-4 rounded border-gray-700 bg-black cursor-pointer accent-emerald-500"/>
-                  <span className="text-xs text-gray-300">Remember me on this device</span>
+                    className="w-4 h-4 rounded border-gray-700 bg-[#060a0c] cursor-pointer accent-[#00f4fe]"/>
+                  <span className="text-xs text-[#a8cfb9]">Remember me on this device</span>
                 </label>
 
                 <button type="submit" disabled={loading}
-                  className="ff-btn ff-btn-primary w-full py-3 text-xs tracking-wider uppercase font-bold mt-1">
+                  className="ff-btn ff-btn-cyan w-full py-3.5 text-sm tracking-wider uppercase font-extrabold mt-1">
                   {loading ? (
-                    <span className="ff-spinner" style={{ width: "16px", height: "16px", borderWidth: "2px", borderTopColor: "#fff", borderColor: "rgba(255,255,255,0.3)" }} />
-                  ) : null}
-                  {loading ? "Signing in..." : success ? "✓ Access Granted" : "Sign In to Farm Fusion"}
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-4 w-4 text-current" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                      </svg>
+                      Authenticating...
+                    </span>
+                  ) : (
+                    "Sign In to Farm Fusion"
+                  )}
                 </button>
 
                 <p className="text-center text-xs text-gray-400 mt-2">

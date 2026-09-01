@@ -314,17 +314,17 @@ export default function Marketplace() {
   const pagedCrops = allCrops.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       {selectedCropImage && (
         <ImageModal crop={selectedCropImage} onClose={() => setSelectedCropImage(null)} />
       )}
 
       <SharedSidebar activePath="/marketplace" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto text-white">
         {/* Topbar */}
         <header className="ff-topbar flex-shrink-0">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-gray-700 hover:text-gray-900 transition-colors cursor-pointer mr-2">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-[#a8cfb9] hover:text-white transition-colors cursor-pointer mr-2">
             <MenuIcon />
           </button>
 
@@ -339,18 +339,19 @@ export default function Marketplace() {
               placeholder="Search for fresh crops, farmers, or varieties..."
             />
           </div>
-          <span className="hidden sm:block text-xs font-semibold text-gray-500 ml-3">
+          <span className="hidden sm:block text-xs font-semibold text-[#a8cfb9] ml-3">
             {allCrops.length} product{allCrops.length !== 1 ? "s" : ""}
           </span>
         </header>
 
         {/* Page body */}
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
-          {/* Main Title Banner (Matching Screenshot 3) */}
+          {/* Main Title Banner */}
           <div className="ff-fade-in">
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Marketplace & Buyer Matching</h1>
-            <p className="text-gray-600 text-sm mt-1">AI-optimized insights to maximize your harvest value.</p>
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">Marketplace & <span className="ff-gradient-text">Buyer Matching</span></h1>
+            <p className="text-[#a8cfb9] text-sm mt-1">AI-optimized insights to maximize your harvest value.</p>
           </div>
+
 
           {/* Error Banner */}
           {error && (

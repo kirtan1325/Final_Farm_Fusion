@@ -741,7 +741,7 @@ export default function FarmerDashboard() {
   if (loading) return <ShimmerLoading />;
 
   return (
-    <div className="flex h-screen bg-[#F4F6F4] font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#101415] font-sans overflow-hidden text-white">
       {showModal && (
         <CropFormModal
           initialData={editingCrop}
@@ -765,12 +765,12 @@ export default function FarmerDashboard() {
         {/* ── Top bar ── */}
         <header className="ff-topbar flex-shrink-0 sticky top-0 z-20">
           <button onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-1 rounded-lg hover:bg-gray-100 mr-1">
+            className="lg:hidden text-[#a8cfb9] hover:text-white transition-colors cursor-pointer p-1 rounded-lg hover:bg-white/10 mr-1">
             <MenuIcon />
           </button>
 
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-bold text-gray-900 truncate leading-tight">
+            <h1 className="text-xl font-bold text-white truncate leading-tight">
               Farm Dashboard
             </h1>
           </div>
@@ -782,7 +782,7 @@ export default function FarmerDashboard() {
               onChange={(e) => setSearch(e.target.value)} />
           </div>
 
-          <button onClick={() => { setEditingCrop(null); setShowModal(true); }} className="ff-btn ff-btn-primary flex-shrink-0" style={{ background: "#0E4B33" }}>
+          <button onClick={() => { setEditingCrop(null); setShowModal(true); }} className="ff-btn ff-btn-primary flex-shrink-0">
             <PlusIcon />
             <span className="hidden sm:inline">Add New Crop</span>
             <span className="sm:hidden">Add</span>
@@ -800,43 +800,44 @@ export default function FarmerDashboard() {
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
 
-          {/* Welcome Banner + Soil Moisture Dark Card (Matching Screenshot 2) */}
+          {/* Welcome Banner + Soil Moisture Dark Card */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch ff-fade-in">
-            <div className="lg:col-span-2 ff-card p-6 flex flex-col justify-between bg-white">
+            <div className="lg:col-span-2 ff-card p-6 flex flex-col justify-between">
               <div>
-                <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-                  Welcome back, {user?.name?.split(" ")[0] || "John"}.
+                <h1 className="text-3xl font-extrabold text-white tracking-tight">
+                  Welcome back, <span className="ff-gradient-text">{user?.name?.split(" ")[0] || "Farmer"}</span>.
                 </h1>
-                <p className="text-gray-600 mt-2 text-sm max-w-xl">
-                  Your farm is operating at <span className="font-bold text-[#0E4B33]">92% efficiency</span>. Here is your current AI farming plan based on real-time soil data.
+                <p className="text-[#a8cfb9] mt-2 text-sm max-w-xl">
+                  Your farm is operating at <span className="font-bold text-[#00f4fe]">92% efficiency</span>. Here is your current AI farming plan based on real-time soil data.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3 mt-6">
-                <div className="px-4 py-2.5 rounded-xl bg-[#E6F9EF] border border-[#95F2BE] flex items-center gap-2 text-xs font-bold text-[#0E4B33]">
-                  <span>🌾</span> Recommended Crop: <span className="underline">Rice (Basmati)</span>
+                <div className="px-4 py-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 flex items-center gap-2 text-xs font-bold text-emerald-300">
+                  <span>🌾</span> Recommended Crop: <span className="underline text-white">Rice (Basmati)</span>
                 </div>
-                <div className="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center gap-2 text-xs font-bold text-amber-900">
-                  <span>🧪</span> Optimal Fertilizer: <span>Urea/DAP Mix</span>
+                <div className="px-4 py-2.5 rounded-xl bg-amber-950/50 border border-amber-500/40 flex items-center gap-2 text-xs font-bold text-amber-300">
+                  <span>🧪</span> Optimal Fertilizer: <span className="text-white">Urea/DAP Mix</span>
                 </div>
               </div>
             </div>
 
-            {/* Dark Stat Card — Soil Moisture (Matching Screenshot 2) */}
-            <div className="ff-card-dark flex flex-col justify-between" style={{ background: "#0E4B33" }}>
+            {/* Dark Stat Card — Soil Moisture */}
+            <div className="ff-card p-6 flex flex-col justify-between bg-gradient-to-br from-[#062c1d] to-[#0a1a12] border border-[#00f4fe]/30">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold tracking-wider uppercase opacity-90">Soil Moisture</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-[#00f4fe]">Soil Moisture</span>
                 <span className="text-xl">💧</span>
               </div>
               <div className="my-4">
                 <h2 className="text-4xl font-extrabold font-mono text-white">42%</h2>
-                <div className="w-full h-2.5 bg-white/20 rounded-full mt-3 overflow-hidden">
-                  <div className="h-full bg-[#95F2BE] rounded-full" style={{ width: "42%" }} />
+                <div className="w-full h-2.5 bg-black/40 rounded-full mt-3 overflow-hidden border border-white/10">
+                  <div className="h-full bg-[#00f4fe] rounded-full shadow-[0_0_10px_#00f4fe]" style={{ width: "42%" }} />
                 </div>
               </div>
-              <p className="text-xs text-white/80 font-medium">Optimal range: 40-60%</p>
+              <p className="text-xs text-[#a8cfb9] font-medium">Optimal range: 40-60%</p>
             </div>
           </div>
+
 
           {/* ── Stat Cards ── */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -395,7 +395,7 @@ export default function BuyerDashboard() {
   if (loading) return <ShimmerSkeleton />;
 
   return (
-    <div className="flex h-screen bg-[#F4F6F4] font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#101415] font-sans overflow-hidden text-white">
       <SharedSidebar activePath="/buyer/dashboard" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">

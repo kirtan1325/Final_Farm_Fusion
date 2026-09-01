@@ -178,30 +178,30 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
           ${open ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:static lg:h-screen lg:flex-shrink-0`}
         style={{ 
-          background: "#EFEFEF", 
-          borderRight: "1px solid #E5E7EB"
+          background: "#070b0c", 
+          borderRight: "1px solid rgba(255, 255, 255, 0.08)"
         }}
       >
         <div>
-          {/* Logo / Header (Farm Intelligence branding matching reference design) */}
+          {/* Logo / Header */}
           <div className="flex items-center gap-3 px-5 pt-6 pb-4">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0 font-bold shadow-xs"
-              style={{ background: "#0E4B33", color: "#FFFFFF" }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0 font-bold shadow-lg"
+              style={{ background: "linear-gradient(135deg, #10b981, #00f4fe)", color: "#002021" }}>
               🌱
             </div>
             <div>
-              <p className="font-extrabold text-gray-900 text-base leading-tight tracking-tight">Farm Intelligence</p>
-              <p className="text-[11px] font-semibold text-gray-500 mt-0.5">
-                AI-Driven Support
+              <p className="font-extrabold text-white text-base leading-tight tracking-tight">Farm Fusion</p>
+              <p className="text-[11px] font-semibold text-[#a8cfb9] mt-0.5">
+                AI Agriculture Network
               </p>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="mx-5 mb-4" style={{ height: "1px", background: "#E2E8F0" }} />
+          <div className="mx-5 mb-4" style={{ height: "1px", background: "rgba(255, 255, 255, 0.08)" }} />
 
           {/* Navigation Items */}
-          <nav className="px-3 flex flex-col gap-1.5">
+          <nav className="px-3 flex flex-col gap-1">
             {links.map((item) => {
               const isActive = activePath === item.path;
               const badgeCount = badges?.[item.path] || 0;
@@ -210,15 +210,15 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
                 <button
                   key={item.path}
                   onClick={() => { setOpen(false); navigate(item.path); }}
-                  className={`ff-nav-item${isActive ? " active" : ""} flex items-center gap-3 w-full h-10 px-3.5 rounded-xl text-xs transition-all cursor-pointer`}
+                  className={`flex items-center gap-3 w-full h-10 px-3.5 rounded-xl text-xs transition-all cursor-pointer`}
                   style={{
-                    background: isActive ? "#95F2BE" : "transparent",
-                    color: isActive ? "#0E4B33" : "#4B5563",
+                    background: isActive ? "linear-gradient(90deg, rgba(16, 185, 129, 0.25), rgba(0, 244, 254, 0.1))" : "transparent",
+                    color: isActive ? "#ffffff" : "#a8cfb9",
                     fontWeight: isActive ? 700 : 500,
-                    boxShadow: isActive ? "0 2px 8px rgba(149,242,190,0.5)" : "none"
+                    borderLeft: isActive ? "4px solid #00f4fe" : "4px solid transparent",
                   }}
                 >
-                  <span className="w-4 h-4 flex items-center justify-center flex-shrink-0" style={{ color: isActive ? "#0E4B33" : "#6B7280" }}>
+                  <span className="w-4 h-4 flex items-center justify-center flex-shrink-0" style={{ color: isActive ? "#00f4fe" : "#a8cfb9" }}>
                     {icon}
                   </span>
                   <span className="flex-1 text-left tracking-tight">{item.label}</span>
@@ -234,39 +234,40 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
         </div>
 
         {/* Bottom CTA Button & User Profile */}
-        <div className="p-4 bg-[#EFEFEF]">
-          {/* New Analysis Action CTA (Matching Screenshot) */}
+        <div className="p-4 bg-[#070b0c] border-t border-white/5">
+          {/* New Analysis Action CTA */}
           <button
             onClick={() => navigate(user?.role === "farmer" ? "/disease-detection" : "/marketplace")}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 mb-4 rounded-xl text-xs font-bold text-white transition-all shadow-md cursor-pointer hover:bg-[#093826]"
-            style={{ background: "#0E4B33" }}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 mb-4 rounded-xl text-xs font-bold text-[#002021] transition-all shadow-md cursor-pointer hover:brightness-110"
+            style={{ background: "linear-gradient(135deg, #00f4fe, #10b981)" }}
           >
-            {user?.role === "farmer" ? "⚡ New Analysis" : "🛒 Browse Market"}
+            {user?.role === "farmer" ? "⚡ AI Disease Scanner" : "🛒 Browse Marketplace"}
           </button>
 
           <div className="mb-3 px-1">
             <GoogleTranslate />
           </div>
           
-          <div className="p-3 rounded-xl mb-2 flex items-center gap-3 bg-white border border-gray-200 shadow-xs">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white"
-              style={{ background: "#0E4B33" }}>
+          <div className="p-3 rounded-xl mb-2 flex items-center gap-3 bg-[#0d1315] border border-white/10 shadow-xs">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-[#002021]"
+              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)" }}>
               {getInitials(user?.name)}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-gray-900 truncate">{user?.name || "User"}</p>
-              <p className="text-[10px] font-semibold text-gray-500 capitalize truncate">{user?.role || "Member"}</p>
+              <p className="text-xs font-bold text-white truncate">{user?.name || "User"}</p>
+              <p className="text-[10px] font-semibold text-[#a8cfb9] capitalize truncate">{user?.role || "Member"}</p>
             </div>
           </div>
 
           <button
             onClick={() => { if (onLogout) onLogout(); else navigate("/login"); }}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-red-600 rounded-xl transition-all cursor-pointer hover:bg-red-50"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-red-400 rounded-xl transition-all cursor-pointer hover:bg-red-500/10"
           >
             <IconLogout /> Sign Out
           </button>
         </div>
       </aside>
+
     </>
   );
 }

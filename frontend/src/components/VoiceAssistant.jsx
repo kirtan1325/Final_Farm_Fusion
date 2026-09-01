@@ -83,20 +83,21 @@ export default function VoiceAssistant() {
   if (!isOpen) {
     return (
       <button onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,244,254,0.4)] flex items-center justify-center text-white text-2xl hover:scale-110 active:scale-95 transition-all z-50 animate-pulse border border-[rgba(0,244,254,0.4)] cursor-pointer"
-        style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
+        className="fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-2xl flex items-center justify-center text-white text-xl hover:scale-110 active:scale-95 transition-all z-50 border border-[rgba(0,244,254,0.4)] cursor-pointer"
+        style={{ background: "linear-gradient(135deg, #10b981, #00f4fe)", color: "#002021", boxShadow: "0 8px 25px rgba(0, 244, 254, 0.3)" }}>
         🎙️
       </button>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-80 sm:w-96 bg-[#062c1d] rounded-2xl shadow-2xl border border-[rgba(0,244,254,0.3)] z-50 overflow-hidden flex flex-col backdrop-blur-xl">
+    <div className="fixed bottom-6 right-6 w-80 sm:w-96 bg-[#0d1315] rounded-2xl shadow-2xl border border-[rgba(0,244,254,0.3)] z-50 overflow-hidden flex flex-col backdrop-blur-xl">
       <div className="px-5 py-3 flex items-center justify-between border-b border-white/10"
-        style={{ background: "rgba(0, 244, 254, 0.15)" }}>
+        style={{ background: "rgba(16, 185, 129, 0.15)" }}>
         <h3 className="text-white font-bold flex items-center gap-2 text-sm"><span>🎙️</span> AI Farm Voice Assistant</h3>
         <button onClick={() => { setIsOpen(false); window.speechSynthesis.cancel(); }} className="text-[#a8cfb9] hover:text-white text-xl leading-none cursor-pointer">&times;</button>
       </div>
+
 
       <div className="p-5 flex flex-col items-center">
         <div className="w-full flex justify-end mb-3">

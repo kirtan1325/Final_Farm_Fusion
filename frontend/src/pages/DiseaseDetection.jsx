@@ -98,28 +98,28 @@ export default function DiseaseDetection() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#F4F6F4" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#101415" }}>
       <SharedSidebar activePath="/disease-detection" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto text-white">
         {/* Top Bar */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer text-gray-700">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-[#a8cfb9]">
             <MenuIcon />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg shadow-xs"
-              style={{ background: "#0E4B33", color: "#FFFFFF" }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg shadow-lg"
+              style={{ background: "linear-gradient(135deg, #10b981, #00f4fe)", color: "#002021" }}>
               🍃
             </div>
             <div>
-              <h1 className="font-bold text-gray-900 text-base leading-tight">Crop Health AI</h1>
-              <p className="text-xs text-gray-500 hidden sm:block">Upload photos for instant disease diagnosis & regional treatment guide</p>
+              <h1 className="font-bold text-white text-base leading-tight">Crop Health AI</h1>
+              <p className="text-xs text-[#a8cfb9] hidden sm:block">Upload photos for instant disease diagnosis & regional treatment guide</p>
             </div>
           </div>
           {user && (
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white shadow-xs"
-              style={{ background: "#0E4B33" }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-[#002021] shadow-md"
+              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)" }}>
               {getInitials(user.name)}
             </div>
           )}
@@ -128,20 +128,20 @@ export default function DiseaseDetection() {
         <main className="flex-1 px-4 sm:px-8 py-8 max-w-6xl mx-auto w-full">
           {/* Main Title Banner */}
           <div className="mb-6 ff-fade-in">
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Crop Health AI</h1>
-            <p className="text-gray-600 mt-1 text-sm max-w-3xl">
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">Crop Health <span className="ff-gradient-text">AI Scanner</span></h1>
+            <p className="text-[#a8cfb9] mt-1 text-sm max-w-3xl">
               Upload photos for instant disease diagnosis, review past scans, and get automated treatment recommendations based on regional data.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             {/* Upload Area */}
-            <div className="lg:col-span-2 ff-card p-6 flex flex-col items-center ff-fade-in relative overflow-hidden bg-white">
+            <div className="lg:col-span-2 ff-card p-6 flex flex-col items-center ff-fade-in relative overflow-hidden">
               <div className="w-full flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <span>⚛️</span> AI Health Scanner
                 </h2>
-                <span className="text-xs text-gray-400">Drag and drop a clear photo of a crop leaf</span>
+                <span className="text-xs text-[#a8cfb9]">Drag and drop a clear photo of a crop leaf</span>
               </div>
 
               <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
@@ -154,18 +154,19 @@ export default function DiseaseDetection() {
                   onDrop={handleDrop}
                   className={`w-full aspect-video sm:aspect-21/9 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group border-2 border-dashed`}
                   style={{
-                    borderColor: dragOver ? "#0E4B33" : "#CBD5E1",
-                    background: dragOver ? "#E6F9EF" : "#F8FAFC",
+                    borderColor: dragOver ? "#00f4fe" : "rgba(0, 244, 254, 0.3)",
+                    background: dragOver ? "rgba(0, 244, 254, 0.1)" : "rgba(6, 44, 29, 0.3)",
                   }}
                 >
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-2 transition-transform group-hover:scale-105 duration-200 bg-white border border-gray-200 shadow-xs">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-2 transition-transform group-hover:scale-105 duration-200 bg-[#0b1012] border border-[#00f4fe]/30 shadow-md">
                     🖼️
                   </div>
-                  <p className="font-bold text-gray-900 text-sm">
+                  <p className="font-bold text-white text-sm">
                     {dragOver ? "Drop crop image here!" : "Click to browse or drag image here"}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">Supports JPG, PNG (Max 5MB)</p>
+                  <p className="text-xs text-[#a8cfb9] mt-0.5">Supports JPG, PNG (Max 5MB)</p>
                 </div>
+
               ) : (
                 <div className="w-full relative rounded-xl overflow-hidden border border-gray-200 group ff-fade-in">
                   {loading && (
