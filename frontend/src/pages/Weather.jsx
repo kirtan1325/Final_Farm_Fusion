@@ -64,26 +64,26 @@ export default function Weather() {
 
   const FARM_ADVICE = (temp, desc) => {
     const d = desc?.toLowerCase() || "";
-    if (d.includes("rain") || d.includes("drizzle")) return { icon: "🌧️", msg: "Heavy Rain Alert! Delay irrigation by 2 days. Avoid spraying pesticides today as rain will wash them off.", color: "bg-blue-50 border-blue-300 text-blue-800", isAlert: true };
-    if (d.includes("storm") || d.includes("thunder"))  return { icon: "⛈️", msg: "Storm Alert! Stay safe — avoid field work and secure equipment.", color: "bg-red-50 border-red-300 text-red-800", isAlert: true };
-    if (temp > 38)  return { icon: "🌡️", msg: "Heatwave Alert! Very hot. Irrigate crops in early morning or evening to prevent water stress.", color: "bg-orange-50 border-orange-300 text-orange-800", isAlert: true };
-    if (temp < 10)  return { icon: "❄️", msg: "Frost Alert! Cold wave expected. Protect sensitive crops with mulching or light evening irrigation.", color: "bg-indigo-50 border-indigo-300 text-indigo-800", isAlert: true };
-    return { icon: "✅", msg: "Good weather for field work and crop spraying today. Maintain standard irrigation schedule.", color: "bg-green-50 border-green-300 text-green-800", isAlert: false };
+    if (d.includes("rain") || d.includes("drizzle")) return { icon: "🌧️", msg: "Heavy Rain Alert! Delay irrigation by 2 days. Avoid spraying pesticides today as rain will wash them off.", color: "bg-blue-950/40 border-blue-500/40 text-blue-300", isAlert: true };
+    if (d.includes("storm") || d.includes("thunder"))  return { icon: "⛈️", msg: "Storm Alert! Stay safe — avoid field work and secure equipment.", color: "bg-red-950/40 border-red-500/40 text-red-300", isAlert: true };
+    if (temp > 38)  return { icon: "🌡️", msg: "Heatwave Alert! Very hot. Irrigate crops in early morning or evening to prevent water stress.", color: "bg-amber-950/40 border-amber-500/40 text-amber-300", isAlert: true };
+    if (temp < 10)  return { icon: "❄️", msg: "Frost Alert! Cold wave expected. Protect sensitive crops with mulching or light evening irrigation.", color: "bg-indigo-950/40 border-indigo-500/40 text-indigo-300", isAlert: true };
+    return { icon: "✅", msg: "Good weather for field work and crop spraying today. Maintain standard irrigation schedule.", color: "bg-emerald-950/40 border-emerald-500/40 text-emerald-300", isAlert: false };
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       <SharedSidebar activePath="/weather" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Topbar */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden cursor-pointer text-gray-500 hover:text-gray-800 transition-colors">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden cursor-pointer text-white hover:text-[#00f4fe] transition-colors">
             <MenuIcon />
           </button>
           <div className="flex items-center gap-2 flex-1">
             <span className="text-xl">🌦️</span>
-            <span className="font-bold text-gray-900">Weather Information</span>
+            <span className="font-bold text-white text-base">Weather Advisory</span>
           </div>
           {/* Search bar */}
           <div className="hidden sm:flex items-center w-64 z-50">
@@ -103,10 +103,10 @@ export default function Weather() {
 
           {/* Page heading */}
           <div className="ff-fade-in">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-              Weather for Farmers
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Real-Time <span className="ff-gradient-text">Agri Weather</span>
             </h1>
-            <p className="text-sm text-gray-500 mt-1">Location-based weather to plan your farming activities.</p>
+            <p className="text-sm text-[#a8cfb9] mt-1">Location-based weather forecast to optimize field work and crop irrigation.</p>
           </div>
 
           {/* Mobile search */}

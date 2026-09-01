@@ -48,24 +48,25 @@ function FilterDropdown({ label, options, value, onChange }) {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl border transition-all cursor-pointer"
+        className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl border transition-all cursor-pointer"
         style={{
-          background: isActive ? "linear-gradient(135deg,#ecfdf5,#d1fae5)" : "#fff",
-          borderColor: isActive ? "#10b981" : "#e5e7eb",
-          color: isActive ? "#065f46" : "#374151",
+          background: isActive ? "rgba(0, 244, 254, 0.18)" : "rgba(6, 44, 29, 0.75)",
+          borderColor: isActive ? "#00f4fe" : "rgba(0, 244, 254, 0.25)",
+          color: isActive ? "#00f4fe" : "#e0e3e5",
+          backdropFilter: "blur(16px)"
         }}
       >
         {label}
         <ChevronDown />
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 py-2 min-w-[170px] ff-scale-in"
-          style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
+        <div className="absolute top-full left-0 mt-2 bg-[#062c1d] border border-[rgba(0,244,254,0.3)] rounded-xl shadow-2xl z-30 py-2 min-w-[180px] ff-scale-in"
+          style={{ backdropFilter: "blur(20px)" }}>
           {options.map((opt) => (
             <button key={opt} onClick={() => { onChange(opt); setOpen(false); }}
               className="w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer flex items-center gap-2"
-              style={{ color: value === opt ? "#059669" : "#374151", fontWeight: value === opt ? 600 : 400 }}
-              onMouseEnter={e => e.currentTarget.style.background = "#f9fafb"}
+              style={{ color: value === opt ? "#00f4fe" : "#c1c8c2", fontWeight: value === opt ? 700 : 400 }}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(0, 244, 254, 0.15)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
             >
               {value === opt && <CheckIcon />}
@@ -99,7 +100,7 @@ function ProductCard({ crop, user, onViewImage }) {
   };
 
   return (
-    <div className="ff-product-card ff-fade-in group">
+    <div className="ff-card p-0 overflow-hidden flex flex-col ff-fade-in group">
       <div
         className={`relative h-48 bg-gradient-to-br ${BG_GRADIENTS[bgIdx]} flex items-center justify-center overflow-hidden ${
           crop.imageUrl ? "cursor-pointer" : ""
@@ -118,7 +119,7 @@ function ProductCard({ crop, user, onViewImage }) {
 
         {crop.badge && (
           <span
-            className={`absolute top-3 left-3 z-10 ff-badge ${BADGE_STYLE[crop.badge] || "ff-badge-gray"}`}
+            className={`absolute top-3 left-3 z-10 ff-badge ${BADGE_STYLE[crop.badge] || "ff-badge-blue"}`}
             style={{ textTransform: "uppercase", letterSpacing: "0.04em" }}
           >
             {crop.badge.replace("_", " ")}
@@ -131,33 +132,32 @@ function ProductCard({ crop, user, onViewImage }) {
           </span>
         ) : null}
 
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 60%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }} />
       </div>
 
       <div className="p-4 flex flex-col flex-1 gap-2">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-bold text-gray-900 text-sm leading-snug">{crop.name}</h3>
-          <span className="font-extrabold text-sm whitespace-nowrap flex-shrink-0" style={{ color: "#059669" }}>
-            ${crop.pricePerUnit?.toFixed(2)}<span className="text-gray-400 font-normal text-xs">/{crop.unit}</span>
+          <h3 className="font-bold text-white text-base leading-snug">{crop.name}</h3>
+          <span className="font-extrabold text-base whitespace-nowrap flex-shrink-0 text-[#00f4fe]">
+            ₹{crop.pricePerUnit?.toFixed(2)}<span className="text-[#a8cfb9] font-normal text-xs">/{crop.unit}</span>
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+        <div className="flex items-center gap-1.5 text-xs text-[#a8cfb9]">
           <UserIcon />
-          <span>{crop.farmer?.farmName || crop.farmer?.name || "Local Farm"}</span>
+          <span>{crop.farmer?.farmName || crop.farmer?.name || "Local Organic Farm"}</span>
         </div>
         {crop.quantity && (
-          <p className="text-xs text-gray-400">{crop.quantity} {crop.unit} available</p>
+          <p className="text-xs text-[#8b928d]">{crop.quantity} {crop.unit} available in stock</p>
         )}
         {user?.role !== "farmer" && (
           <button
             onClick={handleSend}
             disabled={loading}
-            className={`mt-auto w-full ff-btn py-2.5 text-sm ${sent ? "" : "ff-btn-primary"}`}
-            style={sent ? { background: "linear-gradient(135deg,#10b981,#059669)", color: "#fff" } : {}}
+            className={`mt-auto w-full ff-btn py-2.5 text-xs font-bold ${sent ? "ff-btn-secondary" : "ff-btn-primary"}`}
           >
             {loading
-              ? <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
-              : sent ? <><CheckIcon /> Request Sent</> : <><CartIcon /> Request</>}
+              ? <span className="ff-spinner" style={{ width: "1rem", height: "1rem" }} />
+              : sent ? <><CheckIcon /> Request Sent</> : <><CartIcon /> Request Crop</>}
           </button>
         )}
       </div>
