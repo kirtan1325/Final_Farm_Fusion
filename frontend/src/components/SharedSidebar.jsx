@@ -190,9 +190,9 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
             🌱
           </div>
           <div>
-            <p className="font-extrabold text-white text-sm leading-tight uppercase font-mono tracking-wider">Farm Fusion</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider mt-0.5 text-emerald-400 font-mono">
-              {user?.role || "Portal"}
+            <p className="font-extrabold text-white text-base leading-tight tracking-wide">Farm Fusion</p>
+            <p className="text-[11px] font-semibold tracking-wider mt-0.5 text-emerald-400">
+              {user?.role === "farmer" ? "Farmer Portal" : user?.role === "buyer" ? "Buyer Portal" : "Agri Network"}
             </p>
           </div>
         </div>
@@ -210,14 +210,14 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
               <button
                 key={item.path}
                 onClick={() => { setOpen(false); navigate(item.path); }}
-                className={`ff-nav-item${isActive ? " active" : ""} ff-fade-in font-mono tracking-wide`}
+                className={`ff-nav-item${isActive ? " active" : ""} ff-fade-in tracking-wide`}
               >
                 <span className="ff-nav-icon" style={{ width: 16, flexShrink: 0, color: isActive ? "#fff" : "#10b981" }}>
                   {icon}
                 </span>
-                <span className="flex-1 text-left text-xs uppercase font-semibold">{item.label}</span>
+                <span className="flex-1 text-left text-xs font-semibold">{item.label}</span>
                 {badgeCount > 0 && (
-                  <span className="ff-badge ff-badge-red shadow-[0_0_10px_rgba(239,68,68,0.4)]" style={{ fontSize: "0.6rem", padding: "0.1rem 0.35rem" }}>
+                  <span className="ff-badge ff-badge-red shadow-[0_0_10px_rgba(239,68,68,0.4)]" style={{ fontSize: "0.6rem", padding: "0.1ml 0.35rem" }}>
                     {badgeCount > 99 ? "99+" : badgeCount}
                   </span>
                 )}
@@ -234,23 +234,23 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
         {/* User card + Logout */}
         <div className="p-4 mt-2">
           <div className="p-3 rounded-xl mb-2 flex items-center gap-3 bg-black/40 border border-gray-800 shadow-inner">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 font-mono shadow-[0_0_10px_rgba(0,245,255,0.2)]"
+            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-[0_0_10px_rgba(0,245,255,0.2)]"
               style={{ background: "linear-gradient(135deg,#10b981,#00f5ff)", color: "#000" }}>
               {getInitials(user?.name)}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-white uppercase tracking-wider truncate font-mono">{user?.name || "User"}</p>
-              <p className="text-[9px] font-bold uppercase tracking-wider truncate font-mono text-gray-500 mt-0.5">{user?.role}</p>
+              <p className="text-xs font-bold text-white tracking-wide truncate">{user?.name || "User"}</p>
+              <p className="text-[10px] font-semibold tracking-wider truncate text-gray-400 capitalize">{user?.role || "Member"}</p>
             </div>
           </div>
           <button
             onClick={() => { if (onLogout) onLogout(); else navigate("/login"); }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer font-mono"
+            className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer"
             style={{ color: "rgba(239,68,68,0.7)", background: "transparent" }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.08)"; e.currentTarget.style.color = "rgb(239,68,68)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(239,68,68,0.7)"; }}
           >
-            <IconLogout /> Logout
+            <IconLogout /> Sign Out
           </button>
         </div>
       </aside>

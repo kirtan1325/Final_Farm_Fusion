@@ -379,8 +379,8 @@ export default function FarmFusionLogin() {
 
             {/* Role selector (Only displayed on register tab) */}
             <div className="relative z-10 text-left">
-              <p className="text-[10px] font-bold uppercase tracking-widest mb-3 text-gray-500">
-                {tab === "register" ? "Select Domain Portal Role" : "Secure Node Connection"}
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-3 text-gray-400">
+                {tab === "register" ? "Select Account Type" : "Farm Fusion Agriculture Network"}
               </p>
 
               <div className="grid grid-cols-2 gap-2.5 mb-3">
@@ -391,23 +391,23 @@ export default function FarmFusionLogin() {
                       key={r.id}
                       type="button"
                       onClick={() => tab === "register" && setRole(r.id)}
-                      className={`flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 text-white text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${tab === "login" ? "opacity-30 cursor-not-allowed" : "cursor-pointer"}`}
+                      className={`flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 text-white text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${tab === "login" ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
                       style={{
                         background: isSelected ? "rgba(16,185,129,0.12)" : "rgba(255,255,255,0.02)",
                         border: isSelected ? "1.5px solid #10b981" : "1.5px solid rgba(255,255,255,0.06)",
                         boxShadow: isSelected ? "0 0 16px rgba(16,185,129,0.15)" : "none",
                       }}>
                       <span style={{ color: isSelected ? "#10b981" : "rgba(255,255,255,0.6)" }}>{r.icon}</span>
-                      <span style={{ color: isSelected ? "#fff" : "rgba(255,255,255,0.6)" }} className="text-[10px] font-mono">{r.label}</span>
+                      <span style={{ color: isSelected ? "#fff" : "rgba(255,255,255,0.7)" }} className="text-xs font-medium">{r.label}</span>
                     </button>
                   );
                 })}
               </div>
 
-              <p className="text-[10px] text-center text-gray-400 font-mono">
+              <p className="text-xs text-center text-gray-400">
                 {tab === "register"
                   ? selectedRole?.description
-                  : "Interface role verified dynamically during login"}
+                  : "Verified role access for Farmers & Buyers"}
               </p>
             </div>
 
@@ -422,7 +422,7 @@ export default function FarmFusionLogin() {
                   </span>
                 ))}
               </div>
-              <span className="text-xs font-semibold text-gray-400">Trusted by 5,000+ farmers</span>
+              <span className="text-xs font-medium text-gray-300">Trusted by 5,000+ Farmers & Buyers</span>
             </div>
           </div>
 
@@ -431,17 +431,17 @@ export default function FarmFusionLogin() {
 
             {/* Heading */}
             <div className="mb-5 text-left">
-              <h2 className="text-2xl font-extrabold uppercase font-mono tracking-wider text-white mb-1">
+              <h2 className="text-2xl font-extrabold tracking-tight text-white mb-1">
                 {tab === "login" ? (
-                  <>Link <span className="ff-gradient-text">Operator</span></>
+                  <>Welcome Back to <span className="ff-gradient-text">Farm Fusion</span></>
                 ) : (
-                  <>Register <span className="ff-gradient-text">Node</span></>
+                  <>Create Your <span className="ff-gradient-text">Account</span></>
                 )}
               </h2>
-              <p className="text-gray-400 text-xs font-mono uppercase tracking-wider">
+              <p className="text-gray-400 text-xs tracking-wide">
                 {tab === "login"
-                  ? "Initialize auth credentials to connect"
-                  : `Connecting to ${selectedRole?.label} gateway`}
+                  ? "Sign in to access your direct marketplace and AI farm tools"
+                  : `Sign up to connect as a ${selectedRole?.label}`}
               </p>
             </div>
 
@@ -449,12 +449,12 @@ export default function FarmFusionLogin() {
             <div className="flex gap-1 rounded-xl p-1 mb-5 bg-[#050814] border border-gray-800">
               {["login","register"].map((t) => (
                 <button key={t} onClick={() => switchTab(t)}
-                  className="flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer"
+                  className="flex-1 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer"
                   style={{
                     background: tab === t ? "linear-gradient(135deg, #10b981, #059669)" : "transparent",
-                    color: tab === t ? "#fff" : "#889ac2",
+                    color: tab === t ? "#fff" : "#94a3b8",
                   }}>
-                  {t === "login" ? "Login" : "Register"}
+                  {t === "login" ? "Sign In" : "Register"}
                 </button>
               ))}
             </div>
@@ -462,11 +462,11 @@ export default function FarmFusionLogin() {
             {/* Social buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-4">
               <button onClick={handleGoogle}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider text-gray-300 border border-gray-800 hover:border-gray-600 hover:bg-white/5 transition-all cursor-pointer bg-transparent">
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-gray-200 border border-gray-800 hover:border-gray-600 hover:bg-white/5 transition-all cursor-pointer bg-transparent">
                 <GoogleIcon /> Continue with Google
               </button>
               <button onClick={handleFacebook}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider text-gray-300 border border-gray-800 hover:border-gray-600 hover:bg-white/5 transition-all cursor-pointer bg-transparent">
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-gray-200 border border-gray-800 hover:border-gray-600 hover:bg-white/5 transition-all cursor-pointer bg-transparent">
                 <FacebookIcon /> Continue with Facebook
               </button>
             </div>
@@ -474,7 +474,7 @@ export default function FarmFusionLogin() {
             {/* OR divider */}
             <div className="flex items-center gap-3 mb-4">
               <div className="flex-1 h-px bg-gray-800"/>
-              <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">Or Node Handshake</span>
+              <span className="text-[11px] font-medium text-gray-400 whitespace-nowrap">Or sign in with email</span>
               <div className="flex-1 h-px bg-gray-800"/>
             </div>
 
@@ -505,9 +505,9 @@ export default function FarmFusionLogin() {
 
                 <div className="flex flex-col gap-1.5 text-left">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-semibold text-gray-300">Passcode / Password</label>
-                    <button type="button" className="text-xs font-bold text-emerald-400 hover:underline cursor-pointer">
-                      Recovery?
+                    <label className="text-sm font-semibold text-gray-300">Password</label>
+                    <button type="button" className="text-xs font-semibold text-emerald-400 hover:underline cursor-pointer">
+                      Forgot password?
                     </button>
                   </div>
                   <div className="ff-input-group">
@@ -519,7 +519,7 @@ export default function FarmFusionLogin() {
                       onChange={(e) => setLoginPassword(e.target.value)}
                       required
                       autoComplete="new-password"
-                      className="placeholder-gray-600 bg-transparent text-white outline-none w-full"
+                      className="placeholder-gray-500 bg-transparent text-white outline-none w-full text-sm"
                     />
                     <button type="button" onClick={() => setShowLoginPass(!showLoginPass)}
                       className="flex-shrink-0 cursor-pointer text-gray-400 hover:text-white">
@@ -531,22 +531,22 @@ export default function FarmFusionLogin() {
                 <label className="flex items-center gap-2.5 cursor-pointer select-none py-1 text-left">
                   <input type="checkbox" checked={remember} onChange={() => setRemember(!remember)}
                     className="w-4 h-4 rounded border-gray-700 bg-black cursor-pointer accent-emerald-500"/>
-                  <span className="text-xs text-gray-400">Remember sequence for 30 cycles</span>
+                  <span className="text-xs text-gray-300">Remember me on this device</span>
                 </label>
 
                 <button type="submit" disabled={loading}
-                  className="ff-btn ff-btn-primary w-full py-3 text-xs uppercase tracking-widest font-bold mt-1">
+                  className="ff-btn ff-btn-primary w-full py-3 text-xs tracking-wider uppercase font-bold mt-1">
                   {loading ? (
                     <span className="ff-spinner" style={{ width: "16px", height: "16px", borderWidth: "2px", borderTopColor: "#fff", borderColor: "rgba(255,255,255,0.3)" }} />
                   ) : null}
-                  {loading ? "Authorizing node..." : success ? "✓ Access Granted" : "Initialize Link Connection"}
+                  {loading ? "Signing in..." : success ? "✓ Access Granted" : "Sign In to Farm Fusion"}
                 </button>
 
-                <p className="text-center text-xs text-gray-400 font-mono uppercase mt-2">
-                  No active signature?{" "}
+                <p className="text-center text-xs text-gray-400 mt-2">
+                  Don't have an account yet?{" "}
                   <button type="button" onClick={() => switchTab("register")}
-                    className="font-bold text-emerald-400 hover:underline cursor-pointer">
-                    Register Node
+                    className="font-semibold text-emerald-400 hover:underline cursor-pointer">
+                    Register Now
                   </button>
                 </p>
               </form>
@@ -556,8 +556,8 @@ export default function FarmFusionLogin() {
             {tab === "register" && (
               <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
                 <InputField 
-                  label="Operator Full Name *" 
-                  placeholder="e.g. John Doe"
+                  label="Full Name *" 
+                  placeholder="e.g. Ramesh Patel"
                   value={regName} 
                   onChange={(e) => setRegName(e.target.value)}
                   icon={<PersonIcon/>} 
@@ -565,9 +565,9 @@ export default function FarmFusionLogin() {
                 />
 
                 <InputField 
-                  label="Node Email Address *" 
+                  label="Email Address *" 
                   type="email" 
-                  placeholder="you@domain.com"
+                  placeholder="Enter your email address..."
                   value={regEmail} 
                   onChange={(e) => setRegEmail(e.target.value)}
                   icon={<MailIcon/>} 
@@ -576,7 +576,7 @@ export default function FarmFusionLogin() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5 text-left">
-                    <label className="text-xs font-semibold text-gray-300">Passcode *</label>
+                    <label className="text-xs font-semibold text-gray-300">Password *</label>
                     <div className="ff-input-group">
                       <LockIcon/>
                       <input
@@ -585,7 +585,7 @@ export default function FarmFusionLogin() {
                         value={regPassword}
                         onChange={(e) => setRegPassword(e.target.value)}
                         required
-                        className="placeholder-gray-600 bg-transparent text-white outline-none w-full text-xs"
+                        className="placeholder-gray-500 bg-transparent text-white outline-none w-full text-xs"
                       />
                       <button type="button" onClick={() => setShowRegPass(!showRegPass)} className="text-gray-400 hover:text-white">
                         <EyeIcon open={showRegPass}/>
@@ -593,16 +593,16 @@ export default function FarmFusionLogin() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5 text-left">
-                    <label className="text-xs font-semibold text-gray-300">Repeat Passcode *</label>
+                    <label className="text-xs font-semibold text-gray-300">Confirm Password *</label>
                     <div className="ff-input-group">
                       <LockIcon/>
                       <input
                         type={showRegConfirm ? "text" : "password"}
-                        placeholder="Verify"
+                        placeholder="Confirm password"
                         value={regConfirm}
                         onChange={(e) => setRegConfirm(e.target.value)}
                         required
-                        className="placeholder-gray-600 bg-transparent text-white outline-none w-full text-xs"
+                        className="placeholder-gray-500 bg-transparent text-white outline-none w-full text-xs"
                       />
                       <button type="button" onClick={() => setShowRegConfirm(!showRegConfirm)} className="text-gray-400 hover:text-white">
                         <EyeIcon open={showRegConfirm}/>
@@ -613,8 +613,8 @@ export default function FarmFusionLogin() {
 
                 {role === "farmer" && (
                   <InputField 
-                    label="Dome / Farm Name" 
-                    placeholder="e.g. Green Dome Sector"
+                    label="Farm / Organic Enterprise Name" 
+                    placeholder="e.g. Green Harvest Organic Farm"
                     value={regFarmName} 
                     onChange={(e) => setRegFarmName(e.target.value)} 
                     icon={<BuildingIcon/>}
@@ -622,8 +622,8 @@ export default function FarmFusionLogin() {
                 )}
                 {role === "buyer" && (
                   <InputField 
-                    label="Corporate / Organization Name" 
-                    placeholder="e.g. Sourcing Ltd"
+                    label="Company / Business Name" 
+                    placeholder="e.g. Fresh Crop Traders Ltd"
                     value={regCompany} 
                     onChange={(e) => setRegCompany(e.target.value)} 
                     icon={<BuildingIcon/>}
@@ -631,8 +631,8 @@ export default function FarmFusionLogin() {
                 )}
 
                 <InputField 
-                  label="Operations Location" 
-                  placeholder="e.g. Gujarat, India"
+                  label="Location (District / State)" 
+                  placeholder="e.g. Anand, Gujarat"
                   value={regLocation} 
                   onChange={(e) => setRegLocation(e.target.value)} 
                   icon={<PinIcon/>}
@@ -640,22 +640,22 @@ export default function FarmFusionLogin() {
 
                 <label className="flex items-center gap-2.5 cursor-pointer select-none text-left">
                   <input type="checkbox" required className="w-4 h-4 rounded border-gray-700 bg-black cursor-pointer accent-emerald-500"/>
-                  <span className="text-[10px] text-gray-400">Accept Directive Protocols &amp; Data Command Policies</span>
+                  <span className="text-[11px] text-gray-300">I agree to the Terms of Service & Privacy Policy</span>
                 </label>
 
                 <button type="submit" disabled={loading}
-                  className="ff-btn ff-btn-primary w-full py-3 text-xs uppercase tracking-widest font-bold mt-1">
+                  className="ff-btn ff-btn-primary w-full py-3 text-xs uppercase tracking-wider font-bold mt-1">
                   {loading ? (
                     <span className="ff-spinner" style={{ width: "16px", height: "16px", borderWidth: "2px", borderTopColor: "#fff", borderColor: "rgba(255,255,255,0.3)" }} />
                   ) : null}
-                  {loading ? "Registering node..." : success ? "✓ Signature Logged" : "Register Operator Node"}
+                  {loading ? "Creating Account..." : success ? "✓ Account Created" : "Create Account"}
                 </button>
 
-                <p className="text-center text-xs text-gray-400 font-mono uppercase mt-2">
-                  Already mapped node?{" "}
+                <p className="text-center text-xs text-gray-400 mt-2">
+                  Already have an account?{" "}
                   <button type="button" onClick={() => switchTab("login")}
-                    className="font-bold text-emerald-400 hover:underline cursor-pointer">
-                    Sign In
+                    className="font-semibold text-emerald-400 hover:underline cursor-pointer">
+                    Sign In Here
                   </button>
                 </p>
               </form>
