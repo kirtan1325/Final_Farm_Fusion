@@ -217,7 +217,7 @@ export default function SharedSidebar({ activePath, open, setOpen, user, onLogou
                 </span>
                 <span className="flex-1 text-left text-xs font-semibold">{item.label}</span>
                 {badgeCount > 0 && (
-                  <span className="ff-badge ff-badge-red shadow-[0_0_10px_rgba(239,68,68,0.4)]" style={{ fontSize: "0.6rem", padding: "0.1ml 0.35rem" }}>
+                  <span className="ff-badge ff-badge-red shadow-[0_0_10px_rgba(239,68,68,0.4)]" style={{ fontSize: "0.6rem", padding: "0.1rem 0.35rem" }}>
                     {badgeCount > 99 ? "99+" : badgeCount}
                   </span>
                 )}
