@@ -60,7 +60,7 @@ const BG_GRADIENTS = [
 ];
 
 // ── Helpers ─────────────────────────────────────────────
-const fmt     = (n) => `$${Number(n).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+const fmt     = (n) => `₹${Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 const fmtDate = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 const getBg   = (id = "") => BG_GRADIENTS[id.charCodeAt(id.length - 1) % BG_GRADIENTS.length];
 
@@ -336,7 +336,7 @@ export default function MyOrders() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       {negotiateTarget && (
         <NegotiationModal request={negotiateTarget} onClose={() => setNegotiateTarget(null)} isFarmer={false} />
       )}

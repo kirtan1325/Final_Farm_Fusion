@@ -100,18 +100,18 @@ export default function Forum() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       <SharedSidebar open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} activePath="/forum" />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
 
         {/* Topbar */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden cursor-pointer text-gray-500 hover:text-gray-800 transition-colors">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden cursor-pointer text-white hover:text-[#00f4fe] transition-colors">
             <MenuIcon />
           </button>
           <span className="text-xl">💬</span>
-          <span className="font-bold text-gray-900 flex-1">Community Forum</span>
+          <span className="font-bold text-white text-base flex-1">Community Forum</span>
           <button
             onClick={() => setShowNew(true)}
             className="ff-btn ff-btn-primary flex items-center gap-2"

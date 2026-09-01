@@ -515,8 +515,8 @@ export default function BuyerDashboard() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 text-gray-400 text-sm bg-white rounded-2xl border border-gray-100 shadow-sm">
-                {products.length === 0 ? "No products available right now." : "No products match your search."}
+              <div className="ff-card text-center py-16 text-[#a8cfb9] text-sm">
+                {products.length === 0 ? "No crops available in marketplace right now." : "No crops match your search query."}
               </div>
             )}
           </div>

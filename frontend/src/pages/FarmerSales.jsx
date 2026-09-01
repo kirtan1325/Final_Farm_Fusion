@@ -120,7 +120,7 @@ export default function FarmerSales() {
     return acc;
   }, { totalSales: 0, totalVolume: 0, activeOrders: 0, completedOrders: 0 });
 
-  const fmt = (n) => `$${Number(n).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+  const fmt = (n) => `₹${Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
   const fmtDate = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (

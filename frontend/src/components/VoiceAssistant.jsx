@@ -83,23 +83,25 @@ export default function VoiceAssistant() {
   if (!isOpen) {
     return (
       <button onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full shadow-2xl flex items-center justify-center text-white text-2xl hover:scale-110 active:scale-95 transition-all z-50 animate-bounce">
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-[0_0_20px_rgba(0,244,254,0.4)] flex items-center justify-center text-white text-2xl hover:scale-110 active:scale-95 transition-all z-50 animate-pulse border border-[rgba(0,244,254,0.4)] cursor-pointer"
+        style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
         🎙️
       </button>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-gray-100 z-50 overflow-hidden flex flex-col">
-      <div className="bg-gradient-to-r from-green-600 to-emerald-700 px-5 py-4 flex items-center justify-between">
-        <h3 className="text-white font-bold flex items-center gap-2"><span>🎙️</span> AI Farm Assistant</h3>
-        <button onClick={() => { setIsOpen(false); window.speechSynthesis.cancel(); }} className="text-white hover:text-green-200 text-2xl leading-none">&times;</button>
+    <div className="fixed bottom-6 right-6 w-80 sm:w-96 bg-[#062c1d] rounded-2xl shadow-2xl border border-[rgba(0,244,254,0.3)] z-50 overflow-hidden flex flex-col backdrop-blur-xl">
+      <div className="px-5 py-3 flex items-center justify-between border-b border-white/10"
+        style={{ background: "rgba(0, 244, 254, 0.15)" }}>
+        <h3 className="text-white font-bold flex items-center gap-2 text-sm"><span>🎙️</span> AI Farm Voice Assistant</h3>
+        <button onClick={() => { setIsOpen(false); window.speechSynthesis.cancel(); }} className="text-[#a8cfb9] hover:text-white text-xl leading-none cursor-pointer">&times;</button>
       </div>
 
       <div className="p-5 flex flex-col items-center">
-        <div className="w-full flex justify-end mb-4">
+        <div className="w-full flex justify-end mb-3">
           <select value={language} onChange={e => setLanguage(e.target.value)}
-            className="text-xs font-semibold bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 outline-none text-gray-700 cursor-pointer">
+            className="text-xs font-bold bg-[#0b0f10] border border-white/15 rounded-lg px-2 py-1 outline-none text-[#00f4fe] cursor-pointer">
             <option value="en-IN">English (India)</option>
             <option value="hi-IN">हिन्दी (Hindi)</option>
             <option value="ta-IN">தமிழ் (Tamil)</option>
@@ -107,35 +109,35 @@ export default function VoiceAssistant() {
         </div>
 
         <button onClick={toggleListen}
-          className={`w-24 h-24 rounded-full flex items-center justify-center text-4xl shadow-xl transition-all cursor-pointer relative ${isListening ? "bg-red-500 text-white scale-110" : "bg-gray-50 border-4 border-gray-100 text-gray-400 hover:bg-green-50 hover:border-green-200 hover:text-green-600"}`}>
+          className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl shadow-xl transition-all cursor-pointer relative ${isListening ? "bg-red-500 text-white scale-110 shadow-[0_0_20px_rgba(239,68,68,0.5)]" : "bg-[#0b0f10] border-2 border-[rgba(0,244,254,0.3)] text-[#00f4fe] hover:scale-105"}`}>
           {isListening && <span className="absolute inset-0 rounded-full animate-ping bg-red-400 opacity-75"></span>}
           <span className="relative z-10">{isListening ? "👂" : "🎤"}</span>
         </button>
         
-        <p className="mt-4 text-sm font-bold text-gray-400 uppercase tracking-widest text-center">
-          {isListening ? "Listening..." : "Tap to Speak"}
+        <p className="mt-3 text-xs font-bold text-[#a8cfb9] uppercase tracking-widest text-center">
+          {isListening ? "Listening..." : "Tap Microphone to Speak"}
         </p>
 
-        <div className="w-full mt-6 space-y-3">
+        <div className="w-full mt-4 space-y-3">
           {transcript && (
-            <div className="bg-gray-50 rounded-2xl p-3 border border-gray-100 text-sm text-gray-700 self-end">
-              <span className="font-bold text-xs text-gray-400 block mb-1">YOU SAID</span>
+            <div className="bg-[#0b0f10] rounded-xl p-3 border border-white/10 text-xs text-white self-end">
+              <span className="font-bold text-[10px] text-[#00f4fe] block mb-0.5">YOU SAID</span>
               "{transcript}"
             </div>
           )}
           
           {loading && (
             <div className="flex gap-1 items-center justify-center py-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></span>
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-100"></span>
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-200"></span>
+              <span className="w-2 h-2 bg-[#00f4fe] rounded-full animate-bounce"></span>
+              <span className="w-2 h-2 bg-[#00f4fe] rounded-full animate-bounce delay-100"></span>
+              <span className="w-2 h-2 bg-[#00f4fe] rounded-full animate-bounce delay-200"></span>
             </div>
           )}
 
           {response && !loading && (
-            <div className="bg-green-50 border border-green-100 rounded-2xl p-4 text-sm font-medium text-green-900 shadow-sm relative">
+            <div className="bg-[#0b0f10] border border-[rgba(76,227,70,0.4)] rounded-xl p-3 text-xs font-medium text-[#4ce346] shadow-sm relative">
               {response}
-              <button onClick={() => speakText(response, language)} className="absolute bottom-2 right-2 text-green-600 hover:text-green-800 bg-white rounded-full p-1.5 shadow-sm text-xs cursor-pointer">
+              <button onClick={() => speakText(response, language)} className="absolute bottom-2 right-2 text-[#00f4fe] bg-white/10 hover:bg-white/20 rounded-full p-1 text-xs cursor-pointer">
                 🔊
               </button>
             </div>

@@ -94,7 +94,7 @@ const CATEGORY_OPTIONS = ["vegetables","fruits","grains","herbs","other"];
 const UNIT_OPTIONS = ["kg","lb","unit","bunch"];
 
 // ── Helpers ─────────────────────────────────────────────
-const fmt = (n) => `$${Number(n).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+const fmt = (n) => `₹${Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 const getInitials = (name = "") => name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 
 const getStatusClass = (s) =>

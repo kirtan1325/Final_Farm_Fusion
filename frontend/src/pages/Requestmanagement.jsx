@@ -49,7 +49,7 @@ const STATUS_UI = {
 };
 
 // ── Helpers ─────────────────────────────────────────────
-const fmt     = (n) => `$${Number(n).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+const fmt     = (n) => `₹${Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 const fmtDate = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 const getInitials = (name = "") => name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 const avatarColors = [
@@ -262,7 +262,7 @@ export default function Requestmanagement() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       {rejectTarget && <RejectModal onConfirm={handleRejectConfirm} onCancel={() => setRejectTarget(null)} />}
       {negotiateTarget && <NegotiationModal request={negotiateTarget} onClose={() => setNegotiateTarget(null)} isFarmer={true} />}
 

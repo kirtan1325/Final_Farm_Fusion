@@ -60,23 +60,23 @@ export default function GovernmentSchemes() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#101415" }}>
       <SharedSidebar activePath="/schemes" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Bar */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-white">
             <MenuIcon />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl"
-              style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl shadow-[0_0_10px_rgba(0,244,254,0.3)]"
+              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
               🏛️
             </div>
             <div>
-              <h1 className="font-bold text-gray-900 leading-tight">Government Schemes</h1>
-              <p className="text-xs text-gray-500 hidden sm:block">Subsidies, loans, insurance & more</p>
+              <h1 className="font-bold text-white text-base leading-tight">Government Schemes</h1>
+              <p className="text-xs text-[#a8cfb9] hidden sm:block">Subsidies, loans, insurance & welfare programs</p>
             </div>
           </div>
           {user && (

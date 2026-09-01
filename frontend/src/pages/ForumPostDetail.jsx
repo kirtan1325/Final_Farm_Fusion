@@ -104,7 +104,7 @@ export default function ForumPostDetail() {
   if (!post) return null;
 
   return (
-    <div className="min-h-screen" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="min-h-screen" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
       {/* ── Header ── */}
       <header style={{ background: "#0f172a", borderBottom: "1px solid rgba(255,255,255,0.07)" }}
         className="sticky top-0 z-20 px-4 sm:px-6 py-3 flex items-center gap-3">
