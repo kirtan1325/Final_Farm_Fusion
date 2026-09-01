@@ -58,7 +58,7 @@ const PersonIcon   = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill
 const BuildingIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>);
 const PinIcon      = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>);
 
-const InputField = ({ label, type = "text", placeholder, value, onChange, icon, rightElement, required }) => (
+const InputField = ({ label, type = "text", placeholder, value, onChange, icon, rightElement, required, autoComplete = "off" }) => (
   <div className="flex flex-col gap-1.5 text-left">
     <label className="text-sm font-semibold text-gray-300">{label}</label>
     <div className="ff-input-group">
@@ -69,6 +69,7 @@ const InputField = ({ label, type = "text", placeholder, value, onChange, icon, 
         value={value}
         onChange={onChange}
         required={required}
+        autoComplete={autoComplete}
         className="placeholder-gray-600 w-full bg-transparent text-white outline-none"
       />
       {rightElement}
@@ -490,20 +491,21 @@ export default function FarmFusionLogin() {
 
             {/* ══ LOGIN FORM ══ */}
             {tab === "login" && (
-              <form onSubmit={handleLogin} className="flex flex-col gap-4">
+              <form onSubmit={handleLogin} className="flex flex-col gap-4" autoComplete="off">
                 <InputField 
-                  label="Node Email Address" 
+                  label="Email Address" 
                   type="email" 
-                  placeholder="you@domain.com"
+                  placeholder="Enter your email address..."
                   value={loginEmail} 
                   onChange={(e) => setLoginEmail(e.target.value)}
                   icon={<MailIcon/>} 
                   required
+                  autoComplete="off"
                 />
 
                 <div className="flex flex-col gap-1.5 text-left">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-semibold text-gray-300">Operator Passcode</label>
+                    <label className="text-sm font-semibold text-gray-300">Passcode / Password</label>
                     <button type="button" className="text-xs font-bold text-emerald-400 hover:underline cursor-pointer">
                       Recovery?
                     </button>
@@ -512,10 +514,11 @@ export default function FarmFusionLogin() {
                     <LockIcon/>
                     <input
                       type={showLoginPass ? "text" : "password"}
-                      placeholder="••••••••"
+                      placeholder="Enter your password..."
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       required
+                      autoComplete="new-password"
                       className="placeholder-gray-600 bg-transparent text-white outline-none w-full"
                     />
                     <button type="button" onClick={() => setShowLoginPass(!showLoginPass)}
