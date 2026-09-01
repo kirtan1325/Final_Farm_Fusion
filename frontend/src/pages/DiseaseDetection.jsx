@@ -138,11 +138,7 @@ export default function DiseaseDetection() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
             {/* Upload Area */}
-            <div className="ff-card p-6 flex flex-col items-center ff-fade-in ff-stagger-1 relative overflow-hidden">
-              {/* Decorative top strip */}
-              <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl"
-                style={{ background: "linear-gradient(90deg, #10b981, #059669)" }} />
-
+            <div className="ff-card p-6 flex flex-col items-center ff-fade-in relative overflow-hidden">
               <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
 
               {!previewUrl ? (
@@ -151,49 +147,45 @@ export default function DiseaseDetection() {
                   onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
-                  className={`w-full aspect-square rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group ff-fade-in`}
+                  className={`w-full aspect-square rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group`}
                   style={{
-                    border: dragOver ? "2px dashed #10b981" : "2px dashed #6ee7b7",
-                    background: dragOver ? "rgba(16,185,129,0.08)" : "rgba(236,253,245,0.5)",
-                    boxShadow: dragOver ? "0 0 0 4px rgba(16,185,129,0.15)" : "none",
+                    border: dragOver ? "2px dashed #00f4fe" : "2px dashed rgba(0, 244, 254, 0.35)",
+                    background: dragOver ? "rgba(0, 244, 254, 0.12)" : "rgba(6, 44, 29, 0.4)",
+                    boxShadow: dragOver ? "0 0 20px rgba(0, 244, 254, 0.25)" : "none",
                   }}
                 >
-                  <div className="w-24 h-24 rounded-full flex items-center justify-center text-4xl mb-5 transition-transform group-hover:scale-110 duration-300"
-                    style={{ background: "linear-gradient(135deg, #d1fae5, #a7f3d0)" }}>
+                  <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 transition-transform group-hover:scale-110 duration-300 shadow-[0_0_20px_rgba(0,244,254,0.3)]"
+                    style={{ background: "rgba(0, 244, 254, 0.15)", border: "1px solid rgba(0, 244, 254, 0.3)" }}>
                     📸
                   </div>
-                  <p className="font-bold text-gray-700 text-base">
-                    {dragOver ? "Drop image here!" : "Drag & Drop or Click to Upload"}
+                  <p className="font-bold text-white text-base">
+                    {dragOver ? "Drop leaf image here!" : "Drag & Drop or Click to Upload"}
                   </p>
-                  <p className="text-xs text-gray-400 mt-2 font-medium">JPEG, PNG or WebP supported</p>
-                  <div className="mt-4 px-4 py-1.5 rounded-full text-xs font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}>
+                  <p className="text-xs text-[#a8cfb9] mt-1 font-medium">JPEG, PNG or WebP supported</p>
+                  <div className="mt-4 ff-btn ff-btn-secondary text-xs">
                     Browse Files
                   </div>
                 </div>
               ) : (
-                <div className="w-full relative rounded-2xl overflow-hidden shadow-inner group ff-fade-in">
+                <div className="w-full relative rounded-xl overflow-hidden shadow-inner group ff-fade-in">
                   {/* Loading overlay */}
                   {loading && (
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
-                      <div className="relative w-16 h-16">
-                        <div className="absolute inset-0 border-4 border-emerald-300/30 rounded-full animate-ping" />
-                        <div className="absolute inset-2 border-4 border-emerald-400 rounded-full animate-spin border-t-transparent" />
-                      </div>
-                      <p className="text-white text-sm font-bold mt-4 tracking-widest uppercase animate-pulse">Scanning...</p>
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#101415]/80 backdrop-blur-md">
+                      <div className="ff-spinner mb-3" style={{ width: "3rem", height: "3rem" }} />
+                      <p className="text-[#00f4fe] text-xs font-bold tracking-widest uppercase animate-pulse">Scanning Crop Leaf...</p>
                     </div>
                   )}
                   <img src={previewUrl} alt="Crop Leaf" className="w-full h-auto aspect-square object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="bg-white text-gray-800 text-xs font-bold px-4 py-2 rounded-lg hover:scale-105 transition-transform cursor-pointer shadow-md"
+                      className="ff-btn ff-btn-secondary text-xs"
                     >
                       Change
                     </button>
                     <button
                       onClick={clearSelection}
-                      className="ff-btn ff-btn-danger text-xs px-4 py-2"
+                      className="ff-btn ff-btn-danger text-xs"
                     >
                       Remove
                     </button>
@@ -202,7 +194,7 @@ export default function DiseaseDetection() {
               )}
 
               {error && (
-                <div className="text-red-600 text-sm mt-4 font-semibold text-center w-full bg-red-50 rounded-xl p-3 border border-red-100">
+                <div className="text-red-400 text-xs mt-4 font-semibold text-center w-full bg-red-950/30 rounded-xl p-3 border border-red-800/40">
                   ⚠️ {error}
                 </div>
               )}
@@ -210,119 +202,92 @@ export default function DiseaseDetection() {
               <button
                 onClick={handleAnalyze}
                 disabled={!selectedFile || loading}
-                className="ff-btn ff-btn-primary w-full mt-5 flex items-center justify-center gap-2"
-                style={{
-                  background: (!selectedFile || loading) ? undefined : "linear-gradient(135deg, #10b981, #059669)",
-                  boxShadow: (!selectedFile || loading) ? undefined : "0 4px 15px rgba(16,185,129,0.3)",
-                }}
+                className="ff-btn ff-btn-primary w-full mt-6"
               >
                 {loading ? (
                   <>
-                    <span className="ff-spinner" />
+                    <span className="ff-spinner" style={{ width: "1rem", height: "1rem" }} />
                     Analyzing Image...
                   </>
-                ) : "🔍 Analyze Image"}
+                ) : "🔍 Scan & Analyze Crop Health"}
               </button>
             </div>
 
             {/* Results Area */}
             <div>
-              {/* Loading shimmer skeleton */}
-              {loading && !result && (
-                <div className="ff-card p-6 flex flex-col gap-4 ff-fade-in">
-                  <div className="ff-shimmer h-4 w-1/3 rounded-lg" />
-                  <div className="ff-shimmer h-9 w-2/3 rounded-xl" />
-                  <div className="ff-shimmer h-3 w-full rounded-lg" />
-                  <div className="ff-shimmer h-24 rounded-xl" />
-                  <div className="ff-shimmer h-24 rounded-xl" />
-                  <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest text-center animate-pulse">
-                    Deep learning analysis in progress...
-                  </p>
-                </div>
-              )}
-
               {/* Empty placeholder */}
               {!result && !loading && (
-                <div className="ff-card p-10 flex flex-col items-center justify-center text-center min-h-[320px] ff-fade-in ff-stagger-2"
-                  style={{ border: "2px dashed #d1fae5" }}>
-                  <div className="text-6xl mb-4 opacity-50">🍃</div>
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Upload a Leaf Photo</p>
-                  <p className="text-xs text-gray-400 mt-2">Results will appear here after analysis</p>
+                <div className="ff-card p-10 flex flex-col items-center justify-center text-center min-h-[340px] ff-fade-in"
+                  style={{ border: "2px dashed rgba(0, 244, 254, 0.2)" }}>
+                  <div className="text-6xl mb-4 opacity-60">🍃</div>
+                  <p className="text-sm font-bold text-[#00f4fe] uppercase tracking-wider">Awaiting Leaf Scan</p>
+                  <p className="text-xs text-[#a8cfb9] mt-2 max-w-xs">Upload a leaf photo to view real-time disease diagnostic remedies & treatments</p>
                 </div>
               )}
 
               {/* Result card */}
               {result && (
-                <div className="ff-fade-in">
-                  {/* Header result */}
-                  <div className="rounded-2xl p-8 text-white relative overflow-hidden shadow-2xl mb-4"
-                    style={{
-                      background: result.disease === "Healthy"
-                        ? "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)"
-                        : "linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #b91c1c 100%)"
-                    }}>
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mx-20 -my-20 pointer-events-none" />
-
-                    <div className="relative z-10">
-                      <p className={`text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2 ${result.disease === "Healthy" ? "text-emerald-300" : "text-red-300"}`}>
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse inline-block" />
+                <div className="ff-card p-6 ff-fade-in relative overflow-hidden"
+                  style={{ border: result.disease === "Healthy" ? "1.5px solid rgba(76, 227, 70, 0.4)" : "1.5px solid rgba(239, 68, 68, 0.4)" }}>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`ff-badge ${result.disease === "Healthy" ? "ff-badge-green" : "ff-badge-red"}`}>
+                        <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
                         Analysis Complete
-                      </p>
+                      </span>
+                      <span className="text-xs font-semibold text-[#a8cfb9]">
+                        Crop: <strong className="text-white">{result.affected_crop || "Cotton"}</strong>
+                      </span>
+                    </div>
 
-                      <h2 className="text-3xl font-black mb-4 flex items-center gap-3">
-                        {result.disease === "Healthy" ? "✅" : "⚠️"} {result.disease}
-                      </h2>
+                    <h2 className="text-2xl font-extrabold text-white mb-3 flex items-center gap-2">
+                      {result.disease === "Healthy" ? "✅" : "⚠️"} {result.disease}
+                    </h2>
 
-                      {/* Confidence bar */}
-                      {result.confidence && (
-                        <div className="mb-6">
-                          <div className="flex justify-between text-xs font-semibold mb-1.5 opacity-80">
-                            <span>Detection Confidence</span>
-                            <span>{result.confidence}%</span>
-                          </div>
-                          <div className="w-full bg-white/10 rounded-full h-2">
-                            <div
-                              className="h-2 rounded-full transition-all duration-1000"
-                              style={{
-                                width: `${result.confidence}%`,
-                                background: result.disease === "Healthy"
-                                  ? "linear-gradient(90deg, #34d399, #10b981)"
-                                  : "linear-gradient(90deg, #fca5a5, #ef4444)"
-                              }}
-                            />
-                          </div>
+                    {/* Confidence bar */}
+                    {result.confidence && (
+                      <div className="mb-5">
+                        <div className="flex justify-between text-xs font-semibold mb-1 text-[#a8cfb9]">
+                          <span>Confidence Metric</span>
+                          <span className="text-[#00f4fe] font-bold">{result.confidence}%</span>
                         </div>
-                      )}
-
-                      <div className="space-y-3">
-                        <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
-                          <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${result.disease === "Healthy" ? "text-emerald-300" : "text-red-300"}`}>
-                            💊 Recommended Treatment
-                          </p>
-                          <p className="font-semibold text-white">{result.treatment}</p>
-                        </div>
-
-                        <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4">
-                          <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${result.disease === "Healthy" ? "text-emerald-300" : "text-red-300"}`}>
-                            🌿 Organic Alternative
-                          </p>
-                          <p className="font-semibold text-green-300">{result.organic_alternatives}</p>
+                        <div className="w-full bg-[#0b0f10] rounded-full h-2 overflow-hidden border border-white/10">
+                          <div
+                            className="h-2 rounded-full transition-all duration-1000"
+                            style={{
+                              width: `${result.confidence}%`,
+                              background: result.disease === "Healthy"
+                                ? "linear-gradient(90deg, #4ce346, #34d399)"
+                                : "linear-gradient(90deg, #f87171, #ef4444)"
+                            }}
+                          />
                         </div>
                       </div>
+                    )}
 
-                      <p className="text-[10px] opacity-50 mt-6 text-center">
-                        Powered by Deep Convolutional Neural Networks
-                      </p>
+                    <div className="space-y-3">
+                      <div className="bg-[#0b0f10]/80 border border-white/10 rounded-xl p-4">
+                        <p className="text-xs font-bold uppercase tracking-wider mb-1 text-[#00f4fe]">
+                          💊 Recommended Treatment
+                        </p>
+                        <p className="text-sm font-medium text-white">{result.treatment}</p>
+                      </div>
+
+                      <div className="bg-[#0b0f10]/80 border border-white/10 rounded-xl p-4">
+                        <p className="text-xs font-bold uppercase tracking-wider mb-1 text-[#4ce346]">
+                          🌿 Organic Alternative
+                        </p>
+                        <p className="text-sm font-medium text-[#4ce346]">{result.organic_alternatives}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Scan again */}
-                  <button
-                    onClick={clearSelection}
-                    className="ff-btn ff-btn-ghost w-full text-sm"
-                  >
-                    🔄 Scan Another Image
-                  </button>
+                    <button
+                      onClick={clearSelection}
+                      className="ff-btn ff-btn-secondary w-full mt-5 text-xs"
+                    >
+                      🔄 Scan Another Image
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
