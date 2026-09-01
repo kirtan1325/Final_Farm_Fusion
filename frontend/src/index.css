@@ -132,7 +132,7 @@ body {
 
 .ff-input-group {
   display: flex;
-  items-center: center;
+  align-items: center;
   gap: 0.5rem;
   background: #060a0c !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -141,6 +141,7 @@ body {
   color: #ffffff !important;
   transition: all 0.2s ease;
 }
+
 
 .ff-input-group:focus-within {
   border-color: #00f4fe !important;
