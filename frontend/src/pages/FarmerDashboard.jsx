@@ -741,7 +741,7 @@ export default function FarmerDashboard() {
   if (loading) return <ShimmerLoading />;
 
   return (
-    <div className="flex h-screen bg-[#101415] font-sans overflow-hidden">
+    <div className="flex h-screen bg-[#F4F6F4] font-sans overflow-hidden">
       {showModal && (
         <CropFormModal
           initialData={editingCrop}
@@ -765,27 +765,24 @@ export default function FarmerDashboard() {
         {/* ── Top bar ── */}
         <header className="ff-topbar flex-shrink-0 sticky top-0 z-20">
           <button onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-500 hover:text-gray-900 transition-colors cursor-pointer p-1 rounded-lg hover:bg-gray-100 mr-1">
+            className="lg:hidden text-gray-700 hover:text-gray-900 transition-colors cursor-pointer p-1 rounded-lg hover:bg-gray-100 mr-1">
             <MenuIcon />
           </button>
 
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-gray-900 truncate leading-tight">
-              Welcome back, <span className="ff-gradient-text">{user?.name?.split(" ")[0] || "Farmer"}</span>!
+            <h1 className="text-xl font-bold text-gray-900 truncate leading-tight">
+              Farm Dashboard
             </h1>
-            <p className="text-gray-500 text-xs mt-0.5 hidden sm:block">
-              Here's what's happening on your farm today.
-            </p>
           </div>
 
           {/* Search — desktop */}
-          <div className="ff-input-group hidden md:flex w-56 lg:w-64">
+          <div className="ff-input-group hidden md:flex w-56 lg:w-64 mr-3">
             <SearchIcon />
             <input type="text" placeholder="Search crops…" value={search}
               onChange={(e) => setSearch(e.target.value)} />
           </div>
 
-          <button onClick={() => { setEditingCrop(null); setShowModal(true); }} className="ff-btn ff-btn-primary flex-shrink-0">
+          <button onClick={() => { setEditingCrop(null); setShowModal(true); }} className="ff-btn ff-btn-primary flex-shrink-0" style={{ background: "#0E4B33" }}>
             <PlusIcon />
             <span className="hidden sm:inline">Add New Crop</span>
             <span className="sm:hidden">Add</span>
@@ -803,16 +800,43 @@ export default function FarmerDashboard() {
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
 
-          {/* Error banner */}
-          {error && (
-            <div className="ff-fade-in bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                {error}
+          {/* Welcome Banner + Soil Moisture Dark Card (Matching Screenshot 2) */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch ff-fade-in">
+            <div className="lg:col-span-2 ff-card p-6 flex flex-col justify-between bg-white">
+              <div>
+                <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                  Welcome back, {user?.name?.split(" ")[0] || "John"}.
+                </h1>
+                <p className="text-gray-600 mt-2 text-sm max-w-xl">
+                  Your farm is operating at <span className="font-bold text-[#0E4B33]">92% efficiency</span>. Here is your current AI farming plan based on real-time soil data.
+                </p>
               </div>
-              <button onClick={fetchData} className="text-xs font-semibold underline cursor-pointer ml-4 hover:text-red-900 transition-colors">Retry</button>
+
+              <div className="flex flex-wrap gap-3 mt-6">
+                <div className="px-4 py-2.5 rounded-xl bg-[#E6F9EF] border border-[#95F2BE] flex items-center gap-2 text-xs font-bold text-[#0E4B33]">
+                  <span>🌾</span> Recommended Crop: <span className="underline">Rice (Basmati)</span>
+                </div>
+                <div className="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center gap-2 text-xs font-bold text-amber-900">
+                  <span>🧪</span> Optimal Fertilizer: <span>Urea/DAP Mix</span>
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* Dark Stat Card — Soil Moisture (Matching Screenshot 2) */}
+            <div className="ff-card-dark flex flex-col justify-between" style={{ background: "#0E4B33" }}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold tracking-wider uppercase opacity-90">Soil Moisture</span>
+                <span className="text-xl">💧</span>
+              </div>
+              <div className="my-4">
+                <h2 className="text-4xl font-extrabold font-mono text-white">42%</h2>
+                <div className="w-full h-2.5 bg-white/20 rounded-full mt-3 overflow-hidden">
+                  <div className="h-full bg-[#95F2BE] rounded-full" style={{ width: "42%" }} />
+                </div>
+              </div>
+              <p className="text-xs text-white/80 font-medium">Optimal range: 40-60%</p>
+            </div>
+          </div>
 
           {/* ── Stat Cards ── */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

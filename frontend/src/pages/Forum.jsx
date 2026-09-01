@@ -100,7 +100,7 @@ export default function Forum() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
       <SharedSidebar open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} activePath="/forum" />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">

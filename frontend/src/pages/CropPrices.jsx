@@ -211,7 +211,7 @@ export default function CropPrices() {
   const trendBg    = (t) => t === "up" ? "bg-emerald-50 border-emerald-200" : t === "down" ? "bg-red-50 border-red-200" : "bg-gray-50 border-gray-200";
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#f8fafc" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
       <SharedSidebar activePath="/crop-prices" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">

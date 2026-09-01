@@ -145,18 +145,18 @@ export default function NotificationBell() {
       {open && (
         <div className="absolute right-0 top-full mt-2 w-96 max-h-[70vh] bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-[#F8FAFC]">
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-gray-900 text-lg">Notifications</h3>
+              <h3 className="font-bold text-gray-900 text-base">Notifications</h3>
               {unreadCount > 0 && (
-                <span className="bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
+                <span className="ff-badge ff-badge-red" style={{ fontSize: "0.65rem" }}>
                   {unreadCount}
                 </span>
               )}
             </div>
             {unreadCount > 0 && (
               <button onClick={handleMarkAllRead}
-                className="text-xs font-semibold text-green-600 hover:text-green-800 cursor-pointer">
+                className="text-xs font-bold text-[#0E4B33] hover:underline cursor-pointer">
                 Mark all read
               </button>
             )}

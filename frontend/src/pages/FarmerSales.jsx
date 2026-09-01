@@ -124,7 +124,7 @@ export default function FarmerSales() {
   const fmtDate = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#050814" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
       <SharedSidebar activePath="/farmer/sales" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">

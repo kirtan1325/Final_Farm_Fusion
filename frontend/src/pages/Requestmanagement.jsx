@@ -262,7 +262,7 @@ export default function Requestmanagement() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#101415" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
       {rejectTarget && <RejectModal onConfirm={handleRejectConfirm} onCancel={() => setRejectTarget(null)} />}
       {negotiateTarget && <NegotiationModal request={negotiateTarget} onClose={() => setNegotiateTarget(null)} isFarmer={true} />}
 

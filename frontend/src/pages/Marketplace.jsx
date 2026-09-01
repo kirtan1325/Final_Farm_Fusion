@@ -48,25 +48,23 @@ function FilterDropdown({ label, options, value, onChange }) {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl border transition-all cursor-pointer"
+        className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer shadow-xs"
         style={{
-          background: isActive ? "rgba(0, 244, 254, 0.18)" : "rgba(6, 44, 29, 0.75)",
-          borderColor: isActive ? "#00f4fe" : "rgba(0, 244, 254, 0.25)",
-          color: isActive ? "#00f4fe" : "#e0e3e5",
-          backdropFilter: "blur(16px)"
+          background: isActive ? "#E6F9EF" : "#FFFFFF",
+          borderColor: isActive ? "#0E4B33" : "#E5E7EB",
+          color: isActive ? "#0E4B33" : "#4B5563",
         }}
       >
         {label}
         <ChevronDown />
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-2 bg-[#062c1d] border border-[rgba(0,244,254,0.3)] rounded-xl shadow-2xl z-30 py-2 min-w-[180px] ff-scale-in"
-          style={{ backdropFilter: "blur(20px)" }}>
+        <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-30 py-1.5 min-w-[180px] ff-scale-in">
           {options.map((opt) => (
             <button key={opt} onClick={() => { onChange(opt); setOpen(false); }}
-              className="w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer flex items-center gap-2"
-              style={{ color: value === opt ? "#00f4fe" : "#c1c8c2", fontWeight: value === opt ? 700 : 400 }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(0, 244, 254, 0.15)"}
+              className="w-full text-left px-4 py-2 text-xs font-medium transition-colors cursor-pointer flex items-center gap-2"
+              style={{ color: value === opt ? "#0E4B33" : "#4B5563", fontWeight: value === opt ? 700 : 500 }}
+              onMouseEnter={e => e.currentTarget.style.background = "#F4F6F4"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
             >
               {value === opt && <CheckIcon />}
@@ -316,7 +314,7 @@ export default function Marketplace() {
   const pagedCrops = allCrops.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f8fafc", fontFamily: "var(--ff-font)" }}>
+    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}>
       {selectedCropImage && (
         <ImageModal crop={selectedCropImage} onClose={() => setSelectedCropImage(null)} />
       )}
@@ -324,11 +322,12 @@ export default function Marketplace() {
       <SharedSidebar activePath="/marketplace" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        {/* ── Topbar ── */}
+        {/* Topbar */}
         <header className="ff-topbar flex-shrink-0">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-gray-500 hover:text-gray-900 cursor-pointer mr-1">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-gray-700 hover:text-gray-900 transition-colors cursor-pointer mr-2">
             <MenuIcon />
           </button>
+
           <div className="flex-1 max-w-2xl z-40">
             <SearchAutocomplete
               value={search}
@@ -340,20 +339,20 @@ export default function Marketplace() {
               placeholder="Search for fresh crops, farmers, or varieties..."
             />
           </div>
-          <span className="hidden sm:block text-sm text-gray-400 ml-2">
+          <span className="hidden sm:block text-xs font-semibold text-gray-500 ml-3">
             {allCrops.length} product{allCrops.length !== 1 ? "s" : ""}
           </span>
         </header>
 
-        {/* ── Page body ── */}
+        {/* Page body */}
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
-          {/* Heading */}
+          {/* Main Title Banner (Matching Screenshot 3) */}
           <div className="ff-fade-in">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Marketplace</h1>
-            <p className="text-gray-500 text-sm mt-1">Discover fresh, high-quality harvests directly from local farms.</p>
+            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Marketplace & Buyer Matching</h1>
+            <p className="text-gray-600 text-sm mt-1">AI-optimized insights to maximize your harvest value.</p>
           </div>
 
-          {/* Error */}
+          {/* Error Banner */}
           {error && (
             <div className="flex items-center gap-2 bg-red-50 border-l-4 border-red-500 rounded-xl px-4 py-3 text-sm text-red-700">
               {error}

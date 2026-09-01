@@ -60,7 +60,7 @@ export default function GovernmentSchemes() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#101415" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#F4F6F4" }}>
       <SharedSidebar activePath="/schemes" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">

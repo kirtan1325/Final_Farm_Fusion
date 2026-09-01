@@ -98,44 +98,52 @@ export default function DiseaseDetection() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#101415" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#F4F6F4" }}>
       <SharedSidebar activePath="/disease-detection" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top Bar */}
         <header className="ff-topbar">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer text-white">
+          <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer text-gray-700">
             <MenuIcon />
           </button>
           <div className="flex items-center gap-3 flex-1">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl shadow-[0_0_10px_rgba(0,244,254,0.3)]"
-              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg shadow-xs"
+              style={{ background: "#0E4B33", color: "#FFFFFF" }}>
               🍃
             </div>
             <div>
-              <h1 className="font-bold text-white text-base leading-tight">AI Disease Detection</h1>
-              <p className="text-xs text-[#a8cfb9] hidden sm:block">Deep learning plant leaf scanner & treatment guide</p>
+              <h1 className="font-bold text-gray-900 text-base leading-tight">Crop Health AI</h1>
+              <p className="text-xs text-gray-500 hidden sm:block">Upload photos for instant disease diagnosis & regional treatment guide</p>
             </div>
           </div>
           {user && (
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 shadow-[0_0_10px_rgba(0,244,254,0.3)]"
-              style={{ background: "linear-gradient(135deg, #00f4fe, #4ce346)", color: "#002021" }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white shadow-xs"
+              style={{ background: "#0E4B33" }}>
               {getInitials(user.name)}
             </div>
           )}
         </header>
 
-        <main className="flex-1 px-4 sm:px-6 py-8 max-w-5xl mx-auto w-full">
-          {/* Page description */}
+        <main className="flex-1 px-4 sm:px-8 py-8 max-w-6xl mx-auto w-full">
+          {/* Main Title Banner */}
           <div className="mb-6 ff-fade-in">
-            <p className="text-[#a8cfb9] text-sm">
-              Upload a photo of a diseased or pest-infested plant leaf to instantly identify the issue and receive organic & chemical remedies.
+            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Crop Health AI</h1>
+            <p className="text-gray-600 mt-1 text-sm max-w-3xl">
+              Upload photos for instant disease diagnosis, review past scans, and get automated treatment recommendations based on regional data.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             {/* Upload Area */}
-            <div className="ff-card p-6 flex flex-col items-center ff-fade-in relative overflow-hidden">
+            <div className="lg:col-span-2 ff-card p-6 flex flex-col items-center ff-fade-in relative overflow-hidden bg-white">
+              <div className="w-full flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <span>⚛️</span> AI Health Scanner
+                </h2>
+                <span className="text-xs text-gray-400">Drag and drop a clear photo of a crop leaf</span>
+              </div>
+
               <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
 
               {!previewUrl ? (
@@ -144,151 +152,136 @@ export default function DiseaseDetection() {
                   onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
-                  className={`w-full aspect-square rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-300 group`}
+                  className={`w-full aspect-video sm:aspect-21/9 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 group border-2 border-dashed`}
                   style={{
-                    border: dragOver ? "2px dashed #00f4fe" : "2px dashed rgba(0, 244, 254, 0.35)",
-                    background: dragOver ? "rgba(0, 244, 254, 0.12)" : "rgba(6, 44, 29, 0.4)",
-                    boxShadow: dragOver ? "0 0 20px rgba(0, 244, 254, 0.25)" : "none",
+                    borderColor: dragOver ? "#0E4B33" : "#CBD5E1",
+                    background: dragOver ? "#E6F9EF" : "#F8FAFC",
                   }}
                 >
-                  <div className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 transition-transform group-hover:scale-110 duration-300 shadow-[0_0_20px_rgba(0,244,254,0.3)]"
-                    style={{ background: "rgba(0, 244, 254, 0.15)", border: "1px solid rgba(0, 244, 254, 0.3)" }}>
-                    📸
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-2 transition-transform group-hover:scale-105 duration-200 bg-white border border-gray-200 shadow-xs">
+                    🖼️
                   </div>
-                  <p className="font-bold text-white text-base">
-                    {dragOver ? "Drop leaf image here!" : "Drag & Drop or Click to Upload"}
+                  <p className="font-bold text-gray-900 text-sm">
+                    {dragOver ? "Drop crop image here!" : "Click to browse or drag image here"}
                   </p>
-                  <p className="text-xs text-[#a8cfb9] mt-1 font-medium">JPEG, PNG or WebP supported</p>
-                  <div className="mt-4 ff-btn ff-btn-secondary text-xs">
-                    Browse Files
-                  </div>
+                  <p className="text-xs text-gray-400 mt-0.5">Supports JPG, PNG (Max 5MB)</p>
                 </div>
               ) : (
-                <div className="w-full relative rounded-xl overflow-hidden shadow-inner group ff-fade-in">
-                  {/* Loading overlay */}
+                <div className="w-full relative rounded-xl overflow-hidden border border-gray-200 group ff-fade-in">
                   {loading && (
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#101415]/80 backdrop-blur-md">
-                      <div className="ff-spinner mb-3" style={{ width: "3rem", height: "3rem" }} />
-                      <p className="text-[#00f4fe] text-xs font-bold tracking-widest uppercase animate-pulse">Scanning Crop Leaf...</p>
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/80 backdrop-blur-xs">
+                      <div className="ff-spinner mb-3" style={{ width: "2.5rem", height: "2.5rem" }} />
+                      <p className="text-[#0E4B33] text-xs font-bold uppercase tracking-wider animate-pulse">Scanning Crop Leaf...</p>
                     </div>
                   )}
-                  <img src={previewUrl} alt="Crop Leaf" className="w-full h-auto aspect-square object-cover" />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="ff-btn ff-btn-secondary text-xs"
-                    >
-                      Change
-                    </button>
-                    <button
-                      onClick={clearSelection}
-                      className="ff-btn ff-btn-danger text-xs"
-                    >
-                      Remove
-                    </button>
+                  <img src={previewUrl} alt="Crop Leaf" className="w-full h-56 object-cover" />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                    <button onClick={() => fileInputRef.current?.click()} className="ff-btn ff-btn-secondary text-xs">Change</button>
+                    <button onClick={clearSelection} className="ff-btn ff-btn-danger text-xs">Remove</button>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="text-red-400 text-xs mt-4 font-semibold text-center w-full bg-red-950/30 rounded-xl p-3 border border-red-800/40">
+                <div className="text-red-700 text-xs mt-3 font-semibold text-center w-full bg-red-50 rounded-xl p-3 border border-red-200">
                   ⚠️ {error}
                 </div>
               )}
 
-              <button
-                onClick={handleAnalyze}
-                disabled={!selectedFile || loading}
-                className="ff-btn ff-btn-primary w-full mt-6"
-              >
-                {loading ? (
-                  <>
-                    <span className="ff-spinner" style={{ width: "1rem", height: "1rem" }} />
-                    Analyzing Image...
-                  </>
-                ) : "🔍 Scan & Analyze Crop Health"}
-              </button>
+              <div className="w-full flex justify-end mt-4">
+                <button
+                  onClick={handleAnalyze}
+                  disabled={!selectedFile || loading}
+                  className="ff-btn ff-btn-primary px-6"
+                  style={{ background: "#0E4B33" }}
+                >
+                  {loading ? "Analyzing Image..." : "✨ Analyze Image"}
+                </button>
+              </div>
             </div>
 
-            {/* Results Area */}
-            <div>
-              {/* Empty placeholder */}
-              {!result && !loading && (
-                <div className="ff-card p-10 flex flex-col items-center justify-center text-center min-h-[340px] ff-fade-in"
-                  style={{ border: "2px dashed rgba(0, 244, 254, 0.2)" }}>
-                  <div className="text-6xl mb-4 opacity-60">🍃</div>
-                  <p className="text-sm font-bold text-[#00f4fe] uppercase tracking-wider">Awaiting Leaf Scan</p>
-                  <p className="text-xs text-[#a8cfb9] mt-2 max-w-xs">Upload a leaf photo to view real-time disease diagnostic remedies & treatments</p>
+            {/* Health Alerts Side Panel (Matching Screenshot 1) */}
+            <div className="ff-card p-6 bg-white">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-gray-900 text-base flex items-center gap-2">
+                  <span className="text-red-500">⚠️</span> Health Alerts
+                </h3>
+                <span className="ff-badge ff-badge-red" style={{ fontSize: "0.65rem" }}>
+                  2 New
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs">
+                  <p className="font-bold text-red-900">Regional Pest Outbreak: Fall Armyworm</p>
+                  <p className="text-red-700 mt-1">Detected in neighboring county. Preventative bio-pesticide recommended within 48h.</p>
+                  <button className="mt-2 text-xs font-bold text-red-900 underline cursor-pointer hover:text-red-700">View Mitigation Plan</button>
                 </div>
-              )}
 
-              {/* Result card */}
-              {result && (
-                <div className="ff-card p-6 ff-fade-in relative overflow-hidden"
-                  style={{ border: result.disease === "Healthy" ? "1.5px solid rgba(76, 227, 70, 0.4)" : "1.5px solid rgba(239, 68, 68, 0.4)" }}>
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className={`ff-badge ${result.disease === "Healthy" ? "ff-badge-green" : "ff-badge-red"}`}>
-                        <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
-                        Analysis Complete
-                      </span>
-                      <span className="text-xs font-semibold text-[#a8cfb9]">
-                        Crop: <strong className="text-white">{result.affected_crop || "Cotton"}</strong>
-                      </span>
-                    </div>
+                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs">
+                  <p className="font-bold text-amber-900">High Humidity Warning</p>
+                  <p className="text-amber-700 mt-1">Conditions favorable for Blight in Sector 4. Adjust irrigation schedule.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                    <h2 className="text-2xl font-extrabold text-white mb-3 flex items-center gap-2">
-                      {result.disease === "Healthy" ? "✅" : "⚠️"} {result.disease}
-                    </h2>
+          {/* Results Area */}
+          {result && (
+            <div className="mt-6 ff-card p-6 ff-fade-in bg-white">
+              <div className="flex items-center justify-between mb-3">
+                <span className={`ff-badge ${result.disease === "Healthy" ? "ff-badge-green" : "ff-badge-red"}`}>
+                  Analysis Complete
+                </span>
+                <span className="text-xs font-semibold text-gray-500">
+                  Crop: <strong className="text-gray-900">{result.affected_crop || "Cotton"}</strong>
+                </span>
+              </div>
 
-                    {/* Confidence bar */}
-                    {result.confidence && (
-                      <div className="mb-5">
-                        <div className="flex justify-between text-xs font-semibold mb-1 text-[#a8cfb9]">
-                          <span>Confidence Metric</span>
-                          <span className="text-[#00f4fe] font-bold">{result.confidence}%</span>
-                        </div>
-                        <div className="w-full bg-[#0b0f10] rounded-full h-2 overflow-hidden border border-white/10">
-                          <div
-                            className="h-2 rounded-full transition-all duration-1000"
-                            style={{
-                              width: `${result.confidence}%`,
-                              background: result.disease === "Healthy"
-                                ? "linear-gradient(90deg, #4ce346, #34d399)"
-                                : "linear-gradient(90deg, #f87171, #ef4444)"
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
+              <h2 className="text-2xl font-extrabold text-gray-900 mb-3 flex items-center gap-2">
+                {result.disease === "Healthy" ? "✅" : "⚠️"} {result.disease}
+              </h2>
 
-                    <div className="space-y-3">
-                      <div className="bg-[#0b0f10]/80 border border-white/10 rounded-xl p-4">
-                        <p className="text-xs font-bold uppercase tracking-wider mb-1 text-[#00f4fe]">
-                          💊 Recommended Treatment
-                        </p>
-                        <p className="text-sm font-medium text-white">{result.treatment}</p>
-                      </div>
-
-                      <div className="bg-[#0b0f10]/80 border border-white/10 rounded-xl p-4">
-                        <p className="text-xs font-bold uppercase tracking-wider mb-1 text-[#4ce346]">
-                          🌿 Organic Alternative
-                        </p>
-                        <p className="text-sm font-medium text-[#4ce346]">{result.organic_alternatives}</p>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={clearSelection}
-                      className="ff-btn ff-btn-secondary w-full mt-5 text-xs"
-                    >
-                      🔄 Scan Another Image
-                    </button>
+              {/* Confidence bar */}
+              {result.confidence && (
+                <div className="mb-5">
+                  <div className="flex justify-between text-xs font-semibold mb-1 text-gray-500">
+                    <span>Confidence Metric</span>
+                    <span className="text-[#0E4B33] font-bold">{result.confidence}%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden border border-gray-200">
+                    <div
+                      className="h-2 rounded-full transition-all duration-1000 bg-[#0E4B33]"
+                      style={{ width: `${result.confidence}%` }}
+                    />
                   </div>
                 </div>
               )}
+
+              <div className="space-y-3">
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider mb-1 text-[#0E4B33]">
+                    💊 Recommended Treatment
+                  </p>
+                  <p className="text-sm font-medium text-gray-900">{result.treatment}</p>
+                </div>
+
+                <div className="bg-[#E6F9EF] border border-[#95F2BE] rounded-xl p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider mb-1 text-[#0E4B33]">
+                    🌿 Organic Alternative
+                  </p>
+                  <p className="text-sm font-medium text-[#0E4B33]">{result.organic_alternatives}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={clearSelection}
+                className="ff-btn ff-btn-secondary w-full mt-5 text-xs"
+              >
+                🔄 Scan Another Image
+              </button>
             </div>
-          </div>
+          )}
         </main>
       </div>
     </div>

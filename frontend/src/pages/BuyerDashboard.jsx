@@ -5,6 +5,7 @@ import { getBuyerStats } from "../api/statsService";
 import { createRequest } from "../api/requestService";
 import { useAuth } from "../context/AuthContext";
 import { useNotifications } from "../context/NotificationContext";
+import SharedSidebar from "../components/SharedSidebar";
 import GoogleTranslate from "../components/GoogleTranslate";
 
 // ── Icons ──────────────────────────────────────────────
@@ -394,12 +395,8 @@ export default function BuyerDashboard() {
   if (loading) return <ShimmerSkeleton />;
 
   return (
-    <div className="flex h-screen bg-[#f8fafc] font-sans overflow-hidden">
-      <Sidebar
-        active={active} setActive={setActive}
-        open={sidebarOpen} setOpen={setSidebarOpen}
-        user={user} onLogout={handleLogout} onNavigate={navigate}
-      />
+    <div className="flex h-screen bg-[#F4F6F4] font-sans overflow-hidden">
+      <SharedSidebar activePath="/buyer/dashboard" open={sidebarOpen} setOpen={setSidebarOpen} user={user} onLogout={handleLogout} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
 

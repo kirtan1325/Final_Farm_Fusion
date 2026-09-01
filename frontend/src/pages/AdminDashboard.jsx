@@ -127,7 +127,7 @@ export default function AdminDashboard() {
   return (
     <div
       className="flex h-screen overflow-hidden"
-      style={{ fontFamily: "var(--ff-font)", background: "#101415" }}
+      style={{ fontFamily: "var(--ff-font)", background: "#F4F6F4" }}
     >
       {/* Mobile overlay */}
       {sidebarOpen && (

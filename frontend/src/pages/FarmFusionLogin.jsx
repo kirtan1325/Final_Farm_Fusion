@@ -313,24 +313,16 @@ export default function FarmFusionLogin() {
   const handleFacebook = () => { window.location.href = `${BACKEND}/api/auth/facebook`; };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative text-white" style={{ background: "#050814" }}>
-      {/* Background orbs */}
-      <div className="ff-orb ff-orb-1" />
-      <div className="ff-orb ff-orb-2" />
-      <div className="ff-orb ff-orb-3" />
-
+    <div className="min-h-screen flex flex-col font-sans relative text-gray-900" style={{ background: "#F4F6F4" }}>
       {/* ── Navbar ── */}
-      <nav className="w-full px-4 sm:px-8 h-14 flex items-center justify-between flex-shrink-0 border-b border-gray-800/50 backdrop-blur-md sticky top-0 z-40 bg-[#050814]/75">
+      <nav className="w-full px-4 sm:px-8 h-14 flex items-center justify-between flex-shrink-0 border-b border-gray-200 backdrop-blur-md sticky top-0 z-40 bg-white">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.3)]" style={{ background: "linear-gradient(135deg, #10b981, #00f5ff)" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-xs" style={{ background: "#0E4B33", color: "#FFFFFF" }}>
+            🌱
           </div>
-          <span className="font-extrabold text-white text-base sm:text-lg uppercase tracking-wider font-mono">Farm Fusion</span>
+          <span className="font-extrabold text-gray-900 text-base sm:text-lg tracking-tight font-sans">Farm Fusion</span>
         </div>
-        <button className="hidden sm:flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest rounded-lg px-3 py-1.5 transition-colors cursor-pointer border border-[#00f5ff] text-[#00f5ff] hover:bg-[#00f5ff]/10">
+        <button className="hidden sm:flex items-center gap-1.5 text-xs font-bold rounded-lg px-3 py-1.5 transition-colors cursor-pointer border border-[#0E4B33] text-[#0E4B33] hover:bg-[#E6F9EF]">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
@@ -339,72 +331,60 @@ export default function FarmFusionLogin() {
       </nav>
 
       {/* ── Main Panel ── */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10 max-w-7xl mx-auto w-full">
-        <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col lg:flex-row ff-fade-in"
-          style={{ boxShadow: "0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)", background: "#080f25" }}>
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10 max-w-6xl mx-auto w-full">
+        <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col lg:flex-row ff-fade-in border border-gray-200 shadow-xl"
+          style={{ background: "#FFFFFF" }}>
 
-          {/* ── Left Panel (Holds Three.js Animation + Brand Text) ── */}
-          <div className="w-full lg:w-[42%] p-6 sm:p-8 flex flex-col justify-between gap-6 relative overflow-hidden bg-black/30"
-            style={{ borderRight: "1px solid rgba(16,185,129,0.15)" }}>
+          {/* ── Left Panel (Deep Forest Green visual card) ── */}
+          <div className="w-full lg:w-[42%] p-6 sm:p-8 flex flex-col justify-between gap-6 relative overflow-hidden"
+            style={{ background: "#0E4B33" }}>
             
             {/* Embedded Three.js Canvas */}
-            <div ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-80" />
+            <div ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-40" />
 
             {/* Top section */}
             <div className="relative z-10 text-left">
               {/* Logo */}
               <div className="flex items-center gap-2.5 mb-8">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                  style={{ background: "linear-gradient(135deg, #10b981, #00f5ff)" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                  </svg>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold bg-white/10 border border-white/20">
+                  🌱
                 </div>
-                <span className="text-white font-extrabold text-lg tracking-wider uppercase font-mono ff-title-glow">Farm Fusion</span>
+                <span className="font-extrabold text-white text-lg tracking-tight">Farm Intelligence</span>
               </div>
 
-              {/* Headline */}
-              <h1 className="text-white font-extrabold text-2xl sm:text-[1.85rem] leading-snug mb-5 uppercase tracking-wide font-mono ff-title-glow">
-                Cultivating the future<br/>of agriculture.
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-3">
+                Smart Agriculture Network & Marketplace
               </h1>
-
-              {/* Glassmorphism description card */}
-              <div className="ff-glass p-5 mb-2 border border-gray-800">
-                <p className="text-xs leading-relaxed text-gray-300">
-                  Join thousands of farmers and buyers connecting directly to build a smarter, fresher supply chain.
-                </p>
-              </div>
+              <p className="text-white/80 text-xs sm:text-sm leading-relaxed">
+                Connect directly with farmers, monitor crop health with AI, track mandi prices, and negotiate direct orders.
+              </p>
             </div>
 
-            {/* Role selector (Only displayed on register tab) */}
-            <div className="relative z-10 text-left">
-              <p className="text-[10px] font-bold uppercase tracking-widest mb-3 text-gray-400">
-                {tab === "register" ? "Select Account Type" : "Farm Fusion Agriculture Network"}
-              </p>
-
-              <div className="grid grid-cols-2 gap-2.5 mb-3">
+            {/* Middle Section: Role indicator */}
+            <div className="relative z-10">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#95F2BE] mb-2">Select Your Role</p>
+              <div className="grid grid-cols-2 gap-2 mb-3">
                 {ROLES.map((r) => {
-                  const isSelected = role === r.id && tab === "register";
+                  const isSelected = role === r.id;
                   return (
                     <button
                       key={r.id}
                       type="button"
-                      onClick={() => tab === "register" && setRole(r.id)}
-                      className={`flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 text-white text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${tab === "login" ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+                      onClick={() => setRole(r.id)}
+                      className="p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all cursor-pointer text-center"
                       style={{
-                        background: isSelected ? "rgba(16,185,129,0.12)" : "rgba(255,255,255,0.02)",
-                        border: isSelected ? "1.5px solid #10b981" : "1.5px solid rgba(255,255,255,0.06)",
-                        boxShadow: isSelected ? "0 0 16px rgba(16,185,129,0.15)" : "none",
-                      }}>
-                      <span style={{ color: isSelected ? "#10b981" : "rgba(255,255,255,0.6)" }}>{r.icon}</span>
-                      <span style={{ color: isSelected ? "#fff" : "rgba(255,255,255,0.7)" }} className="text-xs font-medium">{r.label}</span>
+                        background: isSelected ? "#95F2BE" : "rgba(255,255,255,0.08)",
+                        borderColor: isSelected ? "#95F2BE" : "rgba(255,255,255,0.2)",
+                      }}
+                    >
+                      <span style={{ color: isSelected ? "#0E4B33" : "#FFFFFF" }}>{r.icon}</span>
+                      <span style={{ color: isSelected ? "#0E4B33" : "#FFFFFF" }} className="text-xs font-bold">{r.label}</span>
                     </button>
                   );
                 })}
               </div>
 
-              <p className="text-xs text-center text-gray-400">
+              <p className="text-xs text-center text-white/70">
                 {tab === "register"
                   ? selectedRole?.description
                   : "Verified role access for Farmers & Buyers"}
@@ -416,29 +396,29 @@ export default function FarmFusionLogin() {
               <div className="flex">
                 {["👩‍🌾","👨‍🌾","🧑‍🌾"].map((emoji, i) => (
                   <span key={i}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${i > 0 ? "-ml-2" : ""}`}
-                    style={{ background: "rgba(16,185,129,0.08)", border: "2px solid rgba(16,185,129,0.2)" }}>
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${i > 0 ? "-ml-2" : ""}`}
+                    style={{ background: "rgba(255,255,255,0.15)", border: "2px solid #0E4B33" }}>
                     {emoji}
                   </span>
                 ))}
               </div>
-              <span className="text-xs font-medium text-gray-300">Trusted by 5,000+ Farmers & Buyers</span>
+              <span className="text-xs font-semibold text-white/90">Trusted by 5,000+ Farmers & Buyers</span>
             </div>
           </div>
 
-          {/* ── Right Panel (Holds Form Controls) ── */}
-          <div className="w-full lg:w-[58%] p-6 sm:p-8 flex flex-col justify-center bg-[#080f25]">
+          {/* ── Right Panel (White Form Container) ── */}
+          <div className="w-full lg:w-[58%] p-6 sm:p-8 flex flex-col justify-center bg-white">
 
             {/* Heading */}
             <div className="mb-5 text-left">
-              <h2 className="text-2xl font-extrabold tracking-tight text-white mb-1">
+              <h2 className="text-2xl font-extrabold tracking-tight text-gray-900 mb-1">
                 {tab === "login" ? (
-                  <>Welcome Back to <span className="ff-gradient-text">Farm Fusion</span></>
+                  <>Welcome Back to <span className="text-[#0E4B33]">Farm Fusion</span></>
                 ) : (
-                  <>Create Your <span className="ff-gradient-text">Account</span></>
+                  <>Create Your <span className="text-[#0E4B33]">Account</span></>
                 )}
               </h2>
-              <p className="text-gray-400 text-xs tracking-wide">
+              <p className="text-gray-500 text-xs">
                 {tab === "login"
                   ? "Sign in to access your direct marketplace and AI farm tools"
                   : `Sign up to connect as a ${selectedRole?.label}`}
@@ -446,13 +426,13 @@ export default function FarmFusionLogin() {
             </div>
 
             {/* Tab switcher */}
-            <div className="flex gap-1 rounded-xl p-1 mb-5 bg-[#050814] border border-gray-800">
+            <div className="flex gap-1 rounded-xl p-1 mb-5 bg-[#F4F6F4] border border-gray-200">
               {["login","register"].map((t) => (
                 <button key={t} onClick={() => switchTab(t)}
-                  className="flex-1 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer"
+                  className="flex-1 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer"
                   style={{
-                    background: tab === t ? "linear-gradient(135deg, #10b981, #059669)" : "transparent",
-                    color: tab === t ? "#fff" : "#94a3b8",
+                    background: tab === t ? "#0E4B33" : "transparent",
+                    color: tab === t ? "#FFFFFF" : "#6B7280",
                   }}>
                   {t === "login" ? "Sign In" : "Register"}
                 </button>
