@@ -10,13 +10,14 @@ export const predictPrice = async (data) => {
   return response.data;
 };
 
-export const detectDisease = async (formData) => {
-  // formData can contain image or just strings depending on implementation
-  const response = await api.post(`/ai/detect-disease`, formData, {
-    headers: {
-      "Content-Type": "application/json", // Adjusted since we are simulating without actual image processing for now
-    },
-  });
+export const detectDisease = async (payload) => {
+  let headers = {};
+  if (payload instanceof FormData) {
+    headers["Content-Type"] = "multipart/form-data";
+  } else {
+    headers["Content-Type"] = "application/json";
+  }
+  const response = await api.post(`/ai/detect-disease`, payload, { headers });
   return response.data;
 };
 

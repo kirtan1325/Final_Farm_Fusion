@@ -54,17 +54,29 @@ export default function DiseaseDetection() {
     setLoading(true);
     setError("");
     try {
-      const formData = new FormData();
-      formData.append("image", selectedFile);
-      const data = await detectDisease(formData);
-      if (data.success) {
-        setResult(data);
-      } else {
-        setError("Analysis failed. Try again.");
-      }
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        try {
+          const base64Image = reader.result;
+          const data = await detectDisease({ image: base64Image, fileName: selectedFile.name });
+          if (data && data.success) {
+            setResult(data);
+          } else {
+            setError(data?.message || "Analysis failed. Try again.");
+          }
+        } catch (err) {
+          setError("Could not connect to the ML Service. Ensure it's running.");
+        } finally {
+          setLoading(false);
+        }
+      };
+      reader.onerror = () => {
+        setError("Error reading image file.");
+        setLoading(false);
+      };
+      reader.readAsDataURL(selectedFile);
     } catch (err) {
-      setError("Could not connect to the ML Service. Ensure it's running.");
-    } finally {
+      setError("Error reading image file.");
       setLoading(false);
     }
   };
