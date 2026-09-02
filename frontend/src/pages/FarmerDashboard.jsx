@@ -9,7 +9,7 @@ import AppShell from "../components/layout/AppShell";
 import PageHeader from "../components/ui/PageHeader";
 import StatCard from "../components/ui/StatCard";
 import Button from "../components/ui/Button";
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
 import Modal from "../components/ui/Modal";
 import { Input, Select } from "../components/ui/Input";
