@@ -3,33 +3,25 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import * as THREE from "three";
 import { loginUser, registerUser } from "../api/authService";
 import { useAuth } from "../context/AuthContext";
+import Button from "../components/ui/Button";
+import { Input, Select } from "../components/ui/Input";
+import { Card } from "../components/ui/Card";
 
 const ROLES = [
   {
     id: "farmer",
     label: "Farmer",
-    description: "List & sell your crops directly",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-    ),
+    description: "List & sell crops directly",
+    icon: "🌾",
   },
   {
     id: "buyer",
     label: "Buyer",
-    description: "Source fresh crops from farmers",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-      </svg>
-    ),
+    description: "Source fresh crops directly",
+    icon: "🛒",
   },
 ];
 
-// ── Icons ──────────────────────────────────────────────
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -38,43 +30,11 @@ const GoogleIcon = () => (
     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
   </svg>
 );
+
 const FacebookIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
   </svg>
-);
-const EyeIcon = ({ open }) => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    {open ? (
-      <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>
-    ) : (
-      <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></>
-    )}
-  </svg>
-);
-const MailIcon     = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>);
-const LockIcon     = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>);
-const PersonIcon   = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>);
-const BuildingIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>);
-const PinIcon      = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>);
-
-const InputField = ({ label, type = "text", placeholder, value, onChange, icon, rightElement, required, autoComplete = "off" }) => (
-  <div className="flex flex-col gap-1.5 text-left">
-    <label className="text-xs font-bold uppercase tracking-wider text-[#00f4fe]">{label}</label>
-    <div className="ff-input-group">
-      {icon}
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required={required}
-        autoComplete={autoComplete}
-        className="placeholder-gray-500 w-full bg-transparent text-white outline-none text-sm"
-      />
-      {rightElement}
-    </div>
-  </div>
 );
 
 export default function FarmFusionLogin() {
@@ -82,197 +42,57 @@ export default function FarmFusionLogin() {
   const [tab, setTab] = useState("login");
   const [role, setRole] = useState("farmer");
 
-  // ── LOGIN form state (isolated) ────────────────────
-  const [loginEmail,    setLoginEmail]    = useState("");
+  // LOGIN form state
+  const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [showLoginPass, setShowLoginPass] = useState(false);
-  const [remember,      setRemember]      = useState(false);
 
-  // ── REGISTER form state (isolated) ─────────────────
-  const [regName,        setRegName]        = useState("");
-  const [regEmail,       setRegEmail]       = useState("");
-  const [regPassword,    setRegPassword]    = useState("");
-  const [regConfirm,     setRegConfirm]     = useState("");
-  const [regFarmName,    setRegFarmName]    = useState("");
-  const [regCompany,     setRegCompany]     = useState("");
-  const [regLocation,    setRegLocation]    = useState("");
-  const [showRegPass,    setShowRegPass]    = useState(false);
-  const [showRegConfirm, setShowRegConfirm] = useState(false);
+  // REGISTER form state
+  const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regConfirm, setRegConfirm] = useState("");
+  const [regFarmName, setRegFarmName] = useState("");
+  const [regCompany, setRegCompany] = useState("");
+  const [regLocation, setRegLocation] = useState("");
 
-  // ── Shared UI state ─────────────────────────────────
+  // UI state
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error,   setError]   = useState("");
+  const [error, setError] = useState("");
 
-  const { login }      = useAuth();
-  const navigate       = useNavigate();
-  const selectedRole   = ROLES.find((r) => r.id === role);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const canvasRef = useRef(null);
-
-  // Show error if OAuth failed
+  // Parse query params
   useEffect(() => {
-    const oauthError = searchParams.get("error");
-    if (oauthError) {
-      setError(
-        oauthError === "google_not_configured"   ? "Google login is not set up yet. Add GOOGLE_CLIENT_ID to your backend .env file." :
-        oauthError === "facebook_not_configured" ? "Facebook login is not set up yet. Add FACEBOOK_APP_ID to your backend .env file." :
-        oauthError === "google_failed"           ? "Google sign-in failed. Please try again." :
-        oauthError === "facebook_failed"         ? "Facebook sign-in failed. Please try again." :
-        "Social login failed. Please use email login instead."
-      );
-    }
+    const tabParam = searchParams.get("tab");
+    const roleParam = searchParams.get("role");
+    if (tabParam === "register" || tabParam === "login") setTab(tabParam);
+    if (roleParam === "buyer" || roleParam === "farmer") setRole(roleParam);
   }, [searchParams]);
 
-  // Three.js Interactive 3D Node Web Animation
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    const container = canvasRef.current;
-    
-    // Scene setup
-    const scene = new THREE.Scene();
-    
-    // Camera
-    const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.z = 12;
-    
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-    
-    // Create random interconnected node points
-    const particleCount = 70;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    
-    const minRange = -7;
-    const maxRange = 7;
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      positions[i] = minRange + Math.random() * (maxRange - minRange);
-      positions[i + 1] = minRange + Math.random() * (maxRange - minRange);
-      positions[i + 2] = minRange + Math.random() * (maxRange - minRange);
-    }
-    
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    
-    // Particle Material - Cyan glowing points
-    const material = new THREE.PointsMaterial({
-      color: 0x00f5ff,
-      size: 0.15,
-      transparent: true,
-      opacity: 0.9
-    });
-    
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-    
-    // Line connections between near nodes
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x10b981,
-      transparent: true,
-      opacity: 0.2
-    });
-    
-    const lineGeometry = new THREE.BufferGeometry();
-    const linePositions = [];
-    
-    const pos = positions;
-    for (let i = 0; i < particleCount; i++) {
-      for (let j = i + 1; j < particleCount; j++) {
-        const dx = pos[i * 3] - pos[j * 3];
-        const dy = pos[i * 3 + 1] - pos[j * 3 + 1];
-        const dz = pos[i * 3 + 2] - pos[j * 3 + 2];
-        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        
-        if (dist < 4.0) {
-          linePositions.push(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
-          linePositions.push(pos[j * 3], pos[j * 3 + 1], pos[j * 3 + 2]);
-        }
-      }
-    }
-    
-    lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
-    const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-    scene.add(lines);
-    
-    // Animation loop & physics mouse alignment
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    
-    const onMouseMove = (e) => {
-      const rect = container.getBoundingClientRect();
-      mouseX = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-      mouseY = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    };
-    
-    window.addEventListener('mousemove', onMouseMove);
-    
-    let reqId;
-    const animate = () => {
-      reqId = requestAnimationFrame(animate);
-      
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-      
-      particles.rotation.y = targetX * 0.4;
-      particles.rotation.x = -targetY * 0.4;
-      lines.rotation.y = targetX * 0.4;
-      lines.rotation.x = -targetY * 0.4;
-      
-      particles.rotation.y += 0.0012;
-      lines.rotation.y += 0.0012;
-      
-      renderer.render(scene, camera);
-    };
-    
-    animate();
-    
-    // Resize handling
-    const handleResize = () => {
-      if (!container) return;
-      camera.aspect = container.clientWidth / container.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(reqId);
-      renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
-    };
-  }, []);
-
-  const switchTab = (t) => {
-    setTab(t);
+  const switchTab = (newTab) => {
+    setTab(newTab);
     setError("");
+    setSuccess(false);
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    if (loading) return;
     setLoading(true);
+    setError("");
     try {
       const data = await loginUser({ email: loginEmail, password: loginPassword });
-      login(data);
+      login(data.user, data.token);
       setSuccess(true);
       setTimeout(() => {
-        if (data.user.role === "farmer")     navigate("/farmer/dashboard");
+        if (data.user.role === "admin") navigate("/admin/dashboard");
         else if (data.user.role === "buyer") navigate("/buyer/dashboard");
-        else                                 navigate("/marketplace");
-      }, 700);
+        else navigate("/farmer/dashboard");
+      }, 500);
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+      setError(err.response?.data?.message || "Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -280,387 +100,305 @@ export default function FarmFusionLogin() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
-    if (regPassword !== regConfirm) { setError("Passwords do not match."); return; }
-    if (regPassword.length < 6)     { setError("Password must be at least 6 characters."); return; }
+
+    if (regPassword !== regConfirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (regPassword.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const data = await registerUser({
-        name:        regName,
-        email:       regEmail,
-        password:    regPassword,
+      const payload = {
+        name: regName.trim(),
+        email: regEmail.trim(),
+        password: regPassword,
         role,
-        farmName:    role === "farmer" ? regFarmName : undefined,
-        companyName: role === "buyer"  ? regCompany  : undefined,
-        location:    regLocation,
-      });
-      login(data);
+        location: regLocation.trim() || undefined,
+        ...(role === "farmer"
+          ? { farmName: regFarmName.trim() || undefined }
+          : { company: regCompany.trim() || undefined }),
+      };
+
+      const data = await registerUser(payload);
+      login(data.user, data.token);
       setSuccess(true);
       setTimeout(() => {
-        if (data.user.role === "farmer")     navigate("/farmer/dashboard");
-        else if (data.user.role === "buyer") navigate("/buyer/dashboard");
-        else                                 navigate("/marketplace");
-      }, 700);
+        if (data.user.role === "buyer") navigate("/buyer/dashboard");
+        else navigate("/farmer/dashboard");
+      }, 500);
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+      setError(err.response?.data?.message || "Registration failed. Please check your details.");
     } finally {
       setLoading(false);
     }
   };
 
   const BACKEND = import.meta.env.VITE_API_URL || "https://farm-fusion-4.onrender.com";
-  const handleGoogle   = () => { window.location.href = `${BACKEND}/api/auth/google`; };
+  const handleGoogle = () => { window.location.href = `${BACKEND}/api/auth/google`; };
   const handleFacebook = () => { window.location.href = `${BACKEND}/api/auth/facebook`; };
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative text-white" style={{ background: "#101415" }}>
-      {/* ── Navbar ── */}
-      <nav className="w-full px-4 sm:px-8 h-14 flex items-center justify-between flex-shrink-0 border-b border-gray-800 backdrop-blur-md sticky top-0 z-40 bg-[#0a0e10]/90">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg" style={{ background: "linear-gradient(135deg, #10b981, #00f4fe)", color: "#002021" }}>
-            🌱
+    <div className="min-h-screen flex bg-slate-50 font-sans text-slate-900">
+      {/* Left SaaS Brand Hero Panel (Desktop) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0F4C2A] text-white flex-col justify-between p-12 relative overflow-hidden">
+        {/* Decorative Background Pattern */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#10B981_1px,transparent_1px)] [background-size:16px_16px]" />
+
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl font-bold shadow-md">
+              🌱
+            </div>
+            <div>
+              <h1 className="text-xl font-extrabold tracking-tight">Farm Fusion</h1>
+              <p className="text-xs text-emerald-200 uppercase tracking-widest font-semibold">AgriTech Platform</p>
+            </div>
           </div>
-          <span className="font-extrabold text-white text-base sm:text-lg tracking-tight font-sans">Farm Fusion</span>
         </div>
-        <button className="hidden sm:flex items-center gap-1.5 text-xs font-bold rounded-lg px-3 py-1.5 transition-colors cursor-pointer border border-[#00f4fe] text-[#00f4fe] hover:bg-[#00f4fe]/10">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-          Support
-        </button>
-      </nav>
 
-      {/* ── Main Panel ── */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10 max-w-6xl mx-auto w-full">
-        <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col lg:flex-row ff-fade-in border border-[rgba(0,244,254,0.25)] shadow-2xl"
-          style={{ background: "#0d1315" }}>
+        <div className="relative z-10 max-w-md my-auto space-y-6">
+          <h2 className="text-3xl font-extrabold tracking-tight leading-snug">
+            Empowering Agriculture with Real-Time Intelligence & Direct Market Access
+          </h2>
+          <p className="text-sm text-emerald-100/90 leading-relaxed">
+            Connect directly with buyers, leverage AI crop advisory, track real-time Mandi prices, and optimize soil health in one unified platform.
+          </p>
 
-          {/* ── Left Panel (Deep Emerald Visual Card) ── */}
-          <div className="w-full lg:w-[42%] p-6 sm:p-8 flex flex-col justify-between gap-6 relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, #062c1d, #091c13)" }}>
-            
-            {/* Embedded Three.js Canvas */}
-            <div ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-40" />
+          <div className="space-y-3 pt-4 border-t border-emerald-800/80">
+            <div className="flex items-center gap-3 text-xs font-semibold text-emerald-100">
+              <span className="w-6 h-6 rounded-full bg-emerald-700/60 flex items-center justify-center text-emerald-300">✓</span>
+              AI-Powered Crop & Disease Analytics
+            </div>
+            <div className="flex items-center gap-3 text-xs font-semibold text-emerald-100">
+              <span className="w-6 h-6 rounded-full bg-emerald-700/60 flex items-center justify-center text-emerald-300">✓</span>
+              Direct Farmer-to-Buyer Marketplace
+            </div>
+            <div className="flex items-center gap-3 text-xs font-semibold text-emerald-100">
+              <span className="w-6 h-6 rounded-full bg-emerald-700/60 flex items-center justify-center text-emerald-300">✓</span>
+              Live Mandi Price Ticker & Soil Cards
+            </div>
+          </div>
+        </div>
 
-            {/* Top section */}
-            <div className="relative z-10 text-left">
-              {/* Logo */}
-              <div className="flex items-center gap-2.5 mb-8">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold bg-white/10 border border-white/20">
-                  🌱
-                </div>
-                <span className="font-extrabold text-white text-lg tracking-tight">Farm Intelligence</span>
-              </div>
+        <div className="relative z-10 text-xs text-emerald-300/80 font-medium">
+          © {new Date().getFullYear()} Farm Fusion Inc. All rights reserved.
+        </div>
+      </div>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight mb-3">
-                Smart Agriculture Network & Marketplace
-              </h1>
-              <p className="text-[#a8cfb9] text-xs sm:text-sm leading-relaxed">
-                Connect directly with farmers, monitor crop health with AI, track mandi prices, and negotiate direct orders.
+      {/* Right Authentication Form Panel */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 overflow-y-auto">
+        <div className="w-full max-w-md space-y-6">
+          {/* Mobile Header Brand */}
+          <div className="lg:hidden flex items-center gap-3 mb-6">
+            <div className="w-9 h-9 rounded-xl bg-[#0F4C2A] text-white flex items-center justify-center text-lg font-bold">
+              🌱
+            </div>
+            <div>
+              <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">Farm Fusion</h1>
+              <p className="text-[10px] text-slate-500 uppercase tracking-wider">AgriTech Platform</p>
+            </div>
+          </div>
+
+          {/* Form Card */}
+          <Card className="p-6 sm:p-8 shadow-sm">
+            {/* Tab Switcher */}
+            <div className="flex rounded-lg bg-slate-100 p-1 mb-6">
+              <button
+                type="button"
+                onClick={() => switchTab("login")}
+                className={`flex-1 py-2 text-xs font-bold rounded-md transition-all cursor-pointer ${
+                  tab === "login"
+                    ? "bg-white text-slate-900 shadow-xs"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => switchTab("register")}
+                className={`flex-1 py-2 text-xs font-bold rounded-md transition-all cursor-pointer ${
+                  tab === "register"
+                    ? "bg-white text-slate-900 shadow-xs"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                Create Account
+              </button>
+            </div>
+
+            {/* Title */}
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+                {tab === "login" ? "Welcome back" : "Get started with Farm Fusion"}
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                {tab === "login"
+                  ? "Enter your credentials to access your account"
+                  : "Select your role and create a new account"}
               </p>
             </div>
 
-            {/* Middle Section: Role indicator */}
-            <div className="relative z-10">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-[#00f4fe] mb-2">Select Your Role</p>
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {ROLES.map((r) => {
-                  const isSelected = role === r.id;
-                  return (
+            {/* Error / Success Alerts */}
+            {error && (
+              <div className="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-center gap-2">
+                <span>⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
+            {success && (
+              <div className="mb-5 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
+                <span>✅</span>
+                <span>Authentication successful! Redirecting...</span>
+              </div>
+            )}
+
+            {/* Role Selection for Register Tab */}
+            {tab === "register" && (
+              <div className="mb-5 space-y-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  Select Role
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {ROLES.map((r) => (
                     <button
                       key={r.id}
                       type="button"
                       onClick={() => setRole(r.id)}
-                      className="p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all cursor-pointer text-center"
-                      style={{
-                        background: isSelected ? "linear-gradient(135deg, #10b981, #059669)" : "rgba(255,255,255,0.05)",
-                        borderColor: isSelected ? "#00f4fe" : "rgba(255,255,255,0.15)",
-                      }}
+                      className={`p-3 text-left rounded-lg border transition-all cursor-pointer ${
+                        role === r.id
+                          ? "border-[#0F4C2A] bg-emerald-50/50 ring-2 ring-emerald-500/20"
+                          : "border-slate-200 hover:border-slate-300 bg-white"
+                      }`}
                     >
-                      <span className="text-white text-lg">{r.icon}</span>
-                      <span className="text-xs font-bold text-white">{r.label}</span>
+                      <span className="text-lg block mb-1">{r.icon}</span>
+                      <span className="text-xs font-bold text-slate-900 block">{r.label}</span>
+                      <span className="text-[10px] text-slate-500 block leading-tight">{r.description}</span>
                     </button>
-                  );
-                })}
-              </div>
-
-              <p className="text-xs text-center text-[#a8cfb9]">
-                {tab === "register"
-                  ? selectedRole?.description
-                  : "Verified role access for Farmers & Buyers"}
-              </p>
-            </div>
-
-            {/* Trust row */}
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="flex">
-                {["👩‍🌾","👨‍🌾","🧑‍🌾"].map((emoji, i) => (
-                  <span key={i}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs ${i > 0 ? "-ml-2" : ""}`}
-                    style={{ background: "rgba(255,255,255,0.15)", border: "2px solid #00f4fe" }}>
-                    {emoji}
-                  </span>
-                ))}
-              </div>
-              <span className="text-xs font-semibold text-[#a8cfb9]">Trusted by 5,000+ Farmers & Buyers</span>
-            </div>
-          </div>
-
-          {/* ── Right Panel (Dark Glass Form Container) ── */}
-          <div className="w-full lg:w-[58%] p-6 sm:p-8 flex flex-col justify-center bg-[#0a0e10]">
-
-            {/* Heading */}
-            <div className="mb-5 text-left">
-              <h2 className="text-2xl font-extrabold tracking-tight text-white mb-1">
-                {tab === "login" ? (
-                  <>Welcome Back to <span className="ff-gradient-text">Farm Fusion</span></>
-                ) : (
-                  <>Create Your <span className="ff-gradient-text">Account</span></>
-                )}
-              </h2>
-              <p className="text-[#a8cfb9] text-xs">
-                {tab === "login"
-                  ? "Sign in to access your direct marketplace and AI farm tools"
-                  : `Sign up to connect as a ${selectedRole?.label}`}
-              </p>
-            </div>
-
-            {/* Tab switcher */}
-            <div className="flex gap-1 rounded-xl p-1 mb-6 bg-[#05080a] border border-gray-800 flex-shrink-0">
-              {["login","register"].map((t) => (
-                <button key={t} type="button" onClick={() => switchTab(t)}
-                  className="flex-1 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer"
-                  style={{
-                    background: tab === t ? "linear-gradient(135deg, #10b981, #059669)" : "transparent",
-                    color: tab === t ? "#FFFFFF" : "#94a3b8",
-                  }}>
-                  {t === "login" ? "Sign In" : "Register"}
-                </button>
-              ))}
-            </div>
-
-            {/* Social buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <button type="button" onClick={handleGoogle}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-white border border-gray-700 bg-[#131b1e] hover:border-[#00f4fe] hover:bg-white/10 transition-all cursor-pointer">
-                <GoogleIcon /> Continue with Google
-              </button>
-              <button type="button" onClick={handleFacebook}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold text-white border border-gray-700 bg-[#131b1e] hover:border-[#00f4fe] hover:bg-white/10 transition-all cursor-pointer">
-                <FacebookIcon /> Continue with Facebook
-              </button>
-            </div>
-
-            {/* OR divider */}
-            <div className="flex items-center gap-3 mb-6">
-
-              <div className="flex-1 h-px bg-gray-800"/>
-              <span className="text-[11px] font-medium text-[#a8cfb9] whitespace-nowrap">Or sign in with email</span>
-              <div className="flex-1 h-px bg-gray-800"/>
-            </div>
-
-            {/* Error banner */}
-            {error && (
-              <div className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-xs font-semibold mb-4 text-left border border-red-950/40"
-                style={{ background: "rgba(239, 68, 68, 0.1)", color: "#f87171" }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="flex-shrink-0">
-                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-                <span>{error}</span>
+                  ))}
+                </div>
               </div>
             )}
 
-
-            {/* ══ LOGIN FORM ══ */}
-            {tab === "login" && (
-              <form onSubmit={handleLogin} className="flex flex-col gap-4" autoComplete="off">
-                <InputField 
-                  label="Email Address" 
-                  type="email" 
-                  placeholder="Enter your email address..."
-                  value={loginEmail} 
+            {/* Forms */}
+            {tab === "login" ? (
+              <form onSubmit={handleLogin} className="space-y-4">
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="name@example.com"
+                  value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  icon={<MailIcon/>} 
                   required
-                  autoComplete="off"
                 />
-
-                <div className="flex flex-col gap-1.5 text-left">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#00f4fe]">Password</label>
-                    <button type="button" className="text-xs font-semibold text-[#00f4fe] hover:underline cursor-pointer">
-                      Forgot password?
-                    </button>
-                  </div>
-                  <div className="ff-input-group">
-                    <LockIcon/>
-                    <input
-                      type={showLoginPass ? "text" : "password"}
-                      placeholder="Enter your password..."
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      required
-                      autoComplete="new-password"
-                      className="placeholder-gray-500 bg-transparent text-white outline-none w-full text-sm"
-                    />
-                    <button type="button" onClick={() => setShowLoginPass(!showLoginPass)}
-                      className="flex-shrink-0 cursor-pointer text-gray-400 hover:text-white">
-                      <EyeIcon open={showLoginPass}/>
-                    </button>
-                  </div>
-                </div>
-
-                <label className="flex items-center gap-2.5 cursor-pointer select-none py-1 text-left">
-                  <input type="checkbox" checked={remember} onChange={() => setRemember(!remember)}
-                    className="w-4 h-4 rounded border-gray-700 bg-[#060a0c] cursor-pointer accent-[#00f4fe]"/>
-                  <span className="text-xs text-[#a8cfb9]">Remember me on this device</span>
-                </label>
-
-                <button type="submit" disabled={loading}
-                  className="ff-btn ff-btn-cyan w-full py-3.5 text-sm tracking-wider uppercase font-extrabold mt-1">
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-4 w-4 text-current" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                      </svg>
-                      Authenticating...
-                    </span>
-                  ) : (
-                    "Sign In to Farm Fusion"
-                  )}
-                </button>
-
-                <p className="text-center text-xs text-gray-400 mt-2">
-                  Don't have an account yet?{" "}
-                  <button type="button" onClick={() => switchTab("register")}
-                    className="font-semibold text-emerald-400 hover:underline cursor-pointer">
-                    Register Now
-                  </button>
-                </p>
+                <Input
+                  label="Password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                />
+                <Button type="submit" loading={loading} className="w-full mt-2">
+                  Sign In
+                </Button>
               </form>
-            )}
-
-            {/* ══ REGISTER FORM ══ */}
-            {tab === "register" && (
-              <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
-                <InputField 
-                  label="Full Name *" 
-                  placeholder="e.g. Ramesh Patel"
-                  value={regName} 
+            ) : (
+              <form onSubmit={handleRegister} className="space-y-3.5">
+                <Input
+                  label="Full Name"
+                  placeholder="John Doe"
+                  value={regName}
                   onChange={(e) => setRegName(e.target.value)}
-                  icon={<PersonIcon/>} 
                   required
                 />
-
-                <InputField 
-                  label="Email Address *" 
-                  type="email" 
-                  placeholder="Enter your email address..."
-                  value={regEmail} 
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="name@example.com"
+                  value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
-                  icon={<MailIcon/>} 
                   required
                 />
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex flex-col gap-1.5 text-left">
-                    <label className="text-xs font-semibold text-gray-300">Password *</label>
-                    <div className="ff-input-group">
-                      <LockIcon/>
-                      <input
-                        type={showRegPass ? "text" : "password"}
-                        placeholder="Min 6 chars"
-                        value={regPassword}
-                        onChange={(e) => setRegPassword(e.target.value)}
-                        required
-                        className="placeholder-gray-500 bg-transparent text-white outline-none w-full text-xs"
-                      />
-                      <button type="button" onClick={() => setShowRegPass(!showRegPass)} className="text-gray-400 hover:text-white">
-                        <EyeIcon open={showRegPass}/>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5 text-left">
-                    <label className="text-xs font-semibold text-gray-300">Confirm Password *</label>
-                    <div className="ff-input-group">
-                      <LockIcon/>
-                      <input
-                        type={showRegConfirm ? "text" : "password"}
-                        placeholder="Confirm password"
-                        value={regConfirm}
-                        onChange={(e) => setRegConfirm(e.target.value)}
-                        required
-                        className="placeholder-gray-500 bg-transparent text-white outline-none w-full text-xs"
-                      />
-                      <button type="button" onClick={() => setShowRegConfirm(!showRegConfirm)} className="text-gray-400 hover:text-white">
-                        <EyeIcon open={showRegConfirm}/>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {role === "farmer" && (
-                  <InputField 
-                    label="Farm / Organic Enterprise Name" 
-                    placeholder="e.g. Green Harvest Organic Farm"
-                    value={regFarmName} 
-                    onChange={(e) => setRegFarmName(e.target.value)} 
-                    icon={<BuildingIcon/>}
+                {role === "farmer" ? (
+                  <Input
+                    label="Farm Name (Optional)"
+                    placeholder="e.g. Green Acres Farm"
+                    value={regFarmName}
+                    onChange={(e) => setRegFarmName(e.target.value)}
+                  />
+                ) : (
+                  <Input
+                    label="Company Name (Optional)"
+                    placeholder="e.g. Fresh Market Co."
+                    value={regCompany}
+                    onChange={(e) => setRegCompany(e.target.value)}
                   />
                 )}
-                {role === "buyer" && (
-                  <InputField 
-                    label="Company / Business Name" 
-                    placeholder="e.g. Fresh Crop Traders Ltd"
-                    value={regCompany} 
-                    onChange={(e) => setRegCompany(e.target.value)} 
-                    icon={<BuildingIcon/>}
-                  />
-                )}
-
-                <InputField 
-                  label="Location (District / State)" 
-                  placeholder="e.g. Anand, Gujarat"
-                  value={regLocation} 
-                  onChange={(e) => setRegLocation(e.target.value)} 
-                  icon={<PinIcon/>}
+                <Input
+                  label="Location"
+                  placeholder="e.g. Gujarat, India"
+                  value={regLocation}
+                  onChange={(e) => setRegLocation(e.target.value)}
                 />
-
-                <label className="flex items-center gap-2.5 cursor-pointer select-none text-left">
-                  <input type="checkbox" required className="w-4 h-4 rounded border-gray-700 bg-black cursor-pointer accent-emerald-500"/>
-                  <span className="text-[11px] text-gray-300">I agree to the Terms of Service & Privacy Policy</span>
-                </label>
-
-                <button type="submit" disabled={loading}
-                  className="ff-btn ff-btn-primary w-full py-3 text-xs uppercase tracking-wider font-bold mt-1">
-                  {loading ? (
-                    <span className="ff-spinner" style={{ width: "16px", height: "16px", borderWidth: "2px", borderTopColor: "#fff", borderColor: "rgba(255,255,255,0.3)" }} />
-                  ) : null}
-                  {loading ? "Creating Account..." : success ? "✓ Account Created" : "Create Account"}
-                </button>
-
-                <p className="text-center text-xs text-gray-400 mt-2">
-                  Already have an account?{" "}
-                  <button type="button" onClick={() => switchTab("login")}
-                    className="font-semibold text-emerald-400 hover:underline cursor-pointer">
-                    Sign In Here
-                  </button>
-                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Input
+                    label="Password"
+                    type="password"
+                    placeholder="Min. 6 chars"
+                    value={regPassword}
+                    onChange={(e) => setRegPassword(e.target.value)}
+                    required
+                  />
+                  <Input
+                    label="Confirm Password"
+                    type="password"
+                    placeholder="Repeat password"
+                    value={regConfirm}
+                    onChange={(e) => setRegConfirm(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button type="submit" loading={loading} className="w-full mt-2">
+                  Create {role === "farmer" ? "Farmer" : "Buyer"} Account
+                </Button>
               </form>
             )}
-          </div>
-        </div>
-      </main>
 
-      {/* ── Footer ── */}
-      <footer className="w-full py-4 text-xs flex flex-wrap items-center justify-center gap-2 px-4 border-t border-gray-900 bg-black/40 relative z-10" style={{ color: "rgba(255,255,255,0.2)" }}>
-        <span>© 2024 Farm Fusion Global. All rights reserved.</span>
-        <span className="hidden sm:inline">|</span>
-        <a href="#" className="transition-colors hover:text-emerald-400">Privacy Policy</a>
-        <span>|</span>
-        <a href="#" className="transition-colors hover:text-emerald-400">Terms of Service</a>
-      </footer>
+            {/* Social OAuth Dividers */}
+            <div className="my-6 flex items-center gap-3">
+              <div className="flex-1 h-px bg-slate-200" />
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                Or continue with
+              </span>
+              <div className="flex-1 h-px bg-slate-200" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={handleGoogle}
+                className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+              >
+                <GoogleIcon /> Google
+              </button>
+              <button
+                type="button"
+                onClick={handleFacebook}
+                className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+              >
+                <FacebookIcon /> Facebook
+              </button>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
