@@ -24,11 +24,29 @@ export function AuthProvider({ children }) {
     }
   });
 
-  const login = (data) => {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user",  JSON.stringify(data.user));
-    setToken(data.token);
-    setUser(data.user);
+  const login = (arg1, arg2) => {
+    let finalUser = null;
+    let finalToken = null;
+
+    if (arg1 && typeof arg1 === "object" && (arg1.user || arg1.token)) {
+      // Called as login({ user, token }) or login(data)
+      finalUser = arg1.user;
+      finalToken = arg1.token;
+    } else if (typeof arg1 === "string" && typeof arg2 === "object") {
+      // Called as login(token, user)
+      finalToken = arg1;
+      finalUser = arg2;
+    } else if (typeof arg1 === "object" && typeof arg2 === "string") {
+      // Called as login(user, token)
+      finalUser = arg1;
+      finalToken = arg2;
+    }
+
+    if (finalToken) localStorage.setItem("token", finalToken);
+    if (finalUser) localStorage.setItem("user", JSON.stringify(finalUser));
+
+    setToken(finalToken);
+    setUser(finalUser);
   };
 
   const logout = () => {

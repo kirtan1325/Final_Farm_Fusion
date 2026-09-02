@@ -84,13 +84,11 @@ export default function FarmFusionLogin() {
     setError("");
     try {
       const data = await loginUser({ email: loginEmail, password: loginPassword });
-      login(data.user, data.token);
+      login({ user: data.user, token: data.token });
       setSuccess(true);
-      setTimeout(() => {
-        if (data.user.role === "admin") navigate("/admin/dashboard");
-        else if (data.user.role === "buyer") navigate("/buyer/dashboard");
-        else navigate("/farmer/dashboard");
-      }, 500);
+      if (data.user.role === "admin") navigate("/admin/dashboard");
+      else if (data.user.role === "buyer") navigate("/buyer/dashboard");
+      else navigate("/farmer/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password. Please try again.");
     } finally {
@@ -126,12 +124,10 @@ export default function FarmFusionLogin() {
       };
 
       const data = await registerUser(payload);
-      login(data.user, data.token);
+      login({ user: data.user, token: data.token });
       setSuccess(true);
-      setTimeout(() => {
-        if (data.user.role === "buyer") navigate("/buyer/dashboard");
-        else navigate("/farmer/dashboard");
-      }, 500);
+      if (data.user.role === "buyer") navigate("/buyer/dashboard");
+      else navigate("/farmer/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please check your details.");
     } finally {
