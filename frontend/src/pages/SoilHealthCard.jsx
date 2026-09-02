@@ -231,8 +231,31 @@ export default function SoilHealthCard() {
                         </div>
 
                         {t.recommendations && (
-                          <div className="text-xs bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 text-emerald-900">
-                            <strong>Recommendation:</strong> {t.recommendations}
+                          <div className="text-xs bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-emerald-900 space-y-1.5">
+                            {typeof t.recommendations === "object" ? (
+                              <>
+                                {t.recommendations.crops && (Array.isArray(t.recommendations.crops) ? t.recommendations.crops.length > 0 : true) && (
+                                  <p>
+                                    <strong>Recommended Crops:</strong>{" "}
+                                    {Array.isArray(t.recommendations.crops)
+                                      ? t.recommendations.crops.join(", ")
+                                      : String(t.recommendations.crops)}
+                                  </p>
+                                )}
+                                {t.recommendations.fertilizers && (Array.isArray(t.recommendations.fertilizers) ? t.recommendations.fertilizers.length > 0 : true) && (
+                                  <p>
+                                    <strong>Fertilizer Plan:</strong>{" "}
+                                    {Array.isArray(t.recommendations.fertilizers)
+                                      ? t.recommendations.fertilizers.join(", ")
+                                      : String(t.recommendations.fertilizers)}
+                                  </p>
+                                )}
+                              </>
+                            ) : (
+                              <p>
+                                <strong>Recommendation:</strong> {String(t.recommendations)}
+                              </p>
+                            )}
                           </div>
                         )}
                       </div>
