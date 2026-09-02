@@ -14,7 +14,6 @@ export function SocketProvider({ children }) {
 
   useEffect(() => {
     if (!token) {
-      // Disconnect if no token
       if (socket) {
         socket.disconnect();
         setSocket(null);
@@ -23,13 +22,14 @@ export function SocketProvider({ children }) {
       return;
     }
 
-    // Create socket connection with JWT auth
+    // Create socket connection with JWT auth; use polling first for reliable Render deployment fallback
     const newSocket = io(SOCKET_URL, {
       auth: { token },
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 10,
+      reconnectionDelay: 2000,
+      reconnectionAttempts: 15,
+      timeout: 20000,
     });
 
     newSocket.on("connect", () => {
