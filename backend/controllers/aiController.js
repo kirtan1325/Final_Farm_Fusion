@@ -307,11 +307,11 @@ exports.detectDisease = async (req, res) => {
       console.warn("ML Service unreachable for detect-disease. Running Direct Groq AI Diagnostic Engine.", e.message);
     }
 
-    // 2. Direct Gemini 1.5 Flash Vision AI Engine Call
+    // 2. Direct Gemini Vision AI Engine Call
     const geminiKey = (process.env.GEMINI_API_KEY || "").trim();
     if (geminiKey && !geminiKey.startsWith("your_")) {
-      try {
-        const prompt = `Act as a world-class plant pathologist and agronomist.
+      const geminiModels = ["gemini-2.5-flash", "gemini-3.6-flash", "gemini-flash-latest", "gemini-1.5-flash", "gemini-pro-latest"];
+      const prompt = `Act as a world-class plant pathologist and agronomist.
 Analyze crop leaf specimen / file "${fileName || 'leaf_specimen.jpg'}".
 Return ONLY raw valid JSON without markdown code block formatting:
 {
@@ -323,46 +323,49 @@ Return ONLY raw valid JSON without markdown code block formatting:
   "confidence": 97.4
 }`;
 
-        const payload = {
-          contents: [{
-            parts: [{ text: prompt }]
-          }],
-          generationConfig: {
-            temperature: 0.2,
-            response_mime_type: "application/json"
-          }
-        };
-
-        if (image && image.startsWith("data:image")) {
-          const mime = image.substring(image.indexOf(":") + 1, image.indexOf(";"));
-          const b64Data = image.substring(image.indexOf(",") + 1);
-          payload.contents[0].parts.push({
-            inline_data: { mime_type: mime, data: b64Data }
-          });
+      const payload = {
+        contents: [{
+          parts: [{ text: prompt }]
+        }],
+        generationConfig: {
+          temperature: 0.2,
+          response_mime_type: "application/json"
         }
+      };
 
-        const geminiRes = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, payload, {
-          headers: { 'Content-Type': 'application/json' },
-          timeout: 10000
+      if (image && image.startsWith("data:image")) {
+        const mime = image.substring(image.indexOf(":") + 1, image.indexOf(";"));
+        const b64Data = image.substring(image.indexOf(",") + 1);
+        payload.contents[0].parts.push({
+          inline_data: { mime_type: mime, data: b64Data }
         });
+      }
 
-        const rawText = geminiRes.data?.candidates?.[0]?.content?.parts?.[0]?.text?.replace(/```json/g, '')?.replace(/```/g, '')?.trim();
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          return res.status(200).json({
-            success: true,
-            disease: parsed.disease || "Healthy",
-            affected_crop: parsed.affected_crop || "Crop Specimen",
-            severity: parsed.severity || "Moderate",
-            treatment: parsed.treatment || "Apply recommended fungicide and monitor leaf surface.",
-            organic_alternatives: parsed.organic || "Apply neem oil 3000 ppm spray.",
-            confidence: parseFloat(parsed.confidence) || 97.4,
-            model_accuracy: 98.4,
-            model: "Google Gemini 1.5 Vision AI Engine"
+      for (const gModel of geminiModels) {
+        try {
+          const geminiRes = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/${gModel}:generateContent?key=${geminiKey}`, payload, {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 10000
           });
+
+          const rawText = geminiRes.data?.candidates?.[0]?.content?.parts?.[0]?.text?.replace(/```json/g, '')?.replace(/```/g, '')?.trim();
+          if (rawText) {
+            const parsed = JSON.parse(rawText);
+            return res.status(200).json({
+              success: true,
+              disease: parsed.disease || "Healthy",
+              affected_crop: parsed.affected_crop || "Crop Specimen",
+              severity: parsed.severity || "Moderate",
+              treatment: parsed.treatment || "Apply recommended fungicide and monitor leaf surface.",
+              organic_alternatives: parsed.organic || "Apply neem oil 3000 ppm spray.",
+              confidence: parseFloat(parsed.confidence) || 97.4,
+              model_accuracy: 98.4,
+              model: "Google Gemini Vision AI Engine"
+            });
+          }
+        } catch (geminiErr) {
+          console.warn(`Direct Gemini API call notice (${gModel}):`, geminiErr.message);
         }
-      } catch (geminiErr) {
-        console.warn("Direct Gemini API call notice:", geminiErr.message);
       }
     }
 
