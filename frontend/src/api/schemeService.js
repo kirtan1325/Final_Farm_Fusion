@@ -11,3 +11,4 @@ export const getAdvisory   = async (params = {}) => { const { data } = await api
 export const getCropNames  = async ()             => { const { data } = await api.get("/advisory/crops");               return data; };
 export const createAdvisory = async (body)        => { const { data } = await api.post("/advisory",         body);      return data; };
 export const updateAdvisory = async (id, body)    => { const { data } = await api.put(`/advisory/${id}`,    body);      return data; };
+export const generateAiAdvisory = async (body)    => { const { data } = await api.post("/advisory/generate", body);      return data; };
