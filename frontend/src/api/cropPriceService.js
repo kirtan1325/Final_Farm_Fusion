@@ -11,6 +11,11 @@ export const getCropPrices = async (params = {}) => {
   }
 };
 
+export const getAiMandiIntelligence = async (body) => {
+  const { data } = await api.post("/prices/ai-intelligence", body);
+  return data;
+};
+
 export const addCropPrice = async (body) => {
   const { data } = await api.post("/prices", body);
   return data;
@@ -20,3 +25,4 @@ export const updateCropPrice = async (id, body) => {
   const { data } = await api.put(`/prices/${id}`, body);
   return data;
 };
+
