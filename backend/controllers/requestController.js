@@ -136,17 +136,45 @@ const acceptRequest = async (req, res) => {
     request.status = "accepted";
     await request.save();
     
+    // 1. Automatically create an Order entry for Sales & Orders tracking
+    let order = await Order.findOne({ purchaseRequest: request._id });
+    if (!order) {
+      order = await Order.create({
+        purchaseRequest: request._id,
+        buyer:       request.buyer,
+        farmer:      request.farmer,
+        crop:        request.crop,
+        quantity:    request.quantity,
+        totalPrice:  request.totalPrice,
+        status:      "processing",
+        paymentMethod: "card",
+        transactionId: `ORDER_${Date.now()}`
+      });
+    }
+
+    // 2. Automatically update crop inventory quantity
+    if (request.crop) {
+      const crop = await Crop.findById(request.crop);
+      if (crop) {
+        crop.quantity = Math.max(0, crop.quantity - request.quantity);
+        if (crop.quantity <= 0) {
+          crop.status = "sold_out";
+        }
+        await crop.save();
+      }
+    }
+
     await createNotification({
       recipient: request.buyer,
       sender: req.user._id,
       type: "request_accepted",
-      title: "Request Accepted",
-      message: "Your purchase request was successfully accepted.",
+      title: "Request Accepted & Order Created",
+      message: `Your purchase request for ${request.quantity} ${request.unit} was accepted! An order has been created and added to your orders.`,
       link: "/buyer/orders",
-      data: { requestId: request._id }
+      data: { requestId: request._id, orderId: order._id }
     });
 
-    res.json({ success: true, data: request });
+    res.json({ success: true, data: request, order });
   } catch (err) {
     console.error("ACCEPT REQUEST ERROR:", err.message);
     res.status(500).json({ success: false, message: err.message });
@@ -211,7 +239,7 @@ const cancelRequest = async (req, res) => {
   }
 };
 
-// @desc  Buyer pays → creates Order
+// @desc  Buyer pays → creates/updates Order
 // @route POST /api/requests/:id/pay
 const payRequest = async (req, res) => {
   try {
@@ -225,23 +253,31 @@ const payRequest = async (req, res) => {
     request.paidAt = new Date();
     await request.save();
 
-    const order = await Order.create({
-      purchaseRequest: request._id,
-      buyer:       request.buyer,
-      farmer:      request.farmer,
-      crop:        request.crop,
-      quantity:    request.quantity,
-      totalPrice:  request.totalPrice,
-      paymentMethod,
-      transactionId: transactionId || `TXN_${Date.now()}`,
-    });
+    let order = await Order.findOne({ purchaseRequest: request._id });
+    if (order) {
+      order.paymentMethod = paymentMethod;
+      if (transactionId) order.transactionId = transactionId;
+      await order.save();
+    } else {
+      order = await Order.create({
+        purchaseRequest: request._id,
+        buyer:       request.buyer,
+        farmer:      request.farmer,
+        crop:        request.crop,
+        quantity:    request.quantity,
+        totalPrice:  request.totalPrice,
+        status:      "processing",
+        paymentMethod,
+        transactionId: transactionId || `TXN_${Date.now()}`,
+      });
+    }
 
     await createNotification({
       recipient: request.farmer,
       sender: req.user._id,
       type: "payment_received",
       title: "Payment Received",
-      message: `You received a payment of $${request.totalPrice}.`,
+      message: `You received a payment of ₹${request.totalPrice}.`,
       link: "/farmer/sales",
       data: { orderId: order._id }
     });
