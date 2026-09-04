@@ -135,7 +135,7 @@ export default function FarmFusionLogin() {
     }
   };
 
-  const BACKEND = import.meta.env.VITE_API_URL || "https://farm-fusion-4.onrender.com";
+  const BACKEND = import.meta.env.VITE_API_URL || "https://final-farm-fusion.onrender.com";
   const handleGoogle = () => { window.location.href = `${BACKEND}/api/auth/google`; };
   const handleFacebook = () => { window.location.href = `${BACKEND}/api/auth/facebook`; };
 

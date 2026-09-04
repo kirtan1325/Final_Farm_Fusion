@@ -14,7 +14,7 @@ export default function NegotiationModal({ request, onClose, isFarmer }) {
 
   const fetchMessages = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "https://farm-fusion-4.onrender.com"}/api/messages/${request._id}`, {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL || "https://final-farm-fusion.onrender.com"}/api/messages/${request._id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       });
       setMessages(data.data || []);

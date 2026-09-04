@@ -9,7 +9,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_ID !== "your_googl
     {
       clientID:     process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:  `${process.env.BACKEND_URL || "https://farm-fusion-4.onrender.com"}/api/auth/google/callback`,
+      callbackURL:  `${process.env.BACKEND_URL || "https://final-farm-fusion.onrender.com"}/api/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -39,7 +39,7 @@ if (process.env.FACEBOOK_APP_ID && process.env.FACEBOOK_APP_ID !== "your_faceboo
     {
       clientID:      process.env.FACEBOOK_APP_ID,
       clientSecret:  process.env.FACEBOOK_APP_SECRET,
-      callbackURL:   `${process.env.BACKEND_URL || "https://farm-fusion-4.onrender.com"}/api/auth/facebook/callback`,
+      callbackURL:   `${process.env.BACKEND_URL || "https://final-farm-fusion.onrender.com"}/api/auth/facebook/callback`,
       profileFields: ["id", "displayName", "emails", "photos"],
     },
     async (accessToken, refreshToken, profile, done) => {

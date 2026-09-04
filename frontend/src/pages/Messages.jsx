@@ -13,7 +13,7 @@ import { Input } from "../components/ui/Input";
 import EmptyState from "../components/ui/EmptyState";
 import Skeleton from "../components/ui/Skeleton";
 
-const BACKEND_URL = import.meta.env.VITE_API_URL || "https://farm-fusion-4.onrender.com";
+const BACKEND_URL = import.meta.env.VITE_API_URL || "https://final-farm-fusion.onrender.com";
 
 export default function Messages() {
   const { user, logout } = useAuth();
