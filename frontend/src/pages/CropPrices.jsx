@@ -125,18 +125,11 @@ export default function CropPrices() {
               <span className="text-base">📍</span>
               <div>
                 <span className="font-bold text-[#0F4C2A]">
-                  {isExactMatch
-                    ? "Displaying Mandi Prices for Your Registered Location:"
-                    : "Displaying Nearest Regional Mandi Rates for:"}
+                  Mandi Rates Filtered for Your Location:
                 </span>
                 <span className="ml-1.5 font-semibold text-slate-800 underline">
                   {user.location}
                 </span>
-                {!isExactMatch && !showAllMandis && (
-                  <span className="ml-2 text-slate-500 font-normal italic">
-                    (Showing regional prices)
-                  </span>
-                )}
               </div>
             </div>
             <Button
@@ -144,7 +137,7 @@ export default function CropPrices() {
               size="sm"
               onClick={() => setShowAllMandis(!showAllMandis)}
             >
-              {showAllMandis ? "📍 Back to My Location" : "🌐 View All India Mandis"}
+              {showAllMandis ? "📍 Filter by My Location" : "🌐 View All India Mandis"}
             </Button>
           </div>
         )}

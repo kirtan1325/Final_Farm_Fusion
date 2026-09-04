@@ -187,12 +187,15 @@ const seed = async () => {
     { cropName: "Ginger",        emoji: "🫚", category: "herbs",      minPrice: 6500, maxPrice: 8200, modalPrice: 7400, unit: "quintal", market: "Wayanad Mandi",    state: "Kerala",          trend: "down", changePercent: -1.5 },
     { cropName: "Dry Chillies",  emoji: "🌶️", category: "herbs",      minPrice: 14500, maxPrice: 17800, modalPrice: 16200, unit: "quintal", market: "Guntur Mandi",   state: "Andhra Pradesh",  trend: "up", changePercent: 4.1 },
 
-    // Other
+    // Other & Navsari Regional Mandis
     { cropName: "Cotton",        emoji: "☁️", category: "other",      minPrice: 6000, maxPrice: 7500, modalPrice: 6800, unit: "quintal", market: "Rajkot Mandi",     state: "Gujarat",         trend: "up", changePercent: 4.2 },
     { cropName: "Sugarcane",     emoji: "🎋", category: "other",      minPrice: 310,  maxPrice: 345,  modalPrice: 325,  unit: "quintal", market: "Muzaffarnagar Mandi", state: "UP",            trend: "up", changePercent: 1.5 },
-    { cropName: "Groundnut",     emoji: "🥜", category: "other",      minPrice: 5900, maxPrice: 6600, modalPrice: 6320, unit: "quintal", market: "Junagadh Mandi",   state: "Gujarat",         trend: "up", changePercent: 1.4 }
+    { cropName: "Groundnut",     emoji: "🥜", category: "other",      minPrice: 5900, maxPrice: 6600, modalPrice: 6320, unit: "quintal", market: "Junagadh Mandi",   state: "Gujarat",         trend: "up", changePercent: 1.4 },
+    { cropName: "Sapota (Chiku)",emoji: "🤎", category: "fruits",     minPrice: 2400, maxPrice: 3100, modalPrice: 2800, unit: "quintal", market: "Navsari Mandi",    state: "Gujarat",         trend: "up", changePercent: 2.1 },
+    { cropName: "Kesar Mango",   emoji: "🥭", category: "fruits",     minPrice: 4500, maxPrice: 6000, modalPrice: 5200, unit: "quintal", market: "Navsari Mandi",    state: "Gujarat",         trend: "up", changePercent: 3.5 },
+    { cropName: "Organic Tomato",emoji: "🍅", category: "vegetables", minPrice: 900,  maxPrice: 1600, modalPrice: 1250, unit: "quintal", market: "Navsari Mandi",    state: "Gujarat",         trend: "stable", changePercent: 0.5 },
   ]);
-  console.log("✅ Crop prices seeded with Fruits, Vegetables, Grains, Herbs, & Other");
+  console.log("✅ Crop prices seeded with Fruits, Vegetables, Grains, Herbs, & Other including Navsari Mandi");
 
   // ── Crop Advisories ────────────────────────────────────
   await CropAdvisory.insertMany([

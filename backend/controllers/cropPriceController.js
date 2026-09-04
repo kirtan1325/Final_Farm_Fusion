@@ -1,18 +1,66 @@
 // backend/controllers/cropPriceController.js
 const CropPrice = require("../models/CropPrice");
 
-// @desc  Get crop prices (prioritizing farmer's registered location)
+// Indian City/District to State Mapping Dictionary
+const CITY_STATE_MAP = {
+  navsari: "Gujarat", surat: "Gujarat", ahmedabad: "Gujarat", baroda: "Gujarat", vadodara: "Gujarat",
+  rajkot: "Gujarat", junagadh: "Gujarat", anand: "Gujarat", bhavnagar: "Gujarat", jamnagar: "Gujarat",
+  gandhinagar: "Gujarat", kutch: "Gujarat", mehsana: "Gujarat", amreli: "Gujarat", bharuch: "Gujarat",
+  valsad: "Gujarat", patan: "Gujarat", porbandar: "Gujarat", godhra: "Gujarat",
+
+  mumbai: "Maharashtra", pune: "Maharashtra", nagpur: "Maharashtra", nashik: "Maharashtra",
+  jalgaon: "Maharashtra", lasalgaon: "Maharashtra", thane: "Maharashtra", kolhapur: "Maharashtra",
+  satara: "Maharashtra", solapur: "Maharashtra", sangli: "Maharashtra", ahmednagar: "Maharashtra",
+  latur: "Maharashtra", nanded: "Maharashtra", aurangabad: "Maharashtra", amravati: "Maharashtra",
+
+  indore: "Madhya Pradesh", bhopal: "Madhya Pradesh", gwalior: "Madhya Pradesh", ujjain: "Madhya Pradesh",
+  neemuch: "Madhya Pradesh", jabalpur: "Madhya Pradesh", ratiam: "Madhya Pradesh",
+
+  ludhiana: "Punjab", amritsar: "Punjab", jalandhar: "Punjab", patiala: "Punjab", bathinda: "Punjab",
+  karnal: "Haryana", gurugram: "Haryana", ambala: "Haryana", hisar: "Haryana",
+
+  delhi: "UP", lucknow: "UP", kanpur: "UP", varanasi: "UP", agra: "UP", muzaffarnagar: "UP", noida: "UP",
+  jaipur: "Rajasthan", jodhpur: "Rajasthan", udaipur: "Rajasthan", kota: "Rajasthan", bikaner: "Rajasthan",
+
+  guntur: "Andhra Pradesh", vijayawada: "Andhra Pradesh", vizag: "Andhra Pradesh", visakhapatnam: "Andhra Pradesh",
+  nizamabad: "Telangana", hyderabad: "Telangana", warangal: "Telangana",
+  wayanad: "Kerala", kochi: "Kerala", trivandrum: "Kerala", kozhikode: "Kerala",
+  bengaluru: "Karnataka", bangalore: "Karnataka", mysore: "Karnataka", hubli: "Karnataka",
+  chennai: "Tamil Nadu", coimbatore: "Tamil Nadu", madurai: "Tamil Nadu",
+  shimla: "Himachal Pradesh", kullu: "Himachal Pradesh", solan: "Himachal Pradesh",
+  dehradun: "Uttarakhand", haridwar: "Uttarakhand"
+};
+
+// Helper: Resolve search terms from location input string
+const resolveLocationTerms = (locStr) => {
+  if (!locStr || !locStr.trim()) return [];
+  const tokens = locStr
+    .split(/[\s,]+/)
+    .map((t) => t.trim().toLowerCase())
+    .filter((t) => t.length > 0 && t !== "india");
+
+  const terms = new Set();
+  for (const token of tokens) {
+    terms.add(token);
+    if (CITY_STATE_MAP[token]) {
+      terms.add(CITY_STATE_MAP[token].toLowerCase());
+    }
+  }
+  return Array.from(terms);
+};
+
+// @desc  Get crop prices (strictly for farmer's registered location)
 // @route GET /api/prices?category=grains&search=wheat&location=Gujarat
 const getCropPrices = async (req, res) => {
   try {
     const { category, search, location, state, showAll } = req.query;
-    const baseFilter = {};
+    const filter = {};
 
     if (category && category.trim() && category.toLowerCase() !== "all") {
-      baseFilter.category = { $regex: `^${category.trim()}$`, $options: "i" };
+      filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
     }
     if (search && search.trim()) {
-      baseFilter.cropName = { $regex: search.trim(), $options: "i" };
+      filter.cropName = { $regex: search.trim(), $options: "i" };
     }
 
     // Auto-detect farmer's location from profile if not explicitly passed
@@ -21,41 +69,26 @@ const getCropPrices = async (req, res) => {
       targetLoc = req.user.location;
     }
 
-    let isExactMatch = false;
-    let prices = [];
+    const isFarmerLocationMode = targetLoc && targetLoc.trim() && targetLoc.toLowerCase() !== "all" && showAll !== "true";
 
-    // 1. Try strict location filter first
-    if (targetLoc && targetLoc.trim() && targetLoc.toLowerCase() !== "all" && showAll !== "true") {
-      const parts = targetLoc
-        .split(",")
-        .map((p) => p.trim())
-        .filter((p) => p.length > 0 && p.toLowerCase() !== "india");
-
-      if (parts.length > 0) {
-        const locationFilter = {
-          ...baseFilter,
-          $or: parts.flatMap((part) => [
-            { state: { $regex: part, $options: "i" } },
-            { market: { $regex: part, $options: "i" } },
-          ]),
-        };
-        prices = await CropPrice.find(locationFilter).sort({ cropName: 1 });
-        if (prices.length > 0) {
-          isExactMatch = true;
-        }
+    if (isFarmerLocationMode) {
+      const terms = resolveLocationTerms(targetLoc);
+      if (terms.length > 0) {
+        filter.$or = terms.flatMap((term) => [
+          { state: { $regex: term, $options: "i" } },
+          { market: { $regex: term, $options: "i" } },
+        ]);
       }
     }
 
-    // 2. Fallback to all available rates if no location specified or no prices found for exact location
-    if (prices.length === 0) {
-      prices = await CropPrice.find(baseFilter).sort({ cropName: 1 });
-    }
+    // Fetch Mandi prices for farmer location strictly
+    const prices = await CropPrice.find(filter).sort({ cropName: 1 });
 
     res.json({
       success: true,
       userLocation: req.user?.location || null,
       appliedLocation: targetLoc || null,
-      isExactMatch,
+      isFarmerLocationMode,
       count: prices.length,
       data: prices,
     });
