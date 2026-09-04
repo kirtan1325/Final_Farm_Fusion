@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCropPrices, getAiMandiIntelligence } from "../api/cropPriceService";
-import { predictPrice } from "../api/mlService";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 
@@ -40,13 +39,13 @@ export default function CropPrices() {
   const [showAllMandis, setShowAllMandis] = useState(false);
   const [appliedLocation, setAppliedLocation] = useState(user?.location || null);
 
-  // ML Predictor State
-  const [predictCropName, setPredictCropName] = useState("Tomato");
-  const [predictState, setPredictState] = useState(user?.location || "Gujarat");
-  const [predictLoading, setPredictLoading] = useState(false);
-  const [predictionResult, setPredictionResult] = useState(null);
-
   const [useGeminiMode, setUseGeminiMode] = useState(false);
+
+  // Gemini AI Mandi Intelligence State
+  const [aiCropName, setAiCropName] = useState("Wheat");
+  const [aiLocation, setAiLocation] = useState(user?.location || "Gujarat");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiIntelligence, setAiIntelligence] = useState(null);
 
   const fetchPrices = useCallback(async () => {
     setLoading(true);
@@ -118,24 +117,10 @@ export default function CropPrices() {
 
   useEffect(() => {
     if (user?.location) {
-      setPredictState(user.location);
       setAiLocation(user.location);
     }
   }, [user?.location]);
 
-  const handlePredictPrice = async (e) => {
-    e.preventDefault();
-    setPredictLoading(true);
-    setPredictionResult(null);
-    try {
-      const data = await predictPrice({ crop: predictCropName, state: predictState });
-      setPredictionResult(data);
-    } catch (err) {
-      console.error("Price prediction error:", err);
-    } finally {
-      setPredictLoading(false);
-    }
-  };
 
   const filteredPrices = prices.filter((p) => {
     const matchesSearch =
@@ -356,53 +341,7 @@ export default function CropPrices() {
           </CardContent>
         </Card>
 
-        {/* AI ML Price Prediction Tool */}
-        <Card className="border border-slate-200">
-          <CardHeader className="bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
-            <div>
-              <CardTitle className="text-slate-800 text-base">📈 ML Commodity 30-Day Forecaster</CardTitle>
-              <CardDescription>Predict long-term price direction using historical ML algorithms</CardDescription>
-            </div>
-            <Badge variant="neutral">ML Model</Badge>
-          </CardHeader>
-          <CardContent className="p-5">
-            <form onSubmit={handlePredictPrice} className="flex flex-col sm:flex-row items-end gap-4">
-              <Input
-                label="Crop Name"
-                placeholder="e.g. Tomato"
-                value={predictCropName}
-                onChange={(e) => setPredictCropName(e.target.value)}
-                className="flex-1"
-                required
-              />
-              <Input
-                label="State / Registered Location"
-                placeholder="e.g. Gujarat"
-                value={predictState}
-                onChange={(e) => setPredictState(e.target.value)}
-                className="flex-1"
-                required
-              />
-              <Button type="submit" loading={predictLoading} className="w-full sm:w-auto shrink-0">
-                Predict Future Price
-              </Button>
-            </form>
 
-            {predictionResult && (
-              <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                <div>
-                  <span className="font-bold text-[#0F4C2A] block uppercase">Predicted 30-Day Rate</span>
-                  <p className="text-xl font-extrabold text-slate-900 mt-0.5">
-                    {fmt(predictionResult.predicted_price || 3400)} / quintal
-                  </p>
-                </div>
-                <Badge variant="success">
-                  Expected Trend: {predictionResult.trend || "Stable (+4.2%)"}
-                </Badge>
-              </div>
-            )}
-          </CardContent>
-        </Card>
 
         {/* Mandi Rate Table */}
         <Card>
