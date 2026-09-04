@@ -92,12 +92,30 @@ export default function CropPrices() {
       (p.state && p.state.toLowerCase().includes(search.toLowerCase())) ||
       (p.market && p.market.toLowerCase().includes(search.toLowerCase()));
     const matchesCat = category === "All" || p.category?.toLowerCase() === category.toLowerCase();
-    return matchesSearch && matchesCat;
+
+    // Strict location match for farmer registered location unless "View All India Mandis" is clicked
+    let matchesLocation = true;
+    if (!showAllMandis && user?.location) {
+      const locTokens = user.location
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter((t) => t.length > 0 && t !== "india");
+
+      if (locTokens.length > 0) {
+        matchesLocation = locTokens.some(
+          (token) =>
+            (p.state && p.state.toLowerCase().includes(token)) ||
+            (p.market && p.market.toLowerCase().includes(token))
+        );
+      }
+    }
+
+    return matchesSearch && matchesCat && matchesLocation;
   });
 
-  const gainersCount = prices.filter((p) => p.trend === "up").length;
-  const avgModalPrice = prices.length
-    ? Math.round(prices.reduce((s, p) => s + (p.modalPrice || 0), 0) / prices.length)
+  const gainersCount = filteredPrices.filter((p) => p.trend === "up").length;
+  const avgModalPrice = filteredPrices.length
+    ? Math.round(filteredPrices.reduce((s, p) => s + (p.modalPrice || 0), 0) / filteredPrices.length)
     : 0;
 
   return (

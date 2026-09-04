@@ -1,7 +1,7 @@
 // backend/controllers/cropPriceController.js
 const CropPrice = require("../models/CropPrice");
 
-// @desc  Get all crop prices (filtered by farmer's registered location by default)
+// @desc  Get all crop prices (strictly filtered by farmer's registered location)
 // @route GET /api/prices?category=grains&search=wheat&location=Gujarat
 const getCropPrices = async (req, res) => {
   try {
@@ -18,7 +18,7 @@ const getCropPrices = async (req, res) => {
       targetLoc = req.user.location;
     }
 
-    if (targetLoc && targetLoc.trim() && targetLoc.toLowerCase() !== "all") {
+    if (targetLoc && targetLoc.trim() && targetLoc.toLowerCase() !== "all" && showAll !== "true") {
       // Split location string (e.g., "Surat, Gujarat, India" -> ["Surat", "Gujarat"])
       const parts = targetLoc
         .split(",")
@@ -37,13 +37,8 @@ const getCropPrices = async (req, res) => {
       filter.cropName = { $regex: search.trim(), $options: "i" };
     }
 
-    let prices = await CropPrice.find(filter).sort({ cropName: 1 });
-
-    // If location filter returns empty, fallback to returning all prices in category/search
-    if (prices.length === 0 && filter.$or) {
-      delete filter.$or;
-      prices = await CropPrice.find(filter).sort({ cropName: 1 });
-    }
+    // Strictly return only matching location prices without falling back to all India
+    const prices = await CropPrice.find(filter).sort({ cropName: 1 });
 
     res.json({
       success: true,
