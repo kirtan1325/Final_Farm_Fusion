@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCropPrices } from "../api/cropPriceService";
 import { predictPrice } from "../api/mlService";
 import { useAuth } from "../context/AuthContext";
+import { useSocket } from "../context/SocketContext";
 
 import AppShell from "../components/layout/AppShell";
 import PageHeader from "../components/ui/PageHeader";
@@ -29,6 +30,7 @@ const fmt = (n) => `₹${Number(n).toLocaleString("en-IN", { minimumFractionDigi
 
 export default function CropPrices() {
   const { user, logout } = useAuth();
+  const { socket } = useSocket();
   const navigate = useNavigate();
 
   const [prices, setPrices] = useState([]);
@@ -44,7 +46,7 @@ export default function CropPrices() {
   const [predictLoading, setPredictLoading] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
 
-  const fetchPrices = async () => {
+  const fetchPrices = useCallback(async () => {
     setLoading(true);
     try {
       const params = {};
@@ -62,11 +64,31 @@ export default function CropPrices() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showAllMandis, user?.location]);
 
   useEffect(() => {
     fetchPrices();
-  }, [showAllMandis, user?.location]);
+  }, [fetchPrices]);
+
+  // Real-time Socket.IO listener for live Mandi rate updates
+  useEffect(() => {
+    if (!socket) return;
+    const handlePriceUpdate = () => {
+      fetchPrices();
+    };
+    socket.on("mandi_price_updated", handlePriceUpdate);
+    return () => {
+      socket.off("mandi_price_updated", handlePriceUpdate);
+    };
+  }, [socket, fetchPrices]);
+
+  // Background auto-refresh polling every 30 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      fetchPrices();
+    }, 30000);
+    return () => clearInterval(timer);
+  }, [fetchPrices]);
 
   useEffect(() => {
     if (user?.location) {
@@ -219,7 +241,13 @@ export default function CropPrices() {
         <Card>
           <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <CardTitle>Current Mandi Rates Ticker</CardTitle>
+              <div className="flex items-center gap-2">
+                <CardTitle>Current Mandi Rates Ticker</CardTitle>
+                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200 animate-pulse">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  Live Updates
+                </span>
+              </div>
               <CardDescription>Minimum, Maximum, and Modal prices by commodity</CardDescription>
             </div>
 

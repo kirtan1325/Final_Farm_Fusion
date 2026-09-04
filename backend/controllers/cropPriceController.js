@@ -109,12 +109,20 @@ const getCropPrice = async (req, res) => {
   }
 };
 
+const { getIO } = require("../config/socketManager");
+
 // @desc  Add crop price (admin only)
 // @route POST /api/prices
 const addCropPrice = async (req, res) => {
   try {
     const price = await CropPrice.create(req.body);
     res.status(201).json({ success: true, data: price });
+
+    try {
+      getIO().emit("mandi_price_updated", price);
+    } catch (e) {
+      // ignore if socket is not initialized
+    }
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
   }
@@ -127,6 +135,12 @@ const updateCropPrice = async (req, res) => {
     const price = await CropPrice.findByIdAndUpdate(req.params.id, req.body, { returnDocument: "after" });
     if (!price) return res.status(404).json({ success: false, message: "Price not found" });
     res.json({ success: true, data: price });
+
+    try {
+      getIO().emit("mandi_price_updated", price);
+    } catch (e) {
+      // ignore if socket is not initialized
+    }
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
   }
