@@ -12,10 +12,11 @@ const generateGeminiMandiIntelligence = async (cropName = "Wheat", location = "G
   if (!geminiKey || geminiKey.startsWith("your_")) return null;
 
   const geminiModels = [
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-2.5-flash",
-    "gemini-1.5-pro",
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-3.5-flash",
     "gemini-flash-latest",
   ];
 
@@ -64,12 +65,17 @@ Return ONLY valid JSON without markdown code blocks matching this structure:
         { headers: { "Content-Type": "application/json" }, timeout: 12000 }
       );
 
-      const rawText = geminiRes.data?.candidates?.[0]?.content?.parts?.[0]?.text
-        ?.replace(/```json/g, "")
+      let rawText = geminiRes.data?.candidates?.[0]?.content?.parts?.[0]?.text
+        ?.replace(/```json/gi, "")
         ?.replace(/```/g, "")
         ?.trim();
 
       if (rawText) {
+        const firstBrace = rawText.indexOf('{');
+        const lastBrace = rawText.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1) {
+          rawText = rawText.substring(firstBrace, lastBrace + 1);
+        }
         const parsed = JSON.parse(rawText);
         return { ...parsed, isAiGenerated: true, aiEngine: `Google Gemini AI (${gModel})` };
       }
@@ -182,10 +188,11 @@ const generateGeminiMandiRatesList = async (location = "Gujarat", category = "Al
   if (!geminiKey || geminiKey.startsWith("your_")) return null;
 
   const geminiModels = [
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-2.5-flash",
-    "gemini-1.5-pro",
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-3.5-flash",
     "gemini-flash-latest",
   ];
 
@@ -230,12 +237,17 @@ Return ONLY valid JSON matching this exact array structure:
         { headers: { "Content-Type": "application/json" }, timeout: 12000 }
       );
 
-      const rawText = geminiRes.data?.candidates?.[0]?.content?.parts?.[0]?.text
-        ?.replace(/```json/g, "")
+      let rawText = geminiRes.data?.candidates?.[0]?.content?.parts?.[0]?.text
+        ?.replace(/```json/gi, "")
         ?.replace(/```/g, "")
         ?.trim();
 
       if (rawText) {
+        const firstBracket = rawText.indexOf('[');
+        const lastBracket = rawText.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket !== -1) {
+          rawText = rawText.substring(firstBracket, lastBracket + 1);
+        }
         const parsed = JSON.parse(rawText);
         if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
