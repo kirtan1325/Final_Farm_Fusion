@@ -152,64 +152,6 @@ export default function CropPrices() {
       }
     >
       <div className="space-y-6 max-w-6xl mx-auto">
-        {/* Registered Location Banner */}
-        {user?.location && (
-          <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="text-base">📍</span>
-              <div>
-                <span className="font-bold text-[#0F4C2A]">
-                  Mandi Rates & Gemini AI Filtered for Your Location:
-                </span>
-                <span className="ml-1.5 font-semibold text-slate-800 underline">
-                  {user.location}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant={useGeminiMode ? "primary" : "outline"}
-                size="sm"
-                onClick={() => setUseGeminiMode(!useGeminiMode)}
-              >
-                {useGeminiMode ? "✨ Gemini AI Rates Active" : "✨ Fetch Gemini AI Live Mandi Rates"}
-              </Button>
-              <Button
-                variant={showAllMandis ? "primary" : "outline"}
-                size="sm"
-                onClick={() => setShowAllMandis(!showAllMandis)}
-              >
-                {showAllMandis ? "📍 Filter by My Location" : "🌐 View All India Mandis"}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* KPI Stat Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <StatCard
-            title="Markets Monitored"
-            value={prices.length || "48 Mandis"}
-            description={
-              !showAllMandis && user?.location
-                ? `Filtered for ${user.location}`
-                : "Live government & APMC yards"
-            }
-          />
-          <StatCard
-            title="Average Modal Rate"
-            value={fmt(avgModalPrice || 2350)}
-            description="Per quintal live market average"
-          />
-          <StatCard
-            title="Rising Price Trends"
-            value={`${gainersCount || 12} Commodities`}
-            trend="up"
-            trendLabel="Upward"
-            description="positive daily trend"
-          />
-        </div>
-
         {/* Gemini AI Real-Time Mandi Intelligence & Forecast Card */}
         <Card className="border-2 border-emerald-500 shadow-sm">
           <CardHeader className="bg-emerald-50/60 border-b border-emerald-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
