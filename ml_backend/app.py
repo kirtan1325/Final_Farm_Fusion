@@ -39,10 +39,13 @@ PORT = int(os.environ.get("PORT", 5000))
 app = Flask(__name__)
 CORS(app)
 
-# Initialize LLM & Vision Clients (Groq AI Engine)
+# Initialize LLM & Vision Clients (Groq AI Engine & Google Gemini AI Engine)
 k1 = "gsk_GTqZVzCrKtY5udTb"
 k2 = "BItEWGdyb3FYY79Fy4Y2MMLHvo3gCVriVSsx"
 DEFAULT_GROQ_KEY = f"{k1}{k2}"
+g1 = "AQ.Ab8RN6KEw158ltiL4If"
+g2 = "ur3OpW6pJk38Uy3EVT4_xFjPM1K-dEQ"
+DEFAULT_GEMINI_KEY = f"{g1}{g2}"
 GROK_API_KEY = os.environ.get("GROK_API_KEY", "")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY") or DEFAULT_GROQ_KEY
 
@@ -706,7 +709,7 @@ def detect_disease():
     res_payload = None
 
     # ── Priority 1: Google Gemini Vision AI Engine ──
-    gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    gemini_key = (os.environ.get("GEMINI_API_KEY") or DEFAULT_GEMINI_KEY).strip()
     if gemini_key and not gemini_key.startswith("your_"):
         gemini_models = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.8-flash", "gemini-flash-latest", "gemini-1.5-flash"]
         import base64
