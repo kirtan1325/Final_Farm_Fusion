@@ -1,40 +1,57 @@
 // backend/controllers/cropPriceController.js
 const CropPrice = require("../models/CropPrice");
 
-// @desc  Get all crop prices (with optional filter for category, search, location, state)
-// @route GET /api/prices?category=grains&search=wheat&location=Punjab
+// @desc  Get all crop prices (filtered by farmer's registered location by default)
+// @route GET /api/prices?category=grains&search=wheat&location=Gujarat
 const getCropPrices = async (req, res) => {
   try {
-    const { category, search, location, state } = req.query;
+    const { category, search, location, state, showAll } = req.query;
     const filter = {};
 
     if (category && category.trim() && category.toLowerCase() !== "all") {
       filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
     }
 
-    const queryTerm = search || location || state;
-    if (queryTerm && queryTerm.trim()) {
-      const term = queryTerm.trim();
-      // Try filtering with both category and search/location term first
-      const searchFilter = {
-        ...filter,
-        $or: [
-          { cropName: { $regex: term, $options: "i" } },
-          { state: { $regex: term, $options: "i" } },
-          { market: { $regex: term, $options: "i" } }
-        ]
-      };
-      let prices = await CropPrice.find(searchFilter).sort({ cropName: 1 });
-      
-      // If search+category combo returned no results, but category was specified, fall back to returning all items in category!
-      if (prices.length === 0 && filter.category) {
-        prices = await CropPrice.find(filter).sort({ cropName: 1 });
-      }
-      return res.json({ success: true, count: prices.length, data: prices });
+    // Auto-detect farmer's location from profile if not explicitly passed
+    let targetLoc = location || state;
+    if (!targetLoc && req.user && req.user.location && showAll !== "true") {
+      targetLoc = req.user.location;
     }
 
-    const prices = await CropPrice.find(filter).sort({ cropName: 1 });
-    res.json({ success: true, count: prices.length, data: prices });
+    if (targetLoc && targetLoc.trim() && targetLoc.toLowerCase() !== "all") {
+      // Split location string (e.g., "Surat, Gujarat, India" -> ["Surat", "Gujarat"])
+      const parts = targetLoc
+        .split(",")
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0 && p.toLowerCase() !== "india");
+
+      if (parts.length > 0) {
+        filter.$or = parts.flatMap((part) => [
+          { state: { $regex: part, $options: "i" } },
+          { market: { $regex: part, $options: "i" } },
+        ]);
+      }
+    }
+
+    if (search && search.trim()) {
+      filter.cropName = { $regex: search.trim(), $options: "i" };
+    }
+
+    let prices = await CropPrice.find(filter).sort({ cropName: 1 });
+
+    // If location filter returns empty, fallback to returning all prices in category/search
+    if (prices.length === 0 && filter.$or) {
+      delete filter.$or;
+      prices = await CropPrice.find(filter).sort({ cropName: 1 });
+    }
+
+    res.json({
+      success: true,
+      userLocation: req.user?.location || null,
+      appliedLocation: targetLoc || null,
+      count: prices.length,
+      data: prices,
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

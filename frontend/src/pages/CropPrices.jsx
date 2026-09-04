@@ -35,17 +35,26 @@ export default function CropPrices() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [showAllMandis, setShowAllMandis] = useState(false);
+  const [appliedLocation, setAppliedLocation] = useState(user?.location || null);
 
   const [predictCropName, setPredictCropName] = useState("Tomato");
-  const [predictState, setPredictState] = useState("Gujarat");
+  const [predictState, setPredictState] = useState(user?.location || "Gujarat");
   const [predictLoading, setPredictLoading] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
 
   const fetchPrices = async () => {
     setLoading(true);
     try {
-      const data = await getCropPrices();
+      const params = {};
+      if (showAllMandis) {
+        params.showAll = "true";
+      } else if (user?.location) {
+        params.location = user.location;
+      }
+      const data = await getCropPrices(params);
       setPrices(data.data || []);
+      if (data.appliedLocation) setAppliedLocation(data.appliedLocation);
     } catch (err) {
       console.error("Mandi prices error:", err);
     } finally {
@@ -55,7 +64,13 @@ export default function CropPrices() {
 
   useEffect(() => {
     fetchPrices();
-  }, []);
+  }, [showAllMandis, user?.location]);
+
+  useEffect(() => {
+    if (user?.location) {
+      setPredictState(user.location);
+    }
+  }, [user?.location]);
 
   const handlePredictPrice = async (e) => {
     e.preventDefault();
@@ -94,20 +109,52 @@ export default function CropPrices() {
         navigate("/login");
       }}
       title="Live Mandi Commodity Prices & ML Forecasts"
-      subtitle="Real-time regional Mandi rates, historical price trends, and ML price predictions."
+      subtitle={
+        user?.location
+          ? `Mandi commodity rates customized for your registered location (${user.location}).`
+          : "Real-time regional Mandi rates, historical price trends, and ML price predictions."
+      }
     >
       <div className="space-y-6 max-w-6xl mx-auto">
+        {/* Registered Location Banner */}
+        {user?.location && (
+          <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-base">📍</span>
+              <div>
+                <span className="font-bold text-[#0F4C2A]">
+                  Displaying Mandi Prices for Your Registered Location:
+                </span>
+                <span className="ml-1.5 font-semibold text-slate-800 underline">
+                  {user.location}
+                </span>
+              </div>
+            </div>
+            <Button
+              variant={showAllMandis ? "primary" : "outline"}
+              size="sm"
+              onClick={() => setShowAllMandis(!showAllMandis)}
+            >
+              {showAllMandis ? "📍 Back to My Location" : "🌐 View All India Mandis"}
+            </Button>
+          </div>
+        )}
+
         {/* KPI Stat Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard
-            title="Total Markets Monitored"
+            title="Markets Monitored"
             value={prices.length || "48 Mandis"}
-            description="Live government & private yards"
+            description={
+              !showAllMandis && user?.location
+                ? `Filtered for ${user.location}`
+                : "Live government & private yards"
+            }
           />
           <StatCard
             title="Average Modal Rate"
             value={fmt(avgModalPrice)}
-            description="Per quintal average across India"
+            description="Per quintal average rate"
           />
           <StatCard
             title="Rising Price Trends"
@@ -138,7 +185,7 @@ export default function CropPrices() {
                 required
               />
               <Input
-                label="State / Market Region"
+                label="State / Registered Location"
                 placeholder="e.g. Gujarat"
                 value={predictState}
                 onChange={(e) => setPredictState(e.target.value)}
