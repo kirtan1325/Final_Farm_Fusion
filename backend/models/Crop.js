@@ -25,6 +25,7 @@ const cropSchema = new mongoose.Schema(
     emoji:     { type: String, default: "🌾" },
     imageUrl:  { type: String },
     harvestedAt: { type: Date },
+    isDummy:   { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -92,7 +92,14 @@ function ProductCard({ crop, user, onViewImage }) {
         <div className="p-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h3 className="font-bold text-slate-900 text-sm leading-snug">{crop.name}</h3>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <h3 className="font-bold text-slate-900 text-sm leading-snug">{crop.name}</h3>
+                {crop.isDummy && (
+                  <span className="bg-amber-50 text-amber-700 text-[10px] font-semibold px-1.5 py-0.5 rounded border border-amber-200">
+                    Sample
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-slate-500">{crop.location || "Verified Farm Location"}</p>
             </div>
             <Badge variant="neutral">{crop.category || "General"}</Badge>
@@ -142,19 +149,20 @@ export default function Marketplace() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("Newest Arrivals");
+  const [includeDummy, setIncludeDummy] = useState(false);
   const [selectedCropImage, setSelectedCropImage] = useState(null);
 
   const fetchCrops = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getMarketplaceCrops();
+      const data = await getMarketplaceCrops({ includeDummy });
       setCrops(data.data || []);
     } catch (err) {
       console.error("Error fetching marketplace crops:", err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [includeDummy]);
 
   useEffect(() => {
     fetchCrops();
@@ -185,20 +193,24 @@ export default function Marketplace() {
         navigate("/login");
       }}
       title="AgriTech Marketplace"
-      subtitle="Source verified regional agricultural produce directly from certified farmers."
+      subtitle="Source verified regional agricultural produce directly listed by certified farmers."
       headerActions={
-        user?.role === "buyer" && (
+        user?.role === "buyer" ? (
           <Button onClick={() => navigate("/buyer/orders")} size="sm" variant="outline">
             My Orders
           </Button>
-        )
+        ) : user?.role === "farmer" ? (
+          <Button onClick={() => navigate("/farmer/dashboard")} size="sm">
+            + List Produce
+          </Button>
+        ) : null
       }
     >
       <div className="space-y-6">
         {/* Search & Filter Header Bar */}
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <Input
-            placeholder="Search crops by name, location..."
+            placeholder="Search farmer crops, locations..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="sm:w-80"
@@ -208,7 +220,7 @@ export default function Marketplace() {
             <Select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-40"
+              className="w-36"
             >
               {CATEGORY_OPTIONS.map((c) => (
                 <option key={c} value={c}>
@@ -228,6 +240,16 @@ export default function Marketplace() {
                 </option>
               ))}
             </Select>
+
+            <label className="flex items-center gap-2 text-xs text-slate-600 font-medium cursor-pointer hover:text-slate-900 select-none bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 transition-colors">
+              <input
+                type="checkbox"
+                checked={includeDummy}
+                onChange={(e) => setIncludeDummy(e.target.checked)}
+                className="rounded text-[#0F4C2A] focus:ring-[#0F4C2A] h-4 w-4 cursor-pointer"
+              />
+              <span>Include Sample Produce</span>
+            </label>
           </div>
         </div>
 
@@ -241,14 +263,30 @@ export default function Marketplace() {
           </div>
         ) : filtered.length === 0 ? (
           <EmptyState
-            icon={() => <span className="text-3xl">🛒</span>}
-            title="No crop listings found"
-            description="Try adjusting your search keywords or category filters."
-            actionLabel="Clear Filters"
+            icon={() => <span className="text-4xl">🧑‍🌾</span>}
+            title={includeDummy ? "No crop listings found" : "No farmer produce listings yet"}
+            description={
+              includeDummy
+                ? "Try adjusting your search terms or category filters."
+                : "Currently displaying only crops listed directly by registered farmers. No listings match your filters yet."
+            }
+            actionLabel={
+              user?.role === "farmer"
+                ? "List Your Harvest Now"
+                : !includeDummy
+                ? "Show Sample Produce"
+                : "Clear Filters"
+            }
             onAction={() => {
-              setSearch("");
-              setCategory("All");
-              setSort("Newest Arrivals");
+              if (user?.role === "farmer") {
+                navigate("/farmer/dashboard");
+              } else if (!includeDummy) {
+                setIncludeDummy(true);
+              } else {
+                setSearch("");
+                setCategory("All");
+                setSort("Newest Arrivals");
+              }
             }}
           />
         ) : (

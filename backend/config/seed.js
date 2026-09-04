@@ -41,35 +41,35 @@ const seed = async () => {
   // ── Crops (Marketplace Products) ─────────────────────────
   const seededCrops = await Crop.insertMany([
     // Vegetables
-    { farmer: farmer1._id, name: "Organic Tomatoes",  subtitle: "Harvested 2 days ago", category: "vegetables", quantity: 250,  unit: "kg",   pricePerUnit: 25,  status: "available", badge: "organic",    emoji: "🍅", location: "Gujarat" },
-    { farmer: farmer1._id, name: "Golden Potatoes",   subtitle: "Storage Grade A",       category: "vegetables", quantity: 1200, unit: "kg",   pricePerUnit: 18,  status: "available", badge: null,         emoji: "🥔", location: "Gujarat" },
-    { farmer: farmer2._id, name: "Baby Spinach",      subtitle: "Earth washed",          category: "vegetables", quantity: 150,  unit: "kg",   pricePerUnit: 40,  status: "available", badge: "flash_sale", emoji: "🥬", location: "Maharashtra" },
-    { farmer: farmer2._id, name: "Heirloom Carrots",  subtitle: "Fresh harvest",         category: "vegetables", quantity: 300,  unit: "kg",   pricePerUnit: 32,  status: "available", badge: "flash_sale", emoji: "🥕", location: "Maharashtra" },
-    { farmer: farmer2._id, name: "Red Onions",        subtitle: "Grade A, dry",          category: "vegetables", quantity: 500,  unit: "kg",   pricePerUnit: 20,  status: "available", badge: null,         emoji: "🧅", location: "Maharashtra" },
-    { farmer: farmer1._id, name: "Fresh Garlic",       subtitle: "Organic bulbs",         category: "vegetables", quantity: 200,  unit: "kg",   pricePerUnit: 110, status: "available", badge: "organic",    emoji: "🧄", location: "Gujarat" },
-    { farmer: farmer2._id, name: "Green Chilli",      subtitle: "Spicy variety",         category: "vegetables", quantity: 180,  unit: "kg",   pricePerUnit: 65,  status: "available", badge: "limited",    emoji: "🌶️", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Organic Tomatoes",  subtitle: "Harvested 2 days ago", category: "vegetables", quantity: 250,  unit: "kg",   pricePerUnit: 25,  status: "available", badge: "organic",    emoji: "🍅", location: "Gujarat", isDummy: true },
+    { farmer: farmer1._id, name: "Golden Potatoes",   subtitle: "Storage Grade A",       category: "vegetables", quantity: 1200, unit: "kg",   pricePerUnit: 18,  status: "available", badge: null,         emoji: "🥔", location: "Gujarat", isDummy: true },
+    { farmer: farmer2._id, name: "Baby Spinach",      subtitle: "Earth washed",          category: "vegetables", quantity: 150,  unit: "kg",   pricePerUnit: 40,  status: "available", badge: "flash_sale", emoji: "🥬", location: "Maharashtra", isDummy: true },
+    { farmer: farmer2._id, name: "Heirloom Carrots",  subtitle: "Fresh harvest",         category: "vegetables", quantity: 300,  unit: "kg",   pricePerUnit: 32,  status: "available", badge: "flash_sale", emoji: "🥕", location: "Maharashtra", isDummy: true },
+    { farmer: farmer2._id, name: "Red Onions",        subtitle: "Grade A, dry",          category: "vegetables", quantity: 500,  unit: "kg",   pricePerUnit: 20,  status: "available", badge: null,         emoji: "🧅", location: "Maharashtra", isDummy: true },
+    { farmer: farmer1._id, name: "Fresh Garlic",       subtitle: "Organic bulbs",         category: "vegetables", quantity: 200,  unit: "kg",   pricePerUnit: 110, status: "available", badge: "organic",    emoji: "🧄", location: "Gujarat", isDummy: true },
+    { farmer: farmer2._id, name: "Green Chilli",      subtitle: "Spicy variety",         category: "vegetables", quantity: 180,  unit: "kg",   pricePerUnit: 65,  status: "available", badge: "limited",    emoji: "🌶️", location: "Maharashtra", isDummy: true },
     
     // Fruits
-    { farmer: farmer1._id, name: "Shimla Apples",     subtitle: "Crisp & Juicy",         category: "fruits",     quantity: 450,  unit: "kg",   pricePerUnit: 120, status: "available", badge: "limited",    emoji: "🍎", location: "Himachal Pradesh" },
-    { farmer: farmer1._id, name: "Alphonso Mangoes",  subtitle: "Ratnagiri Special",     category: "fruits",     quantity: 600,  unit: "kg",   pricePerUnit: 150, status: "available", badge: "best_deal",  emoji: "🥭", location: "Maharashtra" },
-    { farmer: farmer2._id, name: "Robusta Bananas",   subtitle: "Sweet farm fresh",      category: "fruits",     quantity: 800,  unit: "unit", pricePerUnit: 40, status: "available", badge: "organic",    emoji: "🍌", location: "Maharashtra" },
-    { farmer: farmer1._id, name: "Nagpur Oranges",    subtitle: "Juicy citrus",          category: "fruits",     quantity: 550,  unit: "kg",   pricePerUnit: 70,  status: "available", badge: null,         emoji: "🍊", location: "Maharashtra" },
-    { farmer: farmer2._id, name: "Black Grapes",      subtitle: "Seedless sweet",        category: "fruits",     quantity: 350,  unit: "kg",   pricePerUnit: 90,  status: "available", badge: "flash_sale", emoji: "🍇", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Shimla Apples",     subtitle: "Crisp & Juicy",         category: "fruits",     quantity: 450,  unit: "kg",   pricePerUnit: 120, status: "available", badge: "limited",    emoji: "🍎", location: "Himachal Pradesh", isDummy: true },
+    { farmer: farmer1._id, name: "Alphonso Mangoes",  subtitle: "Ratnagiri Special",     category: "fruits",     quantity: 600,  unit: "kg",   pricePerUnit: 150, status: "available", badge: "best_deal",  emoji: "🥭", location: "Maharashtra", isDummy: true },
+    { farmer: farmer2._id, name: "Robusta Bananas",   subtitle: "Sweet farm fresh",      category: "fruits",     quantity: 800,  unit: "unit", pricePerUnit: 40, status: "available", badge: "organic",    emoji: "🍌", location: "Maharashtra", isDummy: true },
+    { farmer: farmer1._id, name: "Nagpur Oranges",    subtitle: "Juicy citrus",          category: "fruits",     quantity: 550,  unit: "kg",   pricePerUnit: 70,  status: "available", badge: null,         emoji: "🍊", location: "Maharashtra", isDummy: true },
+    { farmer: farmer2._id, name: "Black Grapes",      subtitle: "Seedless sweet",        category: "fruits",     quantity: 350,  unit: "kg",   pricePerUnit: 90,  status: "available", badge: "flash_sale", emoji: "🍇", location: "Maharashtra", isDummy: true },
 
     // Grains
-    { farmer: farmer1._id, name: "Organic Wheat",     subtitle: "Premium Grade",         category: "grains",     quantity: 5000, unit: "kg",   pricePerUnit: 22,  status: "available", badge: "organic",    emoji: "🌾", location: "Gujarat" },
-    { farmer: farmer1._id, name: "Basmati Rice",      subtitle: "Long grain variety",    category: "grains",     quantity: 2000, unit: "kg",   pricePerUnit: 55,  status: "available", badge: "best_deal",  emoji: "🍚", location: "Gujarat" },
-    { farmer: farmer2._id, name: "Golden Sweet Corn", subtitle: "Sweet variety",         category: "grains",     quantity: 800,  unit: "kg",   pricePerUnit: 25,  status: "available", badge: null,         emoji: "🌽", location: "Maharashtra" },
-    { farmer: farmer1._id, name: "Yellow Soybean",    subtitle: "Protein rich",          category: "grains",     quantity: 1500, unit: "kg",   pricePerUnit: 48,  status: "available", badge: null,         emoji: "🫘", location: "Gujarat" },
+    { farmer: farmer1._id, name: "Organic Wheat",     subtitle: "Premium Grade",         category: "grains",     quantity: 5000, unit: "kg",   pricePerUnit: 22,  status: "available", badge: "organic",    emoji: "🌾", location: "Gujarat", isDummy: true },
+    { farmer: farmer1._id, name: "Basmati Rice",      subtitle: "Long grain variety",    category: "grains",     quantity: 2000, unit: "kg",   pricePerUnit: 55,  status: "available", badge: "best_deal",  emoji: "🍚", location: "Gujarat", isDummy: true },
+    { farmer: farmer2._id, name: "Golden Sweet Corn", subtitle: "Sweet variety",         category: "grains",     quantity: 800,  unit: "kg",   pricePerUnit: 25,  status: "available", badge: null,         emoji: "🌽", location: "Maharashtra", isDummy: true },
+    { farmer: farmer1._id, name: "Yellow Soybean",    subtitle: "Protein rich",          category: "grains",     quantity: 1500, unit: "kg",   pricePerUnit: 48,  status: "available", badge: null,         emoji: "🫘", location: "Gujarat", isDummy: true },
 
     // Herbs & Spices
-    { farmer: farmer1._id, name: "Organic Turmeric",  subtitle: "High Curcumin",         category: "herbs",      quantity: 300,  unit: "kg",   pricePerUnit: 85,  status: "available", badge: "organic",    emoji: "🌿", location: "Gujarat" },
-    { farmer: farmer2._id, name: "Fresh Ginger",      subtitle: "Aromatic roots",        category: "herbs",      quantity: 250,  unit: "kg",   pricePerUnit: 75,  status: "available", badge: null,         emoji: "🫚", location: "Maharashtra" },
-    { farmer: farmer2._id, name: "Fresh Mint Leaves", subtitle: "Chemical free",         category: "herbs",      quantity: 100,  unit: "kg",   pricePerUnit: 50,  status: "available", badge: "organic",    emoji: "🌱", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Organic Turmeric",  subtitle: "High Curcumin",         category: "herbs",      quantity: 300,  unit: "kg",   pricePerUnit: 85,  status: "available", badge: "organic",    emoji: "🌿", location: "Gujarat", isDummy: true },
+    { farmer: farmer2._id, name: "Fresh Ginger",      subtitle: "Aromatic roots",        category: "herbs",      quantity: 250,  unit: "kg",   pricePerUnit: 75,  status: "available", badge: null,         emoji: "🫚", location: "Maharashtra", isDummy: true },
+    { farmer: farmer2._id, name: "Fresh Mint Leaves", subtitle: "Chemical free",         category: "herbs",      quantity: 100,  unit: "kg",   pricePerUnit: 50,  status: "available", badge: "organic",    emoji: "🌱", location: "Maharashtra", isDummy: true },
 
     // Other
-    { farmer: farmer1._id, name: "Raw Cotton",        subtitle: "Long staple grade",     category: "other",      quantity: 3000, unit: "kg",   pricePerUnit: 68,  status: "available", badge: null,         emoji: "☁️", location: "Gujarat" },
-    { farmer: farmer2._id, name: "Organic Sugarcane", subtitle: "High Brix content",     category: "other",      quantity: 4000, unit: "kg",   pricePerUnit: 15,  status: "available", badge: null,         emoji: "🎋", location: "Maharashtra" },
+    { farmer: farmer1._id, name: "Raw Cotton",        subtitle: "Long staple grade",     category: "other",      quantity: 3000, unit: "kg",   pricePerUnit: 68,  status: "available", badge: null,         emoji: "☁️", location: "Gujarat", isDummy: true },
+    { farmer: farmer2._id, name: "Organic Sugarcane", subtitle: "High Brix content",     category: "other",      quantity: 4000, unit: "kg",   pricePerUnit: 15,  status: "available", badge: null,         emoji: "🎋", location: "Maharashtra", isDummy: true },
   ]);
   const tomato = seededCrops[0];
   const potato = seededCrops[1];

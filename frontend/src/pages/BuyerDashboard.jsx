@@ -69,7 +69,14 @@ function ProductCard({ crop }) {
         <div className="p-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h3 className="font-bold text-slate-900 text-sm">{crop.name}</h3>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <h3 className="font-bold text-slate-900 text-sm">{crop.name}</h3>
+                {crop.isDummy && (
+                  <span className="bg-amber-50 text-amber-700 text-[10px] font-semibold px-1.5 py-0.5 rounded border border-amber-200">
+                    Sample
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-slate-500">{crop.location || "Verified Indian Farm"}</p>
             </div>
             <Badge variant="neutral">{crop.category || "General"}</Badge>

@@ -11,8 +11,13 @@ const sanitizeBadge = (data) => ({
 // @route GET /api/crops
 const getCrops = async (req, res) => {
   try {
-    const { category, minPrice, maxPrice, status, search } = req.query;
+    const { category, minPrice, maxPrice, status, search, includeDummy } = req.query;
     const filter = { quantity: { $gt: 0 } };
+
+    // Default: show ONLY crops explicitly listed by farmers (isDummy: false)
+    if (includeDummy !== "true") {
+      filter.isDummy = false;
+    }
 
     if (category && category.toLowerCase() !== "all") {
       filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
@@ -48,7 +53,7 @@ const getMyCrops = async (req, res) => {
 // @route POST /api/crops
 const createCrop = async (req, res) => {
   try {
-    const crop = await Crop.create({ ...sanitizeBadge(req.body), farmer: req.user._id });
+    const crop = await Crop.create({ ...sanitizeBadge(req.body), farmer: req.user._id, isDummy: false });
     res.status(201).json({ success: true, data: crop });
 
     // ── Notify all buyers about new crop ──
