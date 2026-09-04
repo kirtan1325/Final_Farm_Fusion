@@ -7,5 +7,6 @@ router.post('/predict-crop', aiController.predictCrop);
 router.post('/detect-disease', aiController.detectDisease);
 router.post('/predict-price', aiController.predictPrice);
 router.post('/advisory', aiController.getAdvisory);
+router.post('/voice-assistant', aiController.processVoiceQuery);
 
 module.exports = router;
