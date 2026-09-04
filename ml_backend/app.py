@@ -39,15 +39,28 @@ PORT = int(os.environ.get("PORT", 5000))
 app = Flask(__name__)
 CORS(app)
 
-# Initialize Grok (xAI) if key exists
+# Initialize LLM & Vision Clients (Groq = FREE Llama 3.2 Vision, Grok = xAI)
 GROK_API_KEY = os.environ.get("GROK_API_KEY", "")
-if HAS_OPENAI and GROK_API_KEY:
-    llm_client = OpenAI(
-        api_key=GROK_API_KEY,
-        base_url="https://api.x.ai/v1",
-    )
-else:
-    llm_client = None
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+
+groq_client = None
+grok_client = None
+
+if HAS_OPENAI:
+    if GROQ_API_KEY:
+        try:
+            groq_client = OpenAI(api_key=GROQ_API_KEY, base_url="https://api.groq.com/openai/v1")
+            print("Loaded Free Groq AI Vision Engine (Llama 3.2 Vision)")
+        except Exception as e:
+            print("Groq client init notice:", e)
+    if GROK_API_KEY and not GROK_API_KEY.startswith("your_"):
+        try:
+            grok_client = OpenAI(api_key=GROK_API_KEY, base_url="https://api.x.ai/v1")
+            print("Loaded Grok AI Vision Engine")
+        except Exception as e:
+            print("Grok client init notice:", e)
+
+llm_client = grok_client or groq_client
 
 # ── Asynchronous Background Model Initialization ────────────────────────────────
 import pickle
@@ -729,8 +742,12 @@ def detect_disease():
 
     res_payload = None
 
-    # ── Priority 1: Grok 2 Vision Multimodal AI Diagnostic Engine ──────────────────
-    if llm_client:
+    # ── Priority 1: Free Groq Llama 3.2 Vision / Grok-2 Vision AI Diagnostic Engine ──
+    active_vision_client = groq_client or grok_client
+    vision_model_name = "llama-3.2-11b-vision-preview" if groq_client else "grok-2-vision-1212"
+    vision_engine_label = "Groq Llama 3.2 Vision AI Engine (Free)" if groq_client else "Grok-2 AI Agronomic Vision Engine"
+
+    if active_vision_client:
         try:
             import base64
             b64_image = base64.b64encode(img_bytes).decode('utf-8')
@@ -751,8 +768,8 @@ def detect_disease():
                 '}'
             )
 
-            grok_response = llm_client.chat.completions.create(
-                model="grok-2-vision-1212",
+            ai_response = active_vision_client.chat.completions.create(
+                model=vision_model_name,
                 messages=[
                     {
                         "role": "user",
@@ -765,26 +782,26 @@ def detect_disease():
                 max_tokens=500
             )
 
-            text_out = grok_response.choices[0].message.content.strip().replace("```json", "").replace("```", "")
+            text_out = ai_response.choices[0].message.content.strip().replace("```json", "").replace("```", "")
             import json
-            parsed_grok = json.loads(text_out)
+            parsed_ai = json.loads(text_out)
 
-            conf_val = float(parsed_grok.get("confidence", 97.4))
+            conf_val = float(parsed_ai.get("confidence", 97.4))
             conf_val = round(max(95.0, min(98.4, conf_val)), 1)
 
             res_payload = {
                 "success": True,
-                "disease": parsed_grok.get("disease", "Healthy"),
-                "affected_crop": parsed_grok.get("affected_crop", "Crop Specimen"),
-                "severity": parsed_grok.get("severity", "Moderate"),
-                "treatment": parsed_grok.get("treatment", "Apply recommended fungicide and monitor leaf surface."),
-                "organic_alternatives": parsed_grok.get("organic", "Apply neem oil 3000 ppm spray and Trichoderma."),
+                "disease": parsed_ai.get("disease", "Healthy"),
+                "affected_crop": parsed_ai.get("affected_crop", "Crop Specimen"),
+                "severity": parsed_ai.get("severity", "Moderate"),
+                "treatment": parsed_ai.get("treatment", "Apply recommended fungicide and monitor leaf surface."),
+                "organic_alternatives": parsed_ai.get("organic", "Apply neem oil 3000 ppm spray and Trichoderma."),
                 "confidence": conf_val,
                 "model_accuracy": 96.8,
-                "model": "Grok-2 AI Agronomic Vision Engine"
+                "model": vision_engine_label
             }
-        except Exception as grok_err:
-            print("Grok Vision Disease Detection notice:", grok_err)
+        except Exception as vision_err:
+            print("Free AI Vision Disease Detection notice:", vision_err)
 
     # ── Priority 2: CNN Model Inference ──────────────────────────────────────────
     if not res_payload and DISEASE_MODEL is not None and DISEASE_CLASS_NAMES:
