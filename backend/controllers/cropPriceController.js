@@ -23,36 +23,39 @@ const generateGeminiMandiIntelligence = async (cropName = "Wheat", location = "G
   const targetLoc = location || state || "Gujarat, India";
 
   const prompt = `Act as an expert Indian agricultural market analyst and Mandi price intelligence advisor.
-Provide real-time market price analysis and mandi intelligence for crop: "${cropName}" at Mandi/Location: "${targetLoc}".
+Provide ACCURATE real-time market price analysis and mandi intelligence specifically for the crop: "${cropName}" at Mandi/Location: "${targetLoc}".
 
-Return ONLY valid JSON without markdown code blocks matching this structure:
+CRITICAL MANDI PRICING RULES:
+- Calculate real-time market prices in ₹ / Quintal strictly tailored to "${cropName}" in Indian Mandis today.
+- Use realistic market ranges for "${cropName}" (e.g. Wheat ~₹2,200-2,650, Cotton ~₹6,500-7,800, Tomato ~₹1,500-3,200, Dragon Fruit ~₹8,500-14,000, Strawberry ~₹12,000-20,000, Onion ~₹1,800-3,200, Potato ~₹1,200-2,200, Rice/Paddy ~₹2,800-4,200, Groundnut ~₹5,500-6,800, Soybean ~₹4,200-5,400).
+- DO NOT return generic static dummy numbers! Every crop must have its own accurate price range and realistic local market names near "${targetLoc}".
+
+Return ONLY valid JSON matching this schema:
 {
   "cropName": "${cropName}",
   "location": "${targetLoc}",
-  "minPrice": 2100,
-  "maxPrice": 2580,
-  "modalPrice": 2390,
+  "minPrice": <number>,
+  "maxPrice": <number>,
+  "modalPrice": <number>,
   "unit": "₹ / Quintal",
   "trend": "up",
-  "priceChangeText": "+₹65/quintal (+2.8% today)",
-  "trendSummary": "High buyer demand across local APMC yards supported by strong industrial procurement.",
-  "sellingAdvice": "Strong demand cycle. Sell 60%-70% of ready inventory now to capture peak prices.",
+  "priceChangeText": "+₹<amount>/quintal (+<percent>% today)",
+  "trendSummary": "<detailed trend analysis specific to ${cropName} in ${targetLoc}>",
+  "sellingAdvice": "<actionable selling advice specific to ${cropName}>",
   "bestNearbyMarkets": [
-    { "marketName": "${targetLoc} APMC Yard", "modalPrice": "₹2,390", "distance": "Local", "status": "High Demand" },
-    { "marketName": "Surat Regional Mandi", "modalPrice": "₹2,440", "distance": "35 km", "status": "Best Price" },
-    { "marketName": "District Cooperative Yard", "modalPrice": "₹2,360", "distance": "18 km", "status": "Quick Clearance" }
+    { "marketName": "${targetLoc} APMC Yard", "modalPrice": "₹<modalPrice>", "distance": "Local Yard", "status": "Active Trading" },
+    { "marketName": "<Nearby APMC Name>", "modalPrice": "₹<price>", "distance": "25-40 km", "status": "Best Rate" }
   ],
   "marketDrivers": [
-    "Festive season demand surge from urban distribution centers",
-    "Reduced daily Mandi arrivals from neighboring districts",
-    "Government MSP floor price support"
+    "<key market driver specific to ${cropName}>",
+    "<arrival or demand factor for ${cropName}>"
   ]
 }`;
 
   const payload = {
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: {
-      temperature: 0.2,
+      temperature: 0.5,
       response_mime_type: "application/json",
     },
   };
@@ -100,27 +103,43 @@ const getAiMandiIntelligence = async (req, res) => {
       return res.json({ success: true, source: "gemini_ai", data: aiResult });
     }
 
-    // High quality fallback intelligence if Gemini API is unreachable
+    // Dynamic per-crop fallback prices if Gemini API is temporarily unreachable
+    const getFallbackPrice = (name) => {
+      const lower = name.toLowerCase();
+      if (lower.includes("dragon")) return { min: 8500, max: 13500, modal: 10800 };
+      if (lower.includes("strawberry")) return { min: 12000, max: 18500, modal: 15200 };
+      if (lower.includes("cotton")) return { min: 6500, max: 7800, modal: 7250 };
+      if (lower.includes("groundnut") || lower.includes("peanut")) return { min: 5400, max: 6600, modal: 5950 };
+      if (lower.includes("soybean") || lower.includes("soya")) return { min: 4200, max: 5200, modal: 4750 };
+      if (lower.includes("rice") || lower.includes("paddy")) return { min: 2800, max: 4100, modal: 3450 };
+      if (lower.includes("tomato")) return { min: 1500, max: 3200, modal: 2250 };
+      if (lower.includes("onion")) return { min: 1800, max: 3100, modal: 2400 };
+      if (lower.includes("potato")) return { min: 1200, max: 2100, modal: 1650 };
+      return { min: 2150, max: 2650, modal: 2400 };
+    };
+
+    const fallback = getFallbackPrice(cropName);
+
     return res.json({
       success: true,
       source: "agronomic_engine",
       data: {
         cropName,
         location: userLoc,
-        minPrice: 2150,
-        maxPrice: 2520,
-        modalPrice: 2350,
+        minPrice: fallback.min,
+        maxPrice: fallback.max,
+        modalPrice: fallback.modal,
         unit: "₹ / Quintal",
         trend: "up",
-        priceChangeText: "+₹45/quintal (+1.9% today)",
+        priceChangeText: `+₹${Math.floor(fallback.modal * 0.025)}/quintal (+2.5% today)`,
         trendSummary: `Steady market demand for ${cropName} in ${userLoc} APMC yards with stable daily arrivals.`,
-        sellingAdvice: "Favorable selling price window over the next 5-7 days.",
+        sellingAdvice: `Favorable selling price window for ${cropName} over the next 5-7 days.`,
         bestNearbyMarkets: [
-          { marketName: `${userLoc} Main APMC`, modalPrice: "₹2,350", distance: "Local Yard", status: "Active Trading" },
-          { marketName: "Regional Wholesale Market", modalPrice: "₹2,390", distance: "24 km", status: "High Bulk Demand" }
+          { marketName: `${userLoc} Main APMC`, modalPrice: `₹${fallback.modal.toLocaleString('en-IN')}`, distance: "Local Yard", status: "Active Trading" },
+          { marketName: "Regional Wholesale Market", modalPrice: `₹${(fallback.modal + 60).toLocaleString('en-IN')}`, distance: "24 km", status: "High Bulk Demand" }
         ],
         marketDrivers: [
-          "Consistent wholesale buyer orders",
+          `Consistent wholesale buyer orders for ${cropName}`,
           "Balanced seasonal crop arrivals"
         ]
       }
@@ -201,9 +220,13 @@ Generate a real-time list of current live Mandi commodity prices for location/re
 Category filter: "${category || 'All'}"
 Search filter: "${search || ''}"
 
-Return 8 to 12 major local crops (e.g. Wheat, Rice, Cotton, Tomato, Potato, Onion, Groundnut, Mustard, Chili, Sugarcane, Soybean, Mango).
+Return 8 to 12 major local crops (e.g. Wheat, Rice, Cotton, Tomato, Potato, Onion, Groundnut, Mustard, Chili, Sugarcane, Soybean, Dragon Fruit, Mango).
 
-Return ONLY valid JSON matching this exact array structure:
+CRITICAL PRICING RULES:
+- Calculate real-time market prices in ₹ / Quintal strictly tailored to each individual crop (e.g. Wheat ~₹2,400, Cotton ~₹7,200, Dragon Fruit ~₹10,500, Tomato ~₹2,200, Potato ~₹1,650, Groundnut ~₹5,900, Soybean ~₹4,700).
+- DO NOT assign the same dummy modal price to all commodities!
+
+Return ONLY valid JSON matching this array structure:
 [
   {
     "_id": "gemini-1",
@@ -212,9 +235,9 @@ Return ONLY valid JSON matching this exact array structure:
     "emoji": "🌾",
     "market": "${location} APMC Market",
     "state": "${location}",
-    "minPrice": 2200,
-    "maxPrice": 2650,
-    "modalPrice": 2450,
+    "minPrice": <number>,
+    "maxPrice": <number>,
+    "modalPrice": <number>,
     "trend": "up",
     "isAiGenerated": true,
     "aiSource": "Google Gemini AI Live Mandi Engine"
@@ -224,7 +247,7 @@ Return ONLY valid JSON matching this exact array structure:
   const payload = {
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: {
-      temperature: 0.2,
+      temperature: 0.5,
       response_mime_type: "application/json",
     },
   };
