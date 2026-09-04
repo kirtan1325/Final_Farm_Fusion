@@ -13,7 +13,7 @@ const cropSchema = new mongoose.Schema(
     quantity:  { type: Number, required: true, min: 0 },
     unit:      { type: String, enum: ["kg", "lb", "unit", "bunch"], default: "kg" },
     pricePerUnit: { type: Number, required: true, min: 0 },
-    status:    { type: String, enum: ["available", "sold", "reserved"], default: "available" },
+    status:    { type: String, enum: ["available", "sold", "sold_out", "reserved"], default: "available" },
     badge:     {
       type: String,
       enum: ["organic", "flash_sale", "new", "best_deal", "limited", null, ""],
@@ -31,7 +31,8 @@ const cropSchema = new mongoose.Schema(
 
 // Virtual: formatted price
 cropSchema.virtual("formattedPrice").get(function () {
-  return `$${this.pricePerUnit.toFixed(2)} / ${this.unit}`;
+  const price = this.pricePerUnit ? Number(this.pricePerUnit).toFixed(2) : "0.00";
+  return `₹${price} / ${this.unit || "kg"}`;
 });
 
 cropSchema.set("toJSON", { virtuals: true });
