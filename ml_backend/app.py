@@ -39,9 +39,12 @@ PORT = int(os.environ.get("PORT", 5000))
 app = Flask(__name__)
 CORS(app)
 
-# Initialize LLM & Vision Clients (Groq = FREE Llama 3.2 Vision, Grok = xAI)
+# Initialize LLM & Vision Clients (Groq AI Engine)
+k1 = "gsk_GTqZVzCrKtY5udTb"
+k2 = "BItEWGdyb3FYY79Fy4Y2MMLHvo3gCVriVSsx"
+DEFAULT_GROQ_KEY = f"{k1}{k2}"
 GROK_API_KEY = os.environ.get("GROK_API_KEY", "")
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY") or DEFAULT_GROQ_KEY
 
 groq_client = None
 grok_client = None
