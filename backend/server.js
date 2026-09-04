@@ -10,8 +10,12 @@ dotenv.config();
 
 const app = express();
 
+const path = require("path");
+const fs   = require("fs");
+
 const allowedOrigins = [
   process.env.CLIENT_URL,
+  "https://final-farm-fusion.onrender.com",
   "https://final-farm-fusion.vercel.app",
   "https://farm-fusion-eta.vercel.app",
   "http://localhost:3000",
@@ -25,6 +29,8 @@ app.use(cors({
     if (
       allowedOrigins.includes(origin) || 
       origin.endsWith(".vercel.app") ||
+      origin.endsWith(".onrender.com") ||
+      origin.endsWith(".netlify.app") ||
       origin.startsWith("http://localhost:") ||
       origin.startsWith("http://127.0.0.1:")
     ) {
@@ -72,7 +78,19 @@ app.use("/api/admin",         require("./routes/adminRoutes"));
 app.use("/api/ai",            require("./routes/aiRoutes"));
 
 // ── Health check ─────────────────────────────────────────
-app.get("/", (req, res) => res.json({ message: "Farm Fusion API running ✅" }));
+app.get("/api/health", (req, res) => res.json({ message: "Farm Fusion API running ✅" }));
+
+// ── Serve React Frontend SPA Static Assets (if dist exists) ──
+const frontendDist = path.join(__dirname, "../frontend/dist");
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(path.join(frontendDist, "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => res.json({ message: "Farm Fusion API running ✅" }));
+}
 
 // ── Global error handler ──────────────────────────────────
 app.use((err, req, res, next) => {
