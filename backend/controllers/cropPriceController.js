@@ -1,15 +1,18 @@
 // backend/controllers/cropPriceController.js
 const CropPrice = require("../models/CropPrice");
 
-// @desc  Get all crop prices (strictly filtered by farmer's registered location)
+// @desc  Get crop prices (prioritizing farmer's registered location)
 // @route GET /api/prices?category=grains&search=wheat&location=Gujarat
 const getCropPrices = async (req, res) => {
   try {
     const { category, search, location, state, showAll } = req.query;
-    const filter = {};
+    const baseFilter = {};
 
     if (category && category.trim() && category.toLowerCase() !== "all") {
-      filter.category = { $regex: `^${category.trim()}$`, $options: "i" };
+      baseFilter.category = { $regex: `^${category.trim()}$`, $options: "i" };
+    }
+    if (search && search.trim()) {
+      baseFilter.cropName = { $regex: search.trim(), $options: "i" };
     }
 
     // Auto-detect farmer's location from profile if not explicitly passed
@@ -18,32 +21,41 @@ const getCropPrices = async (req, res) => {
       targetLoc = req.user.location;
     }
 
+    let isExactMatch = false;
+    let prices = [];
+
+    // 1. Try strict location filter first
     if (targetLoc && targetLoc.trim() && targetLoc.toLowerCase() !== "all" && showAll !== "true") {
-      // Split location string (e.g., "Surat, Gujarat, India" -> ["Surat", "Gujarat"])
       const parts = targetLoc
         .split(",")
         .map((p) => p.trim())
         .filter((p) => p.length > 0 && p.toLowerCase() !== "india");
 
       if (parts.length > 0) {
-        filter.$or = parts.flatMap((part) => [
-          { state: { $regex: part, $options: "i" } },
-          { market: { $regex: part, $options: "i" } },
-        ]);
+        const locationFilter = {
+          ...baseFilter,
+          $or: parts.flatMap((part) => [
+            { state: { $regex: part, $options: "i" } },
+            { market: { $regex: part, $options: "i" } },
+          ]),
+        };
+        prices = await CropPrice.find(locationFilter).sort({ cropName: 1 });
+        if (prices.length > 0) {
+          isExactMatch = true;
+        }
       }
     }
 
-    if (search && search.trim()) {
-      filter.cropName = { $regex: search.trim(), $options: "i" };
+    // 2. Fallback to all available rates if no location specified or no prices found for exact location
+    if (prices.length === 0) {
+      prices = await CropPrice.find(baseFilter).sort({ cropName: 1 });
     }
-
-    // Strictly return only matching location prices without falling back to all India
-    const prices = await CropPrice.find(filter).sort({ cropName: 1 });
 
     res.json({
       success: true,
       userLocation: req.user?.location || null,
       appliedLocation: targetLoc || null,
+      isExactMatch,
       count: prices.length,
       data: prices,
     });

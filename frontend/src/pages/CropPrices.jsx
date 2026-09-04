@@ -37,6 +37,7 @@ export default function CropPrices() {
   const [category, setCategory] = useState("All");
   const [showAllMandis, setShowAllMandis] = useState(false);
   const [appliedLocation, setAppliedLocation] = useState(user?.location || null);
+  const [isExactMatch, setIsExactMatch] = useState(false);
 
   const [predictCropName, setPredictCropName] = useState("Tomato");
   const [predictState, setPredictState] = useState(user?.location || "Gujarat");
@@ -55,6 +56,7 @@ export default function CropPrices() {
       const data = await getCropPrices(params);
       setPrices(data.data || []);
       if (data.appliedLocation) setAppliedLocation(data.appliedLocation);
+      setIsExactMatch(Boolean(data.isExactMatch));
     } catch (err) {
       console.error("Mandi prices error:", err);
     } finally {
@@ -92,25 +94,7 @@ export default function CropPrices() {
       (p.state && p.state.toLowerCase().includes(search.toLowerCase())) ||
       (p.market && p.market.toLowerCase().includes(search.toLowerCase()));
     const matchesCat = category === "All" || p.category?.toLowerCase() === category.toLowerCase();
-
-    // Strict location match for farmer registered location unless "View All India Mandis" is clicked
-    let matchesLocation = true;
-    if (!showAllMandis && user?.location) {
-      const locTokens = user.location
-        .split(",")
-        .map((t) => t.trim().toLowerCase())
-        .filter((t) => t.length > 0 && t !== "india");
-
-      if (locTokens.length > 0) {
-        matchesLocation = locTokens.some(
-          (token) =>
-            (p.state && p.state.toLowerCase().includes(token)) ||
-            (p.market && p.market.toLowerCase().includes(token))
-        );
-      }
-    }
-
-    return matchesSearch && matchesCat && matchesLocation;
+    return matchesSearch && matchesCat;
   });
 
   const gainersCount = filteredPrices.filter((p) => p.trend === "up").length;
@@ -141,11 +125,18 @@ export default function CropPrices() {
               <span className="text-base">📍</span>
               <div>
                 <span className="font-bold text-[#0F4C2A]">
-                  Displaying Mandi Prices for Your Registered Location:
+                  {isExactMatch
+                    ? "Displaying Mandi Prices for Your Registered Location:"
+                    : "Displaying Nearest Regional Mandi Rates for:"}
                 </span>
                 <span className="ml-1.5 font-semibold text-slate-800 underline">
                   {user.location}
                 </span>
+                {!isExactMatch && !showAllMandis && (
+                  <span className="ml-2 text-slate-500 font-normal italic">
+                    (Showing regional prices)
+                  </span>
+                )}
               </div>
             </div>
             <Button
