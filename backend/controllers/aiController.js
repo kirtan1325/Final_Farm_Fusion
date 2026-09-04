@@ -310,12 +310,26 @@ exports.detectDisease = async (req, res) => {
     // 2. Direct Gemini Vision AI Engine Call
     const geminiKey = (process.env.GEMINI_API_KEY || "").trim();
     if (geminiKey && !geminiKey.startsWith("your_")) {
-      const geminiModels = ["gemini-2.5-flash", "gemini-3.6-flash", "gemini-flash-latest", "gemini-1.5-flash", "gemini-pro-latest"];
+      const geminiModels = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.8-flash", "gemini-flash-latest", "gemini-1.5-flash"];
+      const archiveClasses = [
+        "American Bollworm on Cotton", "Anthracnose on Cotton", "Army worm",
+        "Bacterial Blight in cotton", "Becterial Blight in Rice", "Brownspot",
+        "Common_Rust", "Cotton Aphid", "Flag Smut", "Gray_Leaf_Spot",
+        "Healthy Maize", "Healthy Wheat", "Healthy cotton", "Leaf Curl",
+        "Leaf smut", "Mosaic sugarcane", "RedRot sugarcane", "RedRust sugarcane",
+        "Rice Blast", "Sugarcane Healthy", "Tungro", "Wheat Brown leaf rust",
+        "Wheat Stem fly", "Wheat aphid", "Wheat black rust", "Wheat leaf blight",
+        "Wheat mite", "Wheat powdery mildew", "Wheat scab", "Wheat___Yellow_Rust",
+        "Wilt", "Yellow Rust Sugarcane", "bollrot on Cotton", "bollworm on Cotton",
+        "cotton mealy bug", "cotton whitefly", "maize ear rot", "maize fall armyworm",
+        "maize stem borer", "pink bollworm in cotton", "red cotton bug", "thirps on  cotton"
+      ];
       const prompt = `Act as a world-class plant pathologist and agronomist.
 Analyze crop leaf specimen / file "${fileName || 'leaf_specimen.jpg'}".
+Classify the image into the single most accurate category out of these 42 official categories: ${JSON.stringify(archiveClasses)}.
 Return ONLY raw valid JSON without markdown code block formatting:
 {
-  "disease": "Disease Name or Healthy",
+  "disease": "Exact Category Name from List",
   "affected_crop": "Crop Name",
   "severity": "High/Moderate/Low/None",
   "treatment": "Chemical treatment guide with dosage",

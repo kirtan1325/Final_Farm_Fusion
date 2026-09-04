@@ -708,18 +708,33 @@ def detect_disease():
     # ── Priority 1: Google Gemini Vision AI Engine ──
     gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if gemini_key and not gemini_key.startswith("your_"):
-        gemini_models = ["gemini-2.5-flash", "gemini-3.6-flash", "gemini-flash-latest", "gemini-1.5-flash", "gemini-pro-latest"]
+        gemini_models = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.8-flash", "gemini-flash-latest", "gemini-1.5-flash"]
         import base64
         import requests
         b64_image = base64.b64encode(img_bytes).decode('utf-8')
 
+        archive_classes = [
+            "American Bollworm on Cotton", "Anthracnose on Cotton", "Army worm",
+            "Bacterial Blight in cotton", "Becterial Blight in Rice", "Brownspot",
+            "Common_Rust", "Cotton Aphid", "Flag Smut", "Gray_Leaf_Spot",
+            "Healthy Maize", "Healthy Wheat", "Healthy cotton", "Leaf Curl",
+            "Leaf smut", "Mosaic sugarcane", "RedRot sugarcane", "RedRust sugarcane",
+            "Rice Blast", "Sugarcane Healthy", "Tungro", "Wheat Brown leaf rust",
+            "Wheat Stem fly", "Wheat aphid", "Wheat black rust", "Wheat leaf blight",
+            "Wheat mite", "Wheat powdery mildew", "Wheat scab", "Wheat___Yellow_Rust",
+            "Wilt", "Yellow Rust Sugarcane", "bollrot on Cotton", "bollworm on Cotton",
+            "cotton mealy bug", "cotton whitefly", "maize ear rot", "maize fall armyworm",
+            "maize stem borer", "pink bollworm in cotton", "red cotton bug", "thirps on  cotton"
+        ]
+
         prompt = (
             "Act as a world-class plant pathologist and agronomist. "
-            "Analyze this crop leaf image to detect plant disease with high accuracy.\n"
+            "Analyze this crop leaf specimen image from the Archive (3) dataset.\n"
+            f"Classify the image into the single most accurate category out of these 42 official categories: {json.dumps(archive_classes)}.\n"
             "Return ONLY a valid JSON object without markdown code block formatting.\n"
             "JSON Schema:\n"
             '{\n'
-            '  "disease": "Disease Name or Healthy",\n'
+            '  "disease": "Exact Category Name from List",\n'
             '  "affected_crop": "Crop Name",\n'
             '  "severity": "High/Moderate/Low/None",\n'
             '  "treatment": "Chemical treatment guide with dosage",\n'
