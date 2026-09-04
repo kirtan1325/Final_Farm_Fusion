@@ -5,6 +5,7 @@ export const getScheme     = async (id)           => { const { data } = await ap
 export const createScheme  = async (body)         => { const { data } = await api.post("/schemes",         body);      return data; };
 export const updateScheme  = async (id, body)     => { const { data } = await api.put(`/schemes/${id}`,    body);      return data; };
 export const deleteScheme  = async (id)           => { const { data } = await api.delete(`/schemes/${id}`);            return data; };
+export const suggestAiSchemes = async (body)      => { const { data } = await api.post("/schemes/suggest-ai", body);   return data; };
 
 // frontend/src/api/advisoryService.js (append below or in separate file)
 export const getAdvisory   = async (params = {}) => { const { data } = await api.get("/advisory",          { params }); return data; };
@@ -12,3 +13,4 @@ export const getCropNames  = async ()             => { const { data } = await ap
 export const createAdvisory = async (body)        => { const { data } = await api.post("/advisory",         body);      return data; };
 export const updateAdvisory = async (id, body)    => { const { data } = await api.put(`/advisory/${id}`,    body);      return data; };
 export const generateAiAdvisory = async (body)    => { const { data } = await api.post("/advisory/generate", body);      return data; };
+
