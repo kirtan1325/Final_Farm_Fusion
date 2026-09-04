@@ -46,16 +46,15 @@ export default function CropPrices() {
   const [predictLoading, setPredictLoading] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
 
-  // Gemini AI Mandi Intelligence State
-  const [aiCropName, setAiCropName] = useState("Wheat");
-  const [aiLocation, setAiLocation] = useState(user?.location || "Gujarat");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiIntelligence, setAiIntelligence] = useState(null);
+  const [useGeminiMode, setUseGeminiMode] = useState(false);
 
   const fetchPrices = useCallback(async () => {
     setLoading(true);
     try {
       const params = {};
+      if (useGeminiMode) {
+        params.useAi = "true";
+      }
       if (showAllMandis) {
         params.showAll = "true";
       } else if (user?.location) {
@@ -69,7 +68,7 @@ export default function CropPrices() {
     } finally {
       setLoading(false);
     }
-  }, [showAllMandis, user?.location]);
+  }, [showAllMandis, useGeminiMode, user?.location]);
 
   const handleFetchAiIntelligence = async (targetCrop, targetLoc) => {
     const cropQuery = targetCrop || aiCropName;
@@ -182,13 +181,22 @@ export default function CropPrices() {
                 </span>
               </div>
             </div>
-            <Button
-              variant={showAllMandis ? "primary" : "outline"}
-              size="sm"
-              onClick={() => setShowAllMandis(!showAllMandis)}
-            >
-              {showAllMandis ? "📍 Filter by My Location" : "🌐 View All India Mandis"}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={useGeminiMode ? "primary" : "outline"}
+                size="sm"
+                onClick={() => setUseGeminiMode(!useGeminiMode)}
+              >
+                {useGeminiMode ? "✨ Gemini AI Rates Active" : "✨ Fetch Gemini AI Live Mandi Rates"}
+              </Button>
+              <Button
+                variant={showAllMandis ? "primary" : "outline"}
+                size="sm"
+                onClick={() => setShowAllMandis(!showAllMandis)}
+              >
+                {showAllMandis ? "📍 Filter by My Location" : "🌐 View All India Mandis"}
+              </Button>
+            </div>
           </div>
         )}
 
@@ -401,16 +409,25 @@ export default function CropPrices() {
           <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2">
-                <CardTitle>Current Mandi Rates Ticker</CardTitle>
+                <CardTitle>Crop Mandi Rates Tracker</CardTitle>
                 <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200 animate-pulse">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                  Live Updates
+                  {useGeminiMode ? "✨ Live Gemini AI Pricing" : "Live Socket.IO Updates"}
                 </span>
               </div>
-              <CardDescription>Minimum, Maximum, and Modal prices by commodity</CardDescription>
+              <CardDescription>Minimum, Maximum, and Modal prices listed in real-time</CardDescription>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
+              <Button
+                variant={useGeminiMode ? "primary" : "outline"}
+                size="sm"
+                onClick={() => setUseGeminiMode(!useGeminiMode)}
+                className="text-xs"
+              >
+                {useGeminiMode ? "✨ Gemini AI Live Rates Active" : "✨ Switch to Gemini AI Live Rates"}
+              </Button>
+
               <Input
                 placeholder="Search commodity or Mandi..."
                 value={search}
@@ -442,11 +459,11 @@ export default function CropPrices() {
               <EmptyState
                 icon={() => <span className="text-3xl">📈</span>}
                 title="No Mandi prices found"
-                description="Ask Google Gemini AI above for instant live Mandi prices for any commodity or location."
-                actionLabel="Reset Search"
+                description="Click 'Switch to Gemini AI Live Rates' to fetch real-time crop pricing for any region."
+                actionLabel="✨ Fetch Gemini AI Live Rates"
                 onAction={() => {
-                  setSearch("");
-                  setCategory("All");
+                  setUseGeminiMode(true);
+                  fetchPrices();
                 }}
               />
             ) : (
@@ -456,11 +473,12 @@ export default function CropPrices() {
                     <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase font-bold text-slate-500 tracking-wider">
                       <th className="px-5 py-3.5">Commodity</th>
                       <th className="px-5 py-3.5">Mandi Market</th>
-                      <th className="px-5 py-3.5">State</th>
+                      <th className="px-5 py-3.5">State / Region</th>
                       <th className="px-5 py-3.5">Min Rate</th>
                       <th className="px-5 py-3.5">Max Rate</th>
                       <th className="px-5 py-3.5">Modal Rate</th>
                       <th className="px-5 py-3.5">Daily Trend</th>
+                      <th className="px-5 py-3.5">Source</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -482,6 +500,13 @@ export default function CropPrices() {
                             {item.trend === "up" ? "▲ Upward" : "▼ Downward"}
                           </Badge>
                         </td>
+                        <td className="px-5 py-4">
+                          {item.isAiGenerated ? (
+                            <Badge variant="emerald">✨ Gemini AI</Badge>
+                          ) : (
+                            <Badge variant="neutral">Verified Mandi</Badge>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -490,6 +515,7 @@ export default function CropPrices() {
             )}
           </CardContent>
         </Card>
+
       </div>
     </AppShell>
   );
